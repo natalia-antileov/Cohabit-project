@@ -23,7 +23,7 @@ export const ApartmentCard: React.FC<ApartmentCardProps> = ({
           </h2>
         </div>
         <button 
-          className="absolute top-[8px] right-[11px] bg-white flex items-center gap-2.5 overflow-hidden w-8 h-8 p-2 rounded-[100px] hover:bg-gray-100 transition-colors z-10"
+          className="absolute bottom-[5px] right-[11px] bg-white flex items-center gap-2.5 overflow-hidden w-8 h-8 p-2 rounded-[100px] hover:bg-gray-100 transition-colors z-10"
           aria-label="Apartment options"
         >
           <img
