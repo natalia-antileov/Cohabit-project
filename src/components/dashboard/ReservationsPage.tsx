@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar as CalendarIcon, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Calendar, CheckCircle, AlertTriangle } from 'lucide-react';
 
 export const ReservationsPage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -74,8 +74,8 @@ export const ReservationsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 pb-24">
-      <div className="max-w-2xl mx-auto space-y-6">
+    <div className="min-h-screen bg-gray-50 pb-24">
+      <div className="max-w-2xl mx-auto p-4 space-y-6">
         {/* Date Selection */}
         <div className="bg-white rounded-xl shadow-md p-6">
           <h3 className="text-lg font-bold mb-4">Seleccionar Fecha de Reserva</h3>
@@ -183,7 +183,7 @@ export const ReservationsPage: React.FC = () => {
               <div key={reservation.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <div className="bg-teal-100 p-2 rounded-full">
-                    <CalendarIcon className="h-5 w-5 text-teal-600" />
+                    <Calendar className="h-5 w-5 text-teal-600" />
                   </div>
                   <div>
                     <p className="font-medium">{reservation.space}</p>
