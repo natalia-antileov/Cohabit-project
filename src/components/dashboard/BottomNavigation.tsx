@@ -134,3 +134,4 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate, 
       </div>
     </nav>
   );
+};
