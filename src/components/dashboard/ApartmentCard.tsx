@@ -17,21 +17,21 @@ export const ApartmentCard: React.FC<ApartmentCardProps> = ({
           alt="Apartment view"
           className="absolute h-full w-[130%] object-cover inset-0 -left-[15%] opacity-60"
         />
-        <div className="flex relative w-full h-full justify-between items-end pb-[5px] px-[11px]">
+        <div className="flex relative w-full h-full justify-start items-end pb-[5px] px-[11px]">
           <h2 className="relative text-white text-base font-medium leading-none z-10">
             {apartmentName}
           </h2>
-          <button 
-            className="relative bg-white flex items-center gap-2.5 overflow-hidden w-8 h-8 p-2 rounded-[100px] hover:bg-gray-100 transition-colors z-10"
-            aria-label="Apartment options"
-          >
-            <img
-              src="https://api.builder.io/api/v1/image/assets/TEMP/98238f5ab7f24cedac9541e87dab77e0b130f967?placeholderIfAbsent=true"
-              alt=""
-              className="aspect-[1] object-contain w-4 self-stretch my-auto"
-            />
-          </button>
         </div>
+        <button 
+          className="absolute top-[8px] right-[11px] bg-white flex items-center gap-2.5 overflow-hidden w-8 h-8 p-2 rounded-[100px] hover:bg-gray-100 transition-colors z-10"
+          aria-label="Apartment options"
+        >
+          <img
+            src="https://api.builder.io/api/v1/image/assets/TEMP/98238f5ab7f24cedac9541e87dab77e0b130f967?placeholderIfAbsent=true"
+            alt=""
+            className="aspect-[1] object-contain w-4 self-stretch my-auto"
+          />
+        </button>
       </div>
     </div>
   );
