@@ -4,9 +4,15 @@ import { ApartmentCard } from './ApartmentCard';
 import { PaymentSection } from './PaymentSection';
 import { CommunicationSection } from './CommunicationSection';
 import { BottomNavigation } from './BottomNavigation';
+import { PaymentsPage } from './PaymentsPage';
+import { ReservationsPage } from './ReservationsPage';
+import { VisitorsPage } from './VisitorsPage';
+import { CommunicationsPage } from './CommunicationsPage';
+
+type PageType = 'inicio' | 'pagos' | 'reservas' | 'visitas' | 'comunicados';
 
 export const Dashboard: React.FC = () => {
-  const [currentSection, setCurrentSection] = useState('inicio');
+  const [currentSection, setCurrentSection] = useState<PageType>('inicio');
 
   // Mock data - in a real app, this would come from API calls
   const userData = {
@@ -31,8 +37,8 @@ export const Dashboard: React.FC = () => {
   };
 
   const handleNavigation = (itemId: string) => {
-    setCurrentSection(itemId);
-    console.log(`Navigating to: ${itemId}`);
+    setCurrentSection(itemId as PageType);
+    console.log('Navigating to:', itemId);
   };
 
   const handleViewAllCommunications = () => {
@@ -40,27 +46,52 @@ export const Dashboard: React.FC = () => {
     setCurrentSection('comunicados');
   };
 
+  const renderHomePage = () => (
+    <>
+      <DashboardHeader userName={userData.name} />
+      
+      <ApartmentCard 
+        apartmentName={userData.apartment}
+        backgroundImage={userData.apartmentImage}
+      />
+      
+      <div className="z-0 w-full px-[19px] pt-[60px] flex-1 flex flex-col justify-between">
+        <div className="space-y-[15px]">
+          <PaymentSection payment={paymentData} />
+          <CommunicationSection 
+            communication={communicationData}
+            onViewAll={handleViewAllCommunications}
+          />
+        </div>
+      </div>
+    </>
+  );
+
+  const renderCurrentPage = () => {
+    switch (currentSection) {
+      case 'inicio':
+        return renderHomePage();
+      case 'pagos':
+        return <PaymentsPage />;
+      case 'reservas':
+        return <ReservationsPage />;
+      case 'visitas':
+        return <VisitorsPage />;
+      case 'comunicados':
+        return <CommunicationsPage />;
+      default:
+        return renderHomePage();
+    }
+  };
+
   return (
     <div className="max-w-[480px] w-full mx-auto min-h-screen">
-      <main className="bg-white relative flex h-screen w-full flex-col items-center justify-between pb-5 overflow-hidden">
-        <DashboardHeader userName={userData.name} />
+      <main className="bg-white relative flex min-h-screen w-full flex-col items-center pb-5 overflow-y-auto">
+        {renderCurrentPage()}
         
-        <ApartmentCard 
-          apartmentName={userData.apartment}
-          backgroundImage={userData.apartmentImage}
-        />
-        
-        <div className="z-0 w-full px-[19px] pt-[60px] flex-1 flex flex-col justify-between">
-          <div className="space-y-[15px]">
-            <PaymentSection payment={paymentData} />
-            <CommunicationSection 
-              communication={communicationData}
-              onViewAll={handleViewAllCommunications}
-            />
-          </div>
+        <div className="fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto">
+          <BottomNavigation onNavigate={handleNavigation} />
         </div>
-        
-        <BottomNavigation onNavigate={handleNavigation} />
       </main>
     </div>
   );
