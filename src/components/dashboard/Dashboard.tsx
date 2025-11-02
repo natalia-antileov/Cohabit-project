@@ -90,7 +90,7 @@ export const Dashboard: React.FC = () => {
         {renderCurrentPage()}
         
         <div className="fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto">
-          <BottomNavigation onNavigate={handleNavigation} />
+          <BottomNavigation onNavigate={handleNavigation} activeTab={currentSection} />
         </div>
       </main>
     </div>
