@@ -74,7 +74,7 @@ export const ReservationsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
+    <div className="min-h-screen bg-gray-50 p-4 pb-24">
       <div className="max-w-2xl mx-auto space-y-6">
         {/* Date Selection */}
         <div className="bg-white rounded-xl shadow-md p-6">
