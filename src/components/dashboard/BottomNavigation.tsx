@@ -112,10 +112,12 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate, 
           <img
             src={item.icon}
             alt=""
-            className={`aspect-[1] object-contain w-8 ${
-              isActive ? 'opacity-100' : 'opacity-60'
-            }`}
-            style={isActive ? { filter: 'brightness(0) saturate(100%) invert(29%) sepia(64%) saturate(1426%) hue-rotate(155deg) brightness(94%) contrast(101%)' } : {}}
+            className="aspect-[1] object-contain w-8"
+            style={
+              isActive 
+                ? { filter: 'brightness(0) saturate(100%) invert(29%) sepia(64%) saturate(1426%) hue-rotate(155deg) brightness(94%) contrast(101%)' }
+                : { filter: 'brightness(0) saturate(100%) invert(47%) sepia(0%) saturate(0%) hue-rotate(195deg) brightness(95%) contrast(88%)' }
+            }
           />
         </button>
         <span className="mt-1">{item.label}</span>
