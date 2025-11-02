@@ -41,8 +41,8 @@ export const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="max-w-[480px] w-full mx-auto px-4">
-      <main className="bg-white relative flex min-h-[905px] w-full flex-col items-center justify-between pb-5 rounded-3xl">
+    <div className="max-w-[480px] w-full mx-auto min-h-screen">
+      <main className="bg-white relative flex h-screen w-full flex-col items-center justify-between pb-5 overflow-hidden">
         <DashboardHeader userName={userData.name} />
         
         <ApartmentCard 
@@ -50,12 +50,14 @@ export const Dashboard: React.FC = () => {
           backgroundImage={userData.apartmentImage}
         />
         
-        <div className="z-0 h-[470px] w-[370px] max-w-full pt-[60px]">
-          <PaymentSection payment={paymentData} />
-          <CommunicationSection 
-            communication={communicationData}
-            onViewAll={handleViewAllCommunications}
-          />
+        <div className="z-0 w-full px-[19px] pt-[60px] flex-1 flex flex-col justify-between">
+          <div className="space-y-[30px]">
+            <PaymentSection payment={paymentData} />
+            <CommunicationSection 
+              communication={communicationData}
+              onViewAll={handleViewAllCommunications}
+            />
+          </div>
         </div>
         
         <BottomNavigation onNavigate={handleNavigation} />

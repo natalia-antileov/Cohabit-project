@@ -10,19 +10,19 @@ export const ApartmentCard: React.FC<ApartmentCardProps> = ({
   backgroundImage 
 }) => {
   return (
-    <div className="absolute z-0 flex w-[371px] max-w-full flex-col h-[213px] rounded-[10px] right-[19px] top-[109px]">
+    <div className="absolute z-0 flex w-full max-w-full flex-col h-[213px] rounded-[10px] left-0 right-0 top-[109px] px-[19px]">
       <div className="bg-[rgba(49,40,40,1)] flex w-full flex-col overflow-hidden items-stretch justify-center py-px rounded-[10px]">
-        <div className="flex flex-col relative aspect-[1.75] w-full gap-5 justify-between pt-[175px] pb-[5px] px-[11px] rounded-[10px]">
+        <div className="flex relative aspect-[1.75] w-full justify-between items-end pb-[5px] px-[11px] rounded-[10px]">
           <img
             src={backgroundImage}
             alt="Apartment view"
-            className="absolute h-full w-full object-cover inset-0"
+            className="absolute h-[85%] w-[85%] object-cover inset-0 m-auto opacity-25"
           />
-          <h2 className="relative text-white text-base font-medium leading-none mt-[11px]">
+          <h2 className="relative text-white text-base font-medium leading-none z-10">
             {apartmentName}
           </h2>
           <button 
-            className="relative bg-white flex items-center gap-2.5 overflow-hidden w-8 h-8 p-2 rounded-[100px] hover:bg-gray-100 transition-colors"
+            className="relative bg-white flex items-center gap-2.5 overflow-hidden w-8 h-8 p-2 rounded-[100px] hover:bg-gray-100 transition-colors z-10"
             aria-label="Apartment options"
           >
             <img

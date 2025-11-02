@@ -37,15 +37,15 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment }) => {
       <h2 className="text-[rgba(11,9,43,1)] text-base font-medium">
         Pagos pendientes o próximos
       </h2>
-      <div className="border min-h-[169px] w-full overflow-hidden mt-4 rounded-[10px] border-[rgba(237,237,237,1)] border-solid">
-        <div className="flex w-full items-center gap-[40px_83px] whitespace-nowrap justify-between flex-1 h-full px-3">
-          <div className="text-black text-[32px] font-black self-stretch my-auto">
+      <div className="border w-full overflow-hidden mt-4 rounded-[10px] border-[rgba(237,237,237,1)] border-solid">
+        <div className="flex w-full items-center justify-between px-3 py-4">
+          <div className="text-black text-[32px] font-black">
             {payment.amount}
           </div>
           {getStatusBadge()}
         </div>
-        <div className="bg-[rgba(237,237,237,1)] w-full overflow-hidden font-medium px-3 py-4 rounded-[10px]">
-          <div className="flex w-full gap-[40px_100px] justify-between">
+        <div className="bg-[rgba(237,237,237,1)] w-full overflow-hidden font-medium px-3 py-4 rounded-b-[10px]">
+          <div className="flex w-full justify-between">
             <div className="flex gap-2">
               <img
                 src="https://api.builder.io/api/v1/image/assets/TEMP/2f79892bb0e8262740a5880d686ae5e0c6a66b18?placeholderIfAbsent=true"
@@ -67,18 +67,18 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment }) => {
               {payment.dueDate}
             </div>
           </div>
-          <div className="flex w-full items-center gap-[40px_100px] text-sm text-black justify-between mt-4">
-            <div className="self-stretch flex items-center gap-2 my-auto">
+          <div className="flex w-full items-center justify-between mt-4">
+            <div className="flex items-center gap-2">
               <img
                 src="https://api.builder.io/api/v1/image/assets/TEMP/b3136d46d88cec3f553f17c36015c7e46b0af094?placeholderIfAbsent=true"
                 alt=""
-                className="aspect-[1] object-contain w-4 self-stretch shrink-0 my-auto"
+                className="aspect-[1] object-contain w-4 shrink-0"
               />
-              <span className="self-stretch my-auto">
+              <span className="text-black text-sm">
                 Periodo de pago
               </span>
             </div>
-            <div className="self-stretch my-auto">
+            <div className="text-black text-sm">
               {payment.period}
             </div>
           </div>
