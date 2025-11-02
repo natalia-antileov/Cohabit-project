@@ -52,7 +52,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate, 
   };
 
   const renderNavigationItem = (item: NavigationItem) => {
-    const isActive = activeTab === item.id;
+    const isActive = currentTab === item.id;
     const baseClasses = "flex flex-col items-center text-xs font-medium whitespace-nowrap leading-none";
     const activeClasses = isActive ? "text-[rgba(0,110,111,1)]" : "text-[rgba(117,117,117,1)]";
     
@@ -61,7 +61,11 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate, 
         <div key={item.id} className="flex flex-col items-stretch w-[60px]">
           <button
             onClick={() => handleNavigate(item.id)}
-            className="bg-[rgba(0,110,111,1)] self-center flex min-h-[60px] w-[60px] items-center gap-2.5 overflow-hidden justify-center h-[60px] px-[9px] rounded-[100px] hover:bg-[rgba(0,90,91,1)] transition-colors"
+            className={`self-center flex min-h-[60px] w-[60px] items-center gap-2.5 overflow-hidden justify-center h-[60px] px-[9px] rounded-[100px] transition-colors ${
+              isActive 
+                ? 'bg-[rgba(0,110,111,1)] hover:bg-[rgba(0,90,91,1)]' 
+                : 'bg-[rgba(117,117,117,1)] hover:bg-[rgba(97,97,97,1)]'
+            }`}
             aria-label={item.label}
           >
             <img
@@ -70,7 +74,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate, 
               className="aspect-[1] object-contain w-8 self-stretch my-auto"
             />
           </button>
-          <span className="text-[rgba(0,110,111,1)] text-xs font-medium leading-none text-center mt-1">
+          <span className={`${activeClasses} text-xs font-medium leading-none text-center mt-1`}>
             {item.label}
           </span>
         </div>
@@ -130,4 +134,3 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate, 
       </div>
     </nav>
   );
-};
