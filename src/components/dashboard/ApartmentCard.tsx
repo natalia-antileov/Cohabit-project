@@ -10,7 +10,7 @@ export const ApartmentCard: React.FC<ApartmentCardProps> = ({
   backgroundImage 
 }) => {
   return (
-    <div className="absolute z-0 flex w-full max-w-full flex-col h-[213px] left-0 right-0 top-[60px] px-[19px]">
+    <div className="absolute z-0 flex w-full max-w-full flex-col h-[213px] left-0 right-0 top-[60px]">
       <div className="bg-[rgba(49,40,40,1)] flex w-full h-full flex-col overflow-hidden items-stretch justify-center rounded-[10px]">
         <div className="flex relative aspect-[1.75] w-full justify-between items-end pb-[5px] px-[11px]">
           <img
