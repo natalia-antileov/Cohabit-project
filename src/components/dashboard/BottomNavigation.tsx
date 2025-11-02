@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 interface NavigationItem {
   id: string;
   label: string;
   icon: string;
-  isActive?: boolean;
   isSpecial?: boolean;
 }
 
@@ -13,6 +12,8 @@ interface BottomNavigationProps {
 }
 
 export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate }) => {
+  const [activeTab, setActiveTab] = useState('inicio');
+
   const navigationItems: NavigationItem[] = [
     {
       id: 'reservas',
@@ -28,7 +29,6 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate }
       id: 'inicio',
       label: 'Inicio',
       icon: 'https://api.builder.io/api/v1/image/assets/TEMP/70fb8f7595518332ce4626a113736881b5625bd0?placeholderIfAbsent=true',
-      isActive: true,
       isSpecial: true
     },
     {
@@ -43,15 +43,21 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate }
     }
   ];
 
+  const handleNavigate = (itemId: string) => {
+    setActiveTab(itemId);
+    onNavigate(itemId);
+  };
+
   const renderNavigationItem = (item: NavigationItem) => {
+    const isActive = activeTab === item.id;
     const baseClasses = "flex flex-col items-center text-xs font-medium whitespace-nowrap leading-none";
-    const activeClasses = item.isActive ? "text-[rgba(0,110,111,1)]" : "text-[rgba(117,117,117,1)]";
+    const activeClasses = isActive ? "text-[rgba(0,110,111,1)]" : "text-[rgba(117,117,117,1)]";
     
     if (item.isSpecial) {
       return (
         <div key={item.id} className="flex flex-col items-stretch w-[60px]">
           <button
-            onClick={() => onNavigate(item.id)}
+            onClick={() => handleNavigate(item.id)}
             className="bg-[rgba(0,110,111,1)] self-center flex min-h-[60px] w-[60px] items-center gap-2.5 overflow-hidden justify-center h-[60px] px-[9px] rounded-[100px] hover:bg-[rgba(0,90,91,1)] transition-colors"
             aria-label={item.label}
           >
@@ -72,8 +78,12 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate }
       return (
         <div key={item.id} className="flex flex-col items-center whitespace-nowrap leading-none w-[75px]">
           <button
-            onClick={() => onNavigate(item.id)}
-            className="bg-[rgba(117,117,117,1)] flex min-h-8 w-8 flex-col items-center text-[23px] text-white font-black justify-center h-8 px-[9px] rounded-[114px] hover:bg-[rgba(97,97,97,1)] transition-colors"
+            onClick={() => handleNavigate(item.id)}
+            className={`flex min-h-8 w-8 flex-col items-center text-[23px] font-black justify-center h-8 px-[9px] rounded-[114px] transition-colors ${
+              isActive 
+                ? 'bg-[rgba(0,110,111,1)] text-white hover:bg-[rgba(0,90,91,1)]' 
+                : 'bg-[rgba(117,117,117,1)] text-white hover:bg-[rgba(97,97,97,1)]'
+            }`}
             aria-label={item.label}
           >
             <span>$</span>
@@ -88,14 +98,17 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate }
     return (
       <div key={item.id} className={`${baseClasses} ${activeClasses} w-[75px]`}>
         <button
-          onClick={() => onNavigate(item.id)}
+          onClick={() => handleNavigate(item.id)}
           className="hover:opacity-70 transition-opacity"
           aria-label={item.label}
         >
           <img
             src={item.icon}
             alt=""
-            className="aspect-[1] object-contain w-8"
+            className={`aspect-[1] object-contain w-8 ${
+              isActive ? 'opacity-100' : 'opacity-60'
+            }`}
+            style={isActive ? { filter: 'brightness(0) saturate(100%) invert(29%) sepia(64%) saturate(1426%) hue-rotate(155deg) brightness(94%) contrast(101%)' } : {}}
           />
         </button>
         <span className="mt-1">{item.label}</span>
