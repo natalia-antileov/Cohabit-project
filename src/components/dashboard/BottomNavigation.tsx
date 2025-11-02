@@ -9,10 +9,13 @@ interface NavigationItem {
 
 interface BottomNavigationProps {
   onNavigate: (itemId: string) => void;
+  activeTab?: string;
 }
 
-export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate }) => {
+export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate, activeTab: externalActiveTab }) => {
   const [activeTab, setActiveTab] = useState('inicio');
+  
+  const currentTab = externalActiveTab || activeTab;
 
   const navigationItems: NavigationItem[] = [
     {
@@ -117,8 +120,14 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate }
   };
 
   return (
-    <nav className="z-0 flex gap-1" role="navigation" aria-label="Main navigation">
-      {navigationItems.map(renderNavigationItem)}
+    <nav 
+      className="bg-white border-t border-gray-200 shadow-lg py-3 px-2" 
+      role="navigation" 
+      aria-label="Main navigation"
+    >
+      <div className="flex gap-1 justify-center items-center">
+        {navigationItems.map(renderNavigationItem)}
+      </div>
     </nav>
   );
 };
