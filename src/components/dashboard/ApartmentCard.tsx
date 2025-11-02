@@ -11,7 +11,7 @@ export const ApartmentCard: React.FC<ApartmentCardProps> = ({
 }) => {
   return (
     <div className="absolute z-0 flex w-full max-w-full flex-col h-[110px] left-0 right-0 top-[60px] px-[19px]">
-      <div className="bg-[rgba(49,40,40,1)] flex w-full h-full flex-col overflow-hidden items-stretch rounded-[10px] relative">
+      <div className="bg-[rgba(49,40,40,1)] flex w-full h-[110px] flex-col overflow-hidden items-stretch rounded-[10px] relative">
         <img
           src={backgroundImage}
           alt="Apartment view"
