@@ -10,13 +10,13 @@ export const ApartmentCard: React.FC<ApartmentCardProps> = ({
   backgroundImage 
 }) => {
   return (
-    <div className="absolute z-0 flex w-full max-w-full flex-col h-[213px] rounded-[10px] left-0 right-0 top-[109px] px-[19px]">
+    <div className="absolute z-0 flex w-full max-w-full flex-col h-[213px] rounded-[10px] left-0 right-0 top-[60px] px-[19px]">
       <div className="bg-[rgba(49,40,40,1)] flex w-full flex-col overflow-hidden items-stretch justify-center py-px rounded-[10px]">
         <div className="flex relative aspect-[1.75] w-full justify-between items-end pb-[5px] px-[11px] rounded-[10px]">
           <img
             src={backgroundImage}
             alt="Apartment view"
-            className="absolute h-[85%] w-[85%] object-cover inset-0 m-auto opacity-[0.15]"
+            className="absolute h-[85%] w-[85%] object-cover inset-0 m-auto opacity-[0.08]"
           />
           <h2 className="relative text-white text-base font-medium leading-none z-10">
             {apartmentName}
