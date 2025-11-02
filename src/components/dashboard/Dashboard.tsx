@@ -50,8 +50,8 @@ export const Dashboard: React.FC = () => {
           backgroundImage={userData.apartmentImage}
         />
         
-        <div className="z-0 w-full px-[19px] pt-[60px] flex-1 flex flex-col">
-          <div className="space-y-[15px] mb-[45px]">
+        <div className="z-0 w-full px-[19px] pt-[60px] flex-1 flex flex-col justify-between">
+          <div className="space-y-[30px]">
             <PaymentSection payment={paymentData} />
             <CommunicationSection 
               communication={communicationData}
