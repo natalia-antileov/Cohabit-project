@@ -1,0 +1,50 @@
+.home-page {
+  padding: 20px 16px;
+}
+
+.home-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.home-card {
+  aspect-ratio: 1;
+  background: #f9f9f9;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #f0f0f0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.home-card:active {
+  transform: scale(0.95);
+}
+
+.home-card.active {
+  background: #20897f;
+  border-color: #20897f;
+}
+
+.home-card.active .card-label {
+  color: white;
+}
+
+.card-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.card-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+}

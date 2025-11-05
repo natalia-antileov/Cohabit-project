@@ -1,0 +1,225 @@
+.payment-method-page {
+  background: white;
+  min-height: 100vh;
+}
+
+.payment-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid #e0e0e0;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: white;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: #20897f;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 12px;
+  transition: all 0.3s ease;
+}
+
+.back-btn:active {
+  opacity: 0.7;
+}
+
+.payment-header h1 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+.payment-content {
+  padding: 16px;
+}
+
+.payment-info {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.payment-info h2 {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.amount-display {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.amount {
+  font-size: 24px;
+  font-weight: bold;
+  color: #20897f;
+}
+
+.month-display {
+  font-size: 13px;
+  color: #666;
+  margin-top: 4px;
+}
+
+.methods-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.method-card {
+  background: #f9f9f9;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.method-card:active {
+  transform: scale(0.98);
+}
+
+.method-card.selected {
+  background: #f0f9f8;
+  border-color: #20897f;
+  box-shadow: 0 0 0 3px rgba(32, 137, 127, 0.1);
+}
+
+.method-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.method-card h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.method-card p {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.method-radio {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.method-radio input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #20897f;
+}
+
+.payment-details {
+  background: #f9f9f9;
+  border-left: 4px solid #20897f;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.payment-details h3 {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 13px;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  color: #666;
+  font-weight: 500;
+}
+
+.detail-value {
+  color: #333;
+  font-weight: 600;
+}
+
+.payment-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.btn-cancel,
+.btn-confirm {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-cancel {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.btn-cancel:active:not(:disabled) {
+  opacity: 0.8;
+  transform: scale(0.98);
+}
+
+.btn-confirm {
+  background: #20897f;
+  color: white;
+}
+
+.btn-confirm:active:not(:disabled) {
+  opacity: 0.8;
+  transform: scale(0.98);
+}
+
+.btn-cancel:disabled,
+.btn-confirm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.security-info {
+  text-align: center;
+  padding: 12px;
+  background: #f0f9f8;
+  border-radius: 8px;
+  border: 1px solid #d0ebe5;
+}
+
+.security-info p {
+  font-size: 12px;
+  color: #20897f;
+  margin: 0;
+}

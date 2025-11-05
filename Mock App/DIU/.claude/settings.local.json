@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm cache clean:*)",
+      "Bash(npm ci:*)",
+      "Bash(xargs cat:*)",
+      "Bash(dir:*)",
+      "Bash(tree:*)",
+      "Bash(nul)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
