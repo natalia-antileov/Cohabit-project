@@ -22,7 +22,7 @@ Aplicación React funcional para gestionar visitas, comunicados y pagos en condo
 ## 🚀 Quick Start
 
 ```bash
-cd "C:\Users\matia\OneDrive\Escritorio\DIU"
+cd "...\Mock App\DIU"
 npm install
 npm start
 ```
