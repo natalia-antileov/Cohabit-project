@@ -1,7 +1,17 @@
 import React, { useState } from "react";
-import { Calendar, MapPin, Users, Clock } from "lucide-react";
+import { Calendar, MapPin, Users, Clock, Edit2, Trash2 } from "lucide-react";
 import { BottomDrawer } from "../ui/BottomDrawer";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../ui/alert-dialog";
 
 interface Reservation {
   id: string;
@@ -17,9 +27,12 @@ export const ReservationsPage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedTime, setSelectedTime] = useState<string>("");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingReservationId, setEditingReservationId] = useState<string | null>(null);
+  const [reservationToDelete, setReservationToDelete] = useState<string | null>(null);
 
   // Simulación de reservas existentes
-  const [myReservations] = useState<Reservation[]>([
+  const [myReservations, setMyReservations] = useState<Reservation[]>([
     {
       id: "1",
       spaceName: "Piscina",
@@ -154,14 +167,55 @@ export const ReservationsPage: React.FC = () => {
       setSelectedSpace(null);
       setSelectedDate("");
       setSelectedTime("");
+      setIsEditing(false);
+      setEditingReservationId(null);
     }, 300);
   };
 
   const handleReserve = () => {
-    alert(
-      `¡Reserva confirmada!\n${selected?.name} - ${selectedDate}\nHorario: ${selectedTime}`
-    );
+    if (isEditing && editingReservationId) {
+      // Actualizar reserva existente
+      setMyReservations(prev => 
+        prev.map(res => 
+          res.id === editingReservationId
+            ? { ...res, date: selectedDate, time: selectedTime }
+            : res
+        )
+      );
+      alert(`¡Reserva actualizada!\n${selected?.name} - ${selectedDate}\nHorario: ${selectedTime}`);
+    } else {
+      // Nueva reserva
+      const newReservation: Reservation = {
+        id: Date.now().toString(),
+        spaceName: selected?.name || "",
+        spaceIcon: selected?.icon || "",
+        date: selectedDate,
+        time: selectedTime,
+        status: "upcoming",
+      };
+      setMyReservations(prev => [...prev, newReservation]);
+      alert(`¡Reserva confirmada!\n${selected?.name} - ${selectedDate}\nHorario: ${selectedTime}`);
+    }
     handleCloseDrawer();
+  };
+
+  const handleEdit = (reservation: Reservation) => {
+    const space = spaces.find(s => s.name === reservation.spaceName);
+    if (space) {
+      setSelectedSpace(space.id);
+      setSelectedDate(reservation.date);
+      setSelectedTime(reservation.time);
+      setIsEditing(true);
+      setEditingReservationId(reservation.id);
+      setIsDrawerOpen(true);
+    }
+  };
+
+  const handleDeleteConfirm = () => {
+    if (reservationToDelete) {
+      setMyReservations(prev => prev.filter(res => res.id !== reservationToDelete));
+      setReservationToDelete(null);
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -266,6 +320,25 @@ export const ReservationsPage: React.FC = () => {
                           {getStatusBadge(reservation.status)}
                         </div>
                       </div>
+                      
+                      {reservation.status === "upcoming" && (
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleEdit(reservation)}
+                            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                            title="Editar"
+                          >
+                            <Edit2 className="w-4 h-4 text-gray-600" />
+                          </button>
+                          <button
+                            onClick={() => setReservationToDelete(reservation.id)}
+                            className="p-2 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Eliminar"
+                          >
+                            <Trash2 className="w-4 h-4 text-red-600" />
+                          </button>
+                        </div>
+                      )}
                     </div>
 
                     <div className="space-y-2 text-sm text-gray-600">
@@ -278,17 +351,6 @@ export const ReservationsPage: React.FC = () => {
                         <span>{reservation.time}</span>
                       </div>
                     </div>
-
-                    {reservation.status === "upcoming" && (
-                      <div className="flex gap-2 mt-4">
-                        <button className="flex-1 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
-                          Modificar
-                        </button>
-                        <button className="flex-1 py-2 border border-red-300 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors">
-                          Cancelar
-                        </button>
-                      </div>
-                    )}
                   </div>
                 ))
               )}
@@ -345,16 +407,12 @@ export const ReservationsPage: React.FC = () => {
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                 Fecha*
               </label>
-              <div className="relative">
-                <input
-                  type="date"
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                  placeholder="DD/MM/AAAA"
-                />
-                <Calendar className="absolute right-3 top-3 w-4 h-4 text-gray-400 pointer-events-none" />
-              </div>
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              />
             </div>
 
             <div className="mb-4">
@@ -390,11 +448,32 @@ export const ReservationsPage: React.FC = () => {
                   : "bg-gray-300 cursor-not-allowed"
               }`}
             >
-              Reservar
+              {isEditing ? "Actualizar reserva" : "Reservar"}
             </button>
           </div>
         )}
       </BottomDrawer>
+
+      {/* Alert Dialog para confirmación de eliminación */}
+      <AlertDialog open={!!reservationToDelete} onOpenChange={(open) => !open && setReservationToDelete(null)}>
+        <AlertDialogContent className="max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle>¿Eliminar reserva?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta acción no se puede deshacer. La reserva será eliminada permanentemente.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Eliminar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
