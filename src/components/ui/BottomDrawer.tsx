@@ -92,7 +92,7 @@ export const BottomDrawer: React.FC<BottomDrawerProps> = ({
       <div className="fixed inset-x-0 bottom-0 z-50 flex justify-center pointer-events-none">
         <div
           ref={drawerRef}
-          className={`w-full max-w-md bg-white rounded-t-3xl shadow-2xl transform transition-transform duration-300 ease-out max-h-[85vh] overflow-y-auto pointer-events-auto ${
+          className={`w-full max-w-md bg-white rounded-t-3xl shadow-2xl transform transition-transform duration-300 ease-out max-h-[90vh] flex flex-col pointer-events-auto ${
             isOpen && !isDragging ? "translate-y-0" : ""
           }`}
           style={{
