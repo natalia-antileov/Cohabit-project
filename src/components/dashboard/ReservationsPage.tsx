@@ -403,7 +403,7 @@ export const ReservationsPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="mb-3">
+          <div className="mb-3">
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                 Fecha*
               </label>
@@ -412,10 +412,9 @@ export const ReservationsPage: React.FC = () => {
                   type="date"
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                  placeholder="DD/MM/AAAA"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent min-h-[44px]"
                 />
-                <Calendar className="absolute right-3 top-3 w-4 h-4 text-gray-400 pointer-events-none" />
+                <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
               </div>
             </div>
 
@@ -433,8 +432,8 @@ export const ReservationsPage: React.FC = () => {
                       !slot.available
                         ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200"
                         : selectedTime === slot.time
-                        ? "bg-emerald-600 text-white border-emerald-600"
-                        : "bg-white border-gray-300 hover:border-emerald-500"
+                        ? "bg-[#006E6F] text-white border-[#006E6F]"
+                        : "bg-white border-gray-300 hover:border-[#006E6F]"
                     }`}
                   >
                     {slot.time}
@@ -448,7 +447,7 @@ export const ReservationsPage: React.FC = () => {
               disabled={!selectedDate || !selectedTime}
               className={`w-full py-3 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base text-white transition-all ${
                 selectedDate && selectedTime
-                  ? "bg-emerald-600 hover:bg-emerald-700"
+                  ? "bg-[#006E6F] hover:bg-[#005a5b]"
                   : "bg-gray-300 cursor-not-allowed"
               }`}
             >
