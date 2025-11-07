@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Calendar, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Calendar } from "lucide-react";
 
 export const ReservationsPage: React.FC = () => {
   const [selectedSpace, setSelectedSpace] = useState<string | null>(null);
@@ -41,6 +40,21 @@ export const ReservationsPage: React.FC = () => {
       ],
     },
     {
+      id: "reuniones",
+      name: "Salón de reuniones",
+      icon: "/reuniones-icon.png",
+      image: "/reuniones.png",
+      includes: "Proyector, pizarra, mesas",
+      capacity: "10 personas",
+      location: "Torre A - Piso 1",
+      timeSlots: [
+        { time: "9:00 - 11:00", available: true },
+        { time: "11:00 - 13:00", available: true },
+        { time: "13:00 - 15:00", available: false },
+        { time: "15:00 - 17:00", available: true },
+      ],
+    },
+    {
       id: "eventos",
       name: "Salón de eventos",
       icon: "/eventos-icon.png",
@@ -71,21 +85,6 @@ export const ReservationsPage: React.FC = () => {
       ],
     },
     {
-      id: "reuniones",
-      name: "Salón de reuniones",
-      icon: "/reuniones-icon.png",
-      image: "/reuniones.png",
-      includes: "Proyector, pizarra, mesas",
-      capacity: "10 personas",
-      location: "Torre A - Piso 1",
-      timeSlots: [
-        { time: "9:00 - 11:00", available: true },
-        { time: "11:00 - 13:00", available: true },
-        { time: "13:00 - 15:00", available: false },
-        { time: "15:00 - 17:00", available: true },
-      ],
-    },
-    {
       id: "juegos",
       name: "Salón de juegos",
       icon: "/juegos-icon.png",
@@ -113,6 +112,91 @@ export const ReservationsPage: React.FC = () => {
     setSelectedTime("");
   };
 
+  // --- Pantalla de detalle ---
+  if (selected) {
+    return (
+      <div className="w-full min-h-screen bg-gray-50 flex flex-col items-center p-4">
+        <div className="w-full max-w-md bg-white rounded-2xl shadow-md overflow-hidden">
+          <div className="relative">
+            <img
+              src={selected.image}
+              alt={selected.name}
+              className="w-full h-48 object-cover"
+            />
+            <button
+              className="absolute top-2 right-2 bg-white rounded-full p-1 shadow"
+              onClick={() => setSelectedSpace(null)}
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="p-4">
+            <h2 className="text-lg font-bold text-gray-800">
+              {selected.name}
+            </h2>
+            <p className="text-sm text-gray-600 mt-1">
+              Incluye: <span className="font-medium">{selected.includes}</span>
+            </p>
+
+            <div className="flex items-center justify-between text-sm text-gray-600 mt-2">
+              <span>👥 {selected.capacity}</span>
+              <span>📍 {selected.location}</span>
+            </div>
+
+            <div className="mt-4">
+              <label className="block text-sm font-medium mb-1">Fecha*</label>
+              <div className="relative">
+                <input
+                  type="date"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500"
+                />
+                <Calendar className="absolute right-3 top-2.5 w-4 h-4 text-gray-400" />
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <label className="block text-sm font-medium mb-1">Horario*</label>
+              <div className="grid grid-cols-2 gap-2">
+                {selected.timeSlots.map((slot) => (
+                  <button
+                    key={slot.time}
+                    disabled={!slot.available}
+                    onClick={() => setSelectedTime(slot.time)}
+                    className={`py-2 rounded-lg border text-sm font-medium transition-all ${
+                      !slot.available
+                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                        : selectedTime === slot.time
+                        ? "bg-emerald-600 text-white"
+                        : "bg-white border-gray-300 hover:border-emerald-500"
+                    }`}
+                  >
+                    {slot.time}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <button
+              onClick={handleReserve}
+              disabled={!selectedDate || !selectedTime}
+              className={`w-full mt-6 py-2 rounded-lg font-bold text-white transition-all ${
+                selectedDate && selectedTime
+                  ? "bg-emerald-600 hover:bg-emerald-700"
+                  : "bg-gray-300 cursor-not-allowed"
+              }`}
+            >
+              Reservar
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // --- Pantalla de selección de espacio ---
   return (
     <div className="w-full min-h-screen bg-gray-50 flex flex-col items-center p-4">
       <div className="w-full max-w-md">
@@ -147,108 +231,6 @@ export const ReservationsPage: React.FC = () => {
           ))}
         </div>
       </div>
-
-      {/* Bottom Sheet */}
-      <AnimatePresence>
-        {selected && (
-          <motion.div
-            className="fixed inset-0 bg-black/30 flex items-end justify-center z-50"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedSpace(null)}
-          >
-            <motion.div
-              className="bg-white w-full max-w-md rounded-t-2xl shadow-lg p-4"
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="relative">
-                <img
-                  src={selected.image}
-                  alt={selected.name}
-                  className="w-full h-40 object-cover rounded-xl"
-                />
-                <button
-                  onClick={() => setSelectedSpace(null)}
-                  className="absolute top-2 right-2 bg-white p-1 rounded-full shadow"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              <div className="p-2">
-                <h2 className="text-lg font-bold text-gray-800">
-                  {selected.name}
-                </h2>
-                <p className="text-sm text-gray-600 mt-1">
-                  Incluye:{" "}
-                  <span className="font-medium">{selected.includes}</span>
-                </p>
-
-                <div className="flex items-center justify-between text-sm text-gray-600 mt-2">
-                  <span>👥 {selected.capacity}</span>
-                  <span>📍 {selected.location}</span>
-                </div>
-
-                <div className="mt-4">
-                  <label className="block text-sm font-medium mb-1">
-                    Fecha*
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="date"
-                      value={selectedDate}
-                      onChange={(e) => setSelectedDate(e.target.value)}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500"
-                    />
-                    <Calendar className="absolute right-3 top-2.5 w-4 h-4 text-gray-400" />
-                  </div>
-                </div>
-
-                <div className="mt-4">
-                  <label className="block text-sm font-medium mb-1">
-                    Horario*
-                  </label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {selected.timeSlots.map((slot) => (
-                      <button
-                        key={slot.time}
-                        disabled={!slot.available}
-                        onClick={() => setSelectedTime(slot.time)}
-                        className={`py-2 rounded-lg border text-sm font-medium transition-all ${
-                          !slot.available
-                            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                            : selectedTime === slot.time
-                            ? "bg-emerald-600 text-white"
-                            : "bg-white border-gray-300 hover:border-emerald-500"
-                        }`}
-                      >
-                        {slot.time}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <button
-                  onClick={handleReserve}
-                  disabled={!selectedDate || !selectedTime}
-                  className={`w-full mt-6 py-2 rounded-lg font-bold text-white transition-all ${
-                    selectedDate && selectedTime
-                      ? "bg-emerald-600 hover:bg-emerald-700"
-                      : "bg-gray-300 cursor-not-allowed"
-                  }`}
-                >
-                  Reservar
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 };
