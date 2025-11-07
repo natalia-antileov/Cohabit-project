@@ -1,12 +1,50 @@
 import React, { useState } from "react";
-import { Calendar } from "lucide-react";
-import { BottomDrawer } from "../ui/BottomDrawer"; // Ajusta la ruta según tu estructura
+import { Calendar, MapPin, Users, Clock } from "lucide-react";
+import { BottomDrawer } from "../ui/BottomDrawer";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
+
+interface Reservation {
+  id: string;
+  spaceName: string;
+  spaceIcon: string;
+  date: string;
+  time: string;
+  status: "upcoming" | "completed" | "cancelled";
+}
 
 export const ReservationsPage: React.FC = () => {
   const [selectedSpace, setSelectedSpace] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedTime, setSelectedTime] = useState<string>("");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  // Simulación de reservas existentes
+  const [myReservations] = useState<Reservation[]>([
+    {
+      id: "1",
+      spaceName: "Piscina",
+      spaceIcon: "/piscina-icon.png",
+      date: "2024-11-15",
+      time: "15:00 - 17:00",
+      status: "upcoming",
+    },
+    {
+      id: "2",
+      spaceName: "Quincho",
+      spaceIcon: "/quincho-icon.png",
+      date: "2024-11-20",
+      time: "11:00 - 13:00",
+      status: "upcoming",
+    },
+    {
+      id: "3",
+      spaceName: "Gimnasio",
+      spaceIcon: "/gym-icon.png",
+      date: "2024-11-01",
+      time: "7:00 - 9:00",
+      status: "completed",
+    },
+  ]);
 
   const spaces = [
     {
@@ -116,7 +154,7 @@ export const ReservationsPage: React.FC = () => {
       setSelectedSpace(null);
       setSelectedDate("");
       setSelectedTime("");
-    }, 300); // Esperar a que termine la animación
+    }, 300);
   };
 
   const handleReserve = () => {
@@ -126,39 +164,137 @@ export const ReservationsPage: React.FC = () => {
     handleCloseDrawer();
   };
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("es-CL", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  };
+
+  const getStatusBadge = (status: string) => {
+    const statusConfig = {
+      upcoming: { text: "Próxima", color: "bg-blue-100 text-blue-700" },
+      completed: { text: "Completada", color: "bg-gray-100 text-gray-600" },
+      cancelled: { text: "Cancelada", color: "bg-red-100 text-red-700" },
+    };
+    const config = statusConfig[status as keyof typeof statusConfig];
+    return (
+      <span
+        className={`px-2 py-1 rounded-full text-xs font-medium ${config.color}`}
+      >
+        {config.text}
+      </span>
+    );
+  };
+
   return (
     <div className="w-full min-h-screen bg-gray-50 flex flex-col items-center p-4">
       <div className="w-full max-w-md">
-        <h1 className="text-xl font-bold mb-1">Reservas</h1>
-        <div className="flex space-x-6 mb-4 border-b border-gray-200">
-          <button className="pb-2 border-b-2 border-lime-700 text-lime-700 font-medium">
-            Reservar
-          </button>
-          <button className="pb-2 text-gray-500">Mis reservas</button>
-        </div>
+        <h1 className="text-xl font-bold mb-4">Reservas</h1>
 
-        <p className="text-sm text-gray-600 mb-4">
-          Selecciona un espacio común:
-        </p>
-
-        <div className="grid grid-cols-2 gap-3">
-          {spaces.map((space) => (
-            <button
-              key={space.id}
-              onClick={() => handleSpaceClick(space.id)}
-              className="bg-white rounded-xl shadow-sm flex flex-col items-center justify-center py-6 hover:shadow-md transition-all"
+        <Tabs defaultValue="reservar" className="w-full">
+          <TabsList className="w-full grid grid-cols-2 mb-4 bg-transparent border-b border-gray-200 rounded-none h-auto p-0">
+            <TabsTrigger
+              value="reservar"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-lime-700 data-[state=active]:text-lime-700 data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-2"
             >
-              <img
-                src={space.icon}
-                alt={space.name}
-                className="w-12 h-12 mb-2"
-              />
-              <span className="text-sm font-medium text-lime-700">
-                {space.name}
-              </span>
-            </button>
-          ))}
-        </div>
+              Reservar
+            </TabsTrigger>
+            <TabsTrigger
+              value="mis-reservas"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-lime-700 data-[state=active]:text-lime-700 data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-2"
+            >
+              Mis reservas
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Tab: Reservar */}
+          <TabsContent value="reservar" className="mt-0">
+            <p className="text-sm text-gray-600 mb-4">
+              Selecciona un espacio común:
+            </p>
+
+            <div className="grid grid-cols-2 gap-3">
+              {spaces.map((space) => (
+                <button
+                  key={space.id}
+                  onClick={() => handleSpaceClick(space.id)}
+                  className="bg-white rounded-xl shadow-sm flex flex-col items-center justify-center py-6 hover:shadow-md transition-all"
+                >
+                  <img
+                    src={space.icon}
+                    alt={space.name}
+                    className="w-12 h-12 mb-2"
+                  />
+                  <span className="text-sm font-medium text-lime-700">
+                    {space.name}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </TabsContent>
+
+          {/* Tab: Mis Reservas */}
+          <TabsContent value="mis-reservas" className="mt-0">
+            <div className="space-y-3">
+              {myReservations.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="text-gray-400 mb-2">📅</div>
+                  <p className="text-gray-500 text-sm">
+                    No tienes reservas aún
+                  </p>
+                </div>
+              ) : (
+                myReservations.map((reservation) => (
+                  <div
+                    key={reservation.id}
+                    className="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all"
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={reservation.spaceIcon}
+                          alt={reservation.spaceName}
+                          className="w-10 h-10"
+                        />
+                        <div>
+                          <h3 className="font-semibold text-gray-800">
+                            {reservation.spaceName}
+                          </h3>
+                          {getStatusBadge(reservation.status)}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2 text-sm text-gray-600">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-gray-400" />
+                        <span>{formatDate(reservation.date)}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-gray-400" />
+                        <span>{reservation.time}</span>
+                      </div>
+                    </div>
+
+                    {reservation.status === "upcoming" && (
+                      <div className="flex gap-2 mt-4">
+                        <button className="flex-1 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                          Modificar
+                        </button>
+                        <button className="flex-1 py-2 border border-red-300 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors">
+                          Cancelar
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
 
       {/* Bottom Drawer */}
@@ -176,25 +312,30 @@ export const ReservationsPage: React.FC = () => {
             <h2 className="text-2xl font-bold text-gray-800 mb-2">
               {selected.name}
             </h2>
-            
+
             <div className="bg-gray-50 rounded-lg p-3 mb-4">
               <p className="text-sm text-gray-600">
-                <span className="font-semibold">Incluye:</span> {selected.includes}
+                <span className="font-semibold">Incluye:</span>{" "}
+                {selected.includes}
               </p>
             </div>
 
             <div className="flex items-center justify-between text-sm text-gray-700 mb-6 bg-gray-50 rounded-lg p-3">
               <div className="flex items-center gap-2">
-                <span className="text-lg">👥</span>
+                <Users className="w-4 h-4 text-gray-500" />
                 <div>
-                  <p className="text-xs text-gray-500 uppercase tracking-wide">Capacidad</p>
+                  <p className="text-xs text-gray-500 uppercase tracking-wide">
+                    Capacidad
+                  </p>
                   <p className="font-medium">{selected.capacity}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-lg">📍</span>
+                <MapPin className="w-4 h-4 text-gray-500" />
                 <div>
-                  <p className="text-xs text-gray-500 uppercase tracking-wide">Localización</p>
+                  <p className="text-xs text-gray-500 uppercase tracking-wide">
+                    Localización
+                  </p>
                   <p className="font-medium">{selected.location}</p>
                 </div>
               </div>
