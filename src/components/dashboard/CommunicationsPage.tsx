@@ -1,188 +1,274 @@
 import React, { useState } from 'react';
-import { Bell, AlertTriangle, MessageSquare } from 'lucide-react';
+import { Bell, AlertTriangle, Clock, Calendar } from 'lucide-react';
 
-type FilterType = 'all' | 'urgent' | 'maintenance' | 'meeting';
+type FilterType = 'all' | 'urgent' | 'maintenance' | 'general';
 
 export const CommunicationsPage: React.FC = () => {
   const [filter, setFilter] = useState<FilterType>('all');
 
+  // Datos estructurados según la imagen
   const communicationsData = [
     { 
       id: 1, 
-      title: 'Cierre temporal piscina', 
-      date: '2024-10-18', 
-      type: 'maintenance' as const, 
-      urgent: true, 
-      content: 'La piscina estará cerrada del 20 al 25 de octubre por mantenimiento preventivo.' 
+      title: 'Arriendo de departamento', 
+      date: 'Ayer',
+      time: 'Oferta',
+      type: 'general' as const, 
+      pinned: true,
+      content: 'Se arrienda departamento 5B Torre Norte. Interesados contactar a Maribel Olivares +56912345678',
+      details: [
+        { label: 'Disponible desde: 4 Nov', icon: 'calendar' as const, type: 'detail' as const }
+      ]
     },
     { 
       id: 2, 
-      title: 'Nuevas medidas de seguridad', 
-      date: '2024-10-15', 
-      type: 'general' as const, 
-      urgent: false, 
-      content: 'Se implementarán nuevos protocolos de seguridad a partir del próximo mes.' 
+      title: 'Ascensor Torre Norte fuera de servicio', 
+      date: 'Hoy',
+      time: 'Urgente • Mantención',
+      type: 'urgent' as const, 
+      pinned: false,
+      content: 'Estimados residentes, Les informamos que debido a fallos técnico del ascensor, este se encontrará fuera de servicio hasta mañana.',
+      details: [
+        { label: 'Mar, 4 - Mie, 5 Nov', icon: 'calendar' as const, type: 'detail' as const }
+      ]
     },
     { 
       id: 3, 
-      title: 'Reunión administración', 
-      date: '2024-10-20', 
-      type: 'meeting' as const, 
-      urgent: false, 
-      content: 'Reunión mensual de administración el viernes 25 a las 19:00 en la sala de eventos.' 
+      title: 'Mantención programada de piscina', 
+      date: 'Hoy',
+      time: 'Mantención',
+      type: 'maintenance' as const, 
+      pinned: false,
+      content: 'Estimados residentes, Les informamos que como cada semana, la piscina estará cerrada el día de hoy entre 07:00 y las 09:00 hrs',
+      details: [
+        { label: '07:00 - 09:00 hrs', icon: 'clock' as const, type: 'actionable' as const },
+        { label: 'Mar, 4 Nov', icon: 'calendar' as const, type: 'detail' as const }
+      ]
+    },
+    { 
+      id: 4, 
+      title: 'Completada en Quincho', 
+      date: 'Lun, 3 Nov',
+      time: 'Oferta',
+      type: 'general' as const, 
+      pinned: false,
+      content: 'Se realizará completada el viernes en el quincho del Jardín Central. A $2500 los completos.',
+      details: [
+        { label: 'Vie, 7 Nov', icon: 'calendar' as const, type: 'detail' as const },
+        { label: '12:00 - 18:00 hrs', icon: 'clock' as const, type: 'actionable' as const }
+      ]
+    },
+    { 
+      id: 5, 
+      title: 'Evento de Recaudación', 
+      date: 'Dom, 2 Nov',
+      time: 'Evento',
+      type: 'general' as const, 
+      pinned: false,
+      content: 'Estimados residentes, Les informamos que el Lunes 17 de noviembre se realizará el evento de recaudación anual. Quedan todos cordialmente invitados',
+      details: [
+        { label: 'Lun, 17 Nov', icon: 'calendar' as const, type: 'detail' as const },
+        { label: '16:00 - 20:00 hrs', icon: 'clock' as const, type: 'actionable' as const }
+      ]
+    },
+    { 
+      id: 6, 
+      title: 'Ascensor Torre Sur fuera de servicio', 
+      date: 'Dom, 2 Nov',
+      time: 'Urgente • Mantención',
+      type: 'urgent' as const, 
+      pinned: false,
+      content: 'Estimados residentes, Les informamos que debido a fallos técnico del ascensor, este se encontrará fuera de servicio hasta mañana.',
+      details: [
+        { label: 'Dom, 2 - Lun, 3 Nov', icon: 'calendar' as const, type: 'detail' as const }
+      ]
     }
   ];
 
   const getFilteredCommunications = () => {
     switch (filter) {
       case 'urgent':
-        return communicationsData.filter(comm => comm.urgent);
+        return communicationsData.filter(comm => comm.type === 'urgent');
       case 'maintenance':
         return communicationsData.filter(comm => comm.type === 'maintenance');
-      case 'meeting':
-        return communicationsData.filter(comm => comm.type === 'meeting');
+      case 'general':
+        return communicationsData.filter(comm => comm.type === 'general');
       default:
         return communicationsData;
     }
   };
 
-  const getTypeLabel = (type: string) => {
+  const getTypeColor = (type: string) => {
     switch (type) {
+      case 'urgent':
+        return 'text-red-600';
       case 'maintenance':
-        return 'Mantención';
-      case 'meeting':
-        return 'Reunión';
+        return 'text-yellow-600';
+      case 'general':
+        return 'text-blue-600';
       default:
-        return 'General';
+        return 'text-gray-600';
     }
   };
 
+  const getBorderColor = (type: string) => {
+    switch (type) {
+      case 'urgent':
+        return 'border-red-300';
+      case 'maintenance':
+        return 'border-yellow-300';
+      case 'general':
+        return 'border-blue-300';
+      default:
+        return 'border-gray-300';
+    }
+  };
+
+  const getTimeColor = (time: string) => {
+    if (time.includes('Urgente')) return 'text-red-600';
+    if (time.includes('Mantención')) return 'text-yellow-600';
+    return 'text-blue-600';
+  };
+
   const filteredComms = getFilteredCommunications();
+  const pinnedComms = filteredComms.filter(comm => comm.pinned);
+  const todayComms = filteredComms.filter(comm => comm.date === 'Hoy' && !comm.pinned);
+  const yesterdayComms = filteredComms.filter(comm => comm.date === 'Ayer' && !comm.pinned);
+  const olderComms = filteredComms.filter(comm => !['Hoy', 'Ayer'].includes(comm.date) && !comm.pinned);
+
+  const DetailItem = ({ label, type, icon }: { 
+    label: string; 
+    type: 'actionable' | 'detail';
+    icon: 'clock' | 'calendar';
+  }) => (
+    <div className={`inline-flex items-center space-x-2 px-3 py-1 rounded-full border ${
+      type === 'actionable' 
+        ? 'bg-[#006E6F] border-[#006E6F] text-white' 
+        : 'bg-[#DDDFA8] border-[#DDDFA8] text-[#79792B]'
+    }`}>
+      {icon === 'clock' ? (
+        <Clock className="w-4 h-4" />
+      ) : (
+        <Calendar className="w-4 h-4" />
+      )}
+      <span className="text-sm">{label}</span>
+    </div>
+  );
+
+  const CommunicationSection = ({ title, communications }: { title: string; communications: any[] }) => {
+    if (communications.length === 0) return null;
+
+    return (
+      <div className="mb-6">
+        <h2 className="text-lg font-bold text-gray-900 mb-3">{title}</h2>
+        <div className="space-y-4">
+          {communications.map((comm) => (
+            <div 
+              key={comm.id} 
+              className={`bg-white border-2 rounded-lg p-4 ${getBorderColor(comm.type)}`}
+            >
+              <div className="flex justify-between items-start mb-2">
+                <h3 className="font-semibold text-gray-900">{comm.title}</h3>
+                <div className="text-right">
+                  <div className="text-sm text-gray-500">{comm.date}</div>
+                  <div className={`text-xs font-medium ${getTimeColor(comm.time)}`}>
+                    {comm.time}
+                  </div>
+                </div>
+              </div>
+              
+              <p className="text-sm text-gray-600 mb-3 leading-relaxed">
+                {comm.content}
+              </p>
+              
+              <div className="flex flex-wrap gap-2">
+                {comm.details.map((detail: any, index: number) => (
+                  <DetailItem
+                    key={index}
+                    label={detail.label}
+                    type={detail.type}
+                    icon={detail.icon}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 pb-24">
-      <div className="max-w-2xl mx-auto space-y-6">
-        {/* Filters */}
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <h3 className="text-lg font-bold mb-4">Filtros</h3>
-          <div className="grid grid-cols-2 gap-3">
-            <button 
-              onClick={() => setFilter('all')}
-              className={`p-3 rounded-lg font-medium transition-all ${
-                filter === 'all'
-                  ? 'bg-teal-600 text-white'
-                  : 'bg-white border-2 border-gray-200 hover:border-teal-500 text-gray-700'
-              }`}
-            >
-              Todos
-            </button>
-            <button 
-              onClick={() => setFilter('urgent')}
-              className={`p-3 rounded-lg font-medium transition-all flex items-center justify-center space-x-2 ${
-                filter === 'urgent'
-                  ? 'bg-teal-600 text-white'
-                  : 'bg-white border-2 border-gray-200 hover:border-teal-500 text-gray-700'
-              }`}
-            >
-              <AlertTriangle className="w-4 h-4" />
-              <span>Urgentes</span>
-            </button>
-            <button 
-              onClick={() => setFilter('maintenance')}
-              className={`p-3 rounded-lg font-medium transition-all ${
-                filter === 'maintenance'
-                  ? 'bg-teal-600 text-white'
-                  : 'bg-white border-2 border-gray-200 hover:border-teal-500 text-gray-700'
-              }`}
-            >
-              Mantención
-            </button>
-            <button 
-              onClick={() => setFilter('meeting')}
-              className={`p-3 rounded-lg font-medium transition-all ${
-                filter === 'meeting'
-                  ? 'bg-teal-600 text-white'
-                  : 'bg-white border-2 border-gray-200 hover:border-teal-500 text-gray-700'
-              }`}
-            >
-              Reuniones
-            </button>
+    <div className="min-h-screen bg-white p-4 pb-24">
+      <div className="max-w-2xl mx-auto">
+        {/* Header */}
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Comunicados</h1>
+          
+          {/* Filters */}
+          <div className="mb-6">
+            <h3 className="text-sm font-semibold text-gray-700 mb-2">Filtrar</h3>
+            <div className="flex flex-wrap gap-2">
+              {(['all', 'urgent', 'maintenance', 'general'] as FilterType[]).map((filterType) => (
+                <button
+                  key={filterType}
+                  onClick={() => setFilter(filterType)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                    filter === filterType
+                      ? 'bg-[#006E6F] text-white'
+                      : 'bg-white border border-gray-300 text-gray-700 hover:border-[#006E6F]'
+                  }`}
+                >
+                  {filterType === 'all' && 'Todos'}
+                  {filterType === 'urgent' && 'Urgente'}
+                  {filterType === 'maintenance' && 'Mantención'}
+                  {filterType === 'general' && 'General'}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Communications List */}
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <div className="flex items-center space-x-2 mb-4">
-            <Bell className="h-5 w-5 text-teal-600" />
-            <h3 className="text-lg font-bold">Comunicados de Administración</h3>
-          </div>
+        {/* Communications Sections */}
+        <div className="space-y-6">
+          <CommunicationSection title="Fijados" communications={pinnedComms} />
+          <CommunicationSection title="Hoy" communications={todayComms} />
+          <CommunicationSection title="Ayer" communications={yesterdayComms} />
           
-          <div className="space-y-4">
-            {filteredComms.map((comm) => (
-              <div 
-                key={comm.id} 
-                className={`border rounded-lg p-4 transition-all hover:shadow-md ${
-                  comm.urgent 
-                    ? 'border-red-200 bg-red-50' 
-                    : 'border-gray-200 bg-white'
+          {/* Older communications grouped by date */}
+          {olderComms.reduce((groups: any[], comm) => {
+            const existingGroup = groups.find(group => group.date === comm.date);
+            if (existingGroup) {
+              existingGroup.communications.push(comm);
+            } else {
+              groups.push({
+                date: comm.date,
+                communications: [comm]
+              });
+            }
+            return groups;
+          }, []).map((group) => (
+            <CommunicationSection 
+              key={group.date} 
+              title={group.date} 
+              communications={group.communications} 
+            />
+          ))}
+        </div>
+
+        {/* Bottom Navigation */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
+          <div className="max-w-2xl mx-auto flex justify-around">
+            {['Reservas', 'Visitas', 'Inicio', 'Pagos', 'Comunicados'].map((item) => (
+              <button
+                key={item}
+                className={`text-sm font-medium ${
+                  item === 'Comunicados' ? 'text-[#006E6F]' : 'text-gray-600'
                 }`}
               >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center space-x-2 flex-1">
-                    {comm.urgent && <AlertTriangle className="h-4 w-4 text-red-600 flex-shrink-0" />}
-                    <h4 className="font-semibold text-gray-900">{comm.title}</h4>
-                  </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                    comm.urgent 
-                      ? 'bg-red-100 text-red-700' 
-                      : 'bg-gray-100 text-gray-700'
-                  }`}>
-                    {comm.urgent ? 'Urgente' : 'Normal'}
-                  </span>
-                </div>
-                
-                <p className="text-sm text-gray-600 mb-3 leading-relaxed">
-                  {comm.content}
-                </p>
-                
-                <div className="flex items-center justify-between">
-                  <p className="text-xs text-gray-500">
-                    {comm.date} • {getTypeLabel(comm.type)}
-                  </p>
-                  <button className="flex items-center space-x-1 text-sm text-teal-600 hover:text-teal-700 font-medium">
-                    <MessageSquare className="w-4 h-4" />
-                    <span>Leer más</span>
-                  </button>
-                </div>
-              </div>
+                {item}
+              </button>
             ))}
-
-            {filteredComms.length === 0 && (
-              <div className="text-center py-8">
-                <Bell className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-500">No hay comunicados para mostrar</p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Quick Stats */}
-        <div className="grid grid-cols-3 gap-4">
-          <div className="bg-white rounded-lg shadow p-4 text-center">
-            <div className="text-2xl font-bold text-teal-600">{communicationsData.length}</div>
-            <div className="text-xs text-gray-600 mt-1">Total</div>
-          </div>
-          <div className="bg-white rounded-lg shadow p-4 text-center">
-            <div className="text-2xl font-bold text-red-600">
-              {communicationsData.filter(c => c.urgent).length}
-            </div>
-            <div className="text-xs text-gray-600 mt-1">Urgentes</div>
-          </div>
-          <div className="bg-white rounded-lg shadow p-4 text-center">
-            <div className="text-2xl font-bold text-blue-600">
-              {communicationsData.filter(c => !c.urgent).length}
-            </div>
-            <div className="text-xs text-gray-600 mt-1">Normales</div>
           </div>
         </div>
       </div>
