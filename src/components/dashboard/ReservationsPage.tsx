@@ -301,48 +301,38 @@ export const ReservationsPage: React.FC = () => {
       <BottomDrawer isOpen={isDrawerOpen} onClose={handleCloseDrawer}>
         {selected && (
           <div className="w-full">
-            <div className="relative mb-4">
+            <div className="relative mb-3">
               <img
                 src={selected.image}
                 alt={selected.name}
-                className="w-full h-48 object-cover rounded-xl"
+                className="w-full h-36 sm:h-40 object-cover rounded-xl"
               />
             </div>
 
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">
               {selected.name}
             </h2>
 
-            <div className="bg-gray-50 rounded-lg p-3 mb-4">
-              <p className="text-sm text-gray-600">
+            <div className="bg-gray-50 rounded-lg p-2.5 mb-3">
+              <p className="text-xs sm:text-sm text-gray-600">
                 <span className="font-semibold">Incluye:</span>{" "}
                 {selected.includes}
               </p>
             </div>
 
-            <div className="flex items-center justify-between text-sm text-gray-700 mb-6 bg-gray-50 rounded-lg p-3">
-              <div className="flex items-center gap-2">
-                <Users className="w-4 h-4 text-gray-500" />
-                <div>
-                  <p className="text-xs text-gray-500 uppercase tracking-wide">
-                    Capacidad
-                  </p>
-                  <p className="font-medium">{selected.capacity}</p>
-                </div>
+            <div className="flex items-center justify-between text-xs sm:text-sm text-gray-700 mb-4">
+              <div className="flex items-center gap-1.5">
+                <span>👥</span>
+                <span>{selected.capacity}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-gray-500" />
-                <div>
-                  <p className="text-xs text-gray-500 uppercase tracking-wide">
-                    Localización
-                  </p>
-                  <p className="font-medium">{selected.location}</p>
-                </div>
+              <div className="flex items-center gap-1.5">
+                <span>📍</span>
+                <span className="text-right">{selected.location}</span>
               </div>
             </div>
 
-            <div className="mb-4">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <div className="mb-3">
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                 Fecha*
               </label>
               <div className="relative">
@@ -350,15 +340,15 @@ export const ReservationsPage: React.FC = () => {
                   type="date"
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                   placeholder="DD/MM/AAAA"
                 />
-                <Calendar className="absolute right-3 top-3.5 w-5 h-5 text-gray-400 pointer-events-none" />
+                <Calendar className="absolute right-3 top-3 w-4 h-4 text-gray-400 pointer-events-none" />
               </div>
             </div>
 
-            <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <div className="mb-4">
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                 Horario*
               </label>
               <div className="grid grid-cols-2 gap-2">
@@ -367,12 +357,12 @@ export const ReservationsPage: React.FC = () => {
                     key={slot.time}
                     disabled={!slot.available}
                     onClick={() => setSelectedTime(slot.time)}
-                    className={`py-3 rounded-lg border text-sm font-medium transition-all ${
+                    className={`py-2.5 rounded-lg border text-xs sm:text-sm font-medium transition-all ${
                       !slot.available
                         ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200"
                         : selectedTime === slot.time
-                        ? "bg-emerald-600 text-white border-emerald-600 shadow-md"
-                        : "bg-white border-gray-300 hover:border-emerald-500 hover:bg-emerald-50"
+                        ? "bg-emerald-600 text-white border-emerald-600"
+                        : "bg-white border-gray-300 hover:border-emerald-500"
                     }`}
                   >
                     {slot.time}
@@ -384,9 +374,9 @@ export const ReservationsPage: React.FC = () => {
             <button
               onClick={handleReserve}
               disabled={!selectedDate || !selectedTime}
-              className={`w-full py-4 rounded-xl font-bold text-white transition-all ${
+              className={`w-full py-3 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base text-white transition-all ${
                 selectedDate && selectedTime
-                  ? "bg-emerald-600 hover:bg-emerald-700 shadow-lg"
+                  ? "bg-emerald-600 hover:bg-emerald-700"
                   : "bg-gray-300 cursor-not-allowed"
               }`}
             >
