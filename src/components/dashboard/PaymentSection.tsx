@@ -38,13 +38,13 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment }) => {
         Pagos pendientes o próximos
       </h2>
       <div className="bg-[rgba(245,245,245,1)] w-full overflow-hidden mt-4 rounded-[10px]">
-        <div className="flex w-full items-center justify-between px-3 py-4">
+        <div className="flex w-full items-center justify-between px-3 py-4 bg-white rounded-t-[10px]">
           <div className="text-black text-[32px] font-black">
             {payment.amount}
           </div>
           {getStatusBadge()}
         </div>
-        <div className="bg-[rgba(237,237,237,1)] w-full overflow-hidden font-medium px-3 py-4 rounded-b-[10px]">
+        <div className="bg-[rgba(237,237,237,1)] w-full overflow-hidden font-medium px-3 py-4">
           <div className="flex w-full justify-between">
             <div className="flex gap-2">
               <img
@@ -82,11 +82,9 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment }) => {
               {payment.period}
             </div>
           </div>
-          <div className="flex w-full justify-end mt-4">
-            <button className="text-[rgba(0,110,111,1)] text-sm font-normal hover:underline transition-all">
-              Ir a pagar
-            </button>
-          </div>
+          <button className="w-full mt-4 px-4 py-2.5 text-sm font-semibold text-[rgba(0,110,111,1)] bg-white rounded-lg border border-[rgba(0,110,111,1)] border-solid hover:bg-[rgba(0,110,111,0.05)] transition-colors">
+            Ir a pagar
+          </button>
         </div>
       </div>
     </section>
