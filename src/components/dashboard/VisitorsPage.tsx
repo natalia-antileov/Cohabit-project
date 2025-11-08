@@ -4,6 +4,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { TimePicker } from '@/components/ui/time-picker';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
@@ -125,12 +126,10 @@ export const VisitorsPage: React.FC = () => {
                       <Clock className="w-5 h-5 text-teal-600" />
                     </button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-4" align="start">
-                    <input
-                      type="time"
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <TimePicker
                       value={formData.time}
-                      onChange={(e) => handleFormChange('time', e.target.value)}
+                      onChange={(time) => handleFormChange('time', time)}
                     />
                   </PopoverContent>
                 </Popover>
