@@ -84,11 +84,14 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment }) => {
           </div>
         </div>
         
-        <div className="flex w-full justify-end mt-4">
-          <button className="text-[rgba(0,110,111,1)] text-sm font-normal hover:underline transition-all">
-            Ir a pagar
-          </button>
-        </div>
+         <div className="flex w-full justify-end mt-4">
+            <button 
+              onClick={onGoToPayment}
+              className="text-[rgba(0,110,111,1)] text-sm font-normal hover:underline transition-all"
+            >
+              Ir a pagar
+            </button>
+          </div>
       </div>
     </section>
   );
