@@ -13,7 +13,7 @@ interface PaymentSectionProps {
   onGoToPayment: () => void;  
 }
 
-export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment }) => {
+export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment, onGoToPayment }) => {
   const getStatusBadge = () => {
     switch (payment.status) {
       case 'pending':
@@ -33,6 +33,7 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment }) => {
     }
   };
 
+  
   return (
     <section className="w-full leading-none">
       <h2 className="text-[rgba(11,9,43,1)] text-base font-medium">
