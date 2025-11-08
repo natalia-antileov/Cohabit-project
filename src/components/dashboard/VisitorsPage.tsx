@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
-import { Users, UserPlus, CheckCircle, Clock, Calendar } from 'lucide-react';
+import { Users, UserPlus, CheckCircle, Clock, Calendar as CalendarIcon } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+import { cn } from '@/lib/utils';
 
 export const VisitorsPage: React.FC = () => {
   const [transportType, setTransportType] = useState<'foot' | 'vehicle'>('foot');
-  const [showCalendar, setShowCalendar] = useState(false);
-  const [showTime, setShowTime] = useState(false);
   const [selectedVisit, setSelectedVisit] = useState<number | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [formData, setFormData] = useState({
     name: '',
     rut: '',
@@ -76,52 +80,60 @@ export const VisitorsPage: React.FC = () => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Fecha</label>
-                <div className="relative">
-                  <button
-                    onClick={() => setShowCalendar(!showCalendar)}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white flex items-center justify-between hover:border-teal-300 transition-colors"
-                  >
-                    <span className="text-gray-600">{formData.date || 'Seleccionar fecha'}</span>
-                    <Calendar className="w-5 h-5 text-teal-600" />
-                  </button>
-                  {showCalendar && (
-                    <input
-                      type="date"
-                      autoFocus
-                      className="absolute top-12 left-0 w-full p-3 border border-gray-300 rounded-lg z-10"
-                      min={new Date().toISOString().split('T')[0]}
-                      value={formData.date}
-                      onChange={(e) => {
-                        handleFormChange('date', e.target.value);
-                        setShowCalendar(false);
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button
+                      className={cn(
+                        "w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white flex items-center justify-between hover:border-teal-300 transition-colors",
+                        !selectedDate && "text-gray-400"
+                      )}
+                    >
+                      <span>
+                        {selectedDate ? format(selectedDate, "dd/MM/yyyy", { locale: es }) : "DD/MM/AAAA"}
+                      </span>
+                      <CalendarIcon className="w-5 h-5 text-teal-600" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={(date) => {
+                        setSelectedDate(date);
+                        if (date) {
+                          handleFormChange('date', format(date, "yyyy-MM-dd"));
+                        }
                       }}
+                      disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                      initialFocus
+                      className="pointer-events-auto"
                     />
-                  )}
-                </div>
+                  </PopoverContent>
+                </Popover>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Hora</label>
-                <div className="relative">
-                  <button
-                    onClick={() => setShowTime(!showTime)}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white flex items-center justify-between hover:border-teal-300 transition-colors"
-                  >
-                    <span className="text-gray-600">{formData.time || 'Seleccionar hora'}</span>
-                    <Clock className="w-5 h-5 text-teal-600" />
-                  </button>
-                  {showTime && (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button
+                      className={cn(
+                        "w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white flex items-center justify-between hover:border-teal-300 transition-colors",
+                        !formData.time && "text-gray-400"
+                      )}
+                    >
+                      <span>{formData.time || "HH:MM"}</span>
+                      <Clock className="w-5 h-5 text-teal-600" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-4" align="start">
                     <input
                       type="time"
-                      autoFocus
-                      className="absolute top-12 right-0 w-full p-3 border border-gray-300 rounded-lg z-10"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                       value={formData.time}
-                      onChange={(e) => {
-                        handleFormChange('time', e.target.value);
-                        setShowTime(false);
-                      }}
+                      onChange={(e) => handleFormChange('time', e.target.value)}
                     />
-                  )}
-                </div>
+                  </PopoverContent>
+                </Popover>
               </div>
             </div>
 
