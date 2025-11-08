@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Users, UserPlus, CheckCircle, Clock, Calendar, MapPin } from 'lucide-react';
+import { Users, UserPlus, CheckCircle, Clock, Calendar } from 'lucide-react';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 
 export const VisitorsPage: React.FC = () => {
   const [transportType, setTransportType] = useState<'foot' | 'vehicle'>('foot');
@@ -71,39 +73,6 @@ export const VisitorsPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Transport Type Selection */}
-            <div>
-              <label className="block text-sm font-medium mb-2">Medio de transporte</label>
-              <div className="flex gap-4">
-                <button
-                  onClick={() => setTransportType('foot')}
-                  className={`flex-1 p-3 rounded-lg border-2 transition-all font-medium ${
-                    transportType === 'foot'
-                      ? 'border-teal-600 bg-teal-50 text-teal-700'
-                      : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
-                  }`}
-                >
-                  <div className="flex items-center justify-center space-x-2">
-                    <MapPin className="w-4 h-4" />
-                    <span>A pie</span>
-                  </div>
-                </button>
-                <button
-                  onClick={() => setTransportType('vehicle')}
-                  className={`flex-1 p-3 rounded-lg border-2 transition-all font-medium ${
-                    transportType === 'vehicle'
-                      ? 'border-teal-600 bg-teal-50 text-teal-700'
-                      : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
-                  }`}
-                >
-                  <div className="flex items-center justify-center space-x-2">
-                    <span>🚗</span>
-                    <span>Vehículo</span>
-                  </div>
-                </button>
-              </div>
-            </div>
-
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Fecha</label>
@@ -154,6 +123,21 @@ export const VisitorsPage: React.FC = () => {
                   )}
                 </div>
               </div>
+            </div>
+
+            {/* Transport Type Selection */}
+            <div>
+              <label className="block text-sm font-medium mb-2">Medio de transporte</label>
+              <RadioGroup value={transportType} onValueChange={(value) => setTransportType(value as 'foot' | 'vehicle')}>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="foot" id="foot" />
+                  <Label htmlFor="foot">A pie</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="vehicle" id="vehicle" />
+                  <Label htmlFor="vehicle">Vehículo</Label>
+                </div>
+              </RadioGroup>
             </div>
 
             {/* License Plate Field - Only show if vehicle is selected */}
