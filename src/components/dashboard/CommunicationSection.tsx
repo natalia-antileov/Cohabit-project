@@ -5,6 +5,7 @@ interface Communication {
   content: string;
   category: string;
   priority: 'normal' | 'urgent';
+  date?: string;
 }
 
 interface CommunicationSectionProps {
@@ -16,46 +17,64 @@ export const CommunicationSection: React.FC<CommunicationSectionProps> = ({
   communication, 
   onViewAll 
 }) => {
-  const getPriorityBadge = () => {
-    if (communication.priority === 'urgent') {
-      return (
-        <div className="bg-[rgba(223,170,170,1)] flex min-h-[31px] items-center gap-2.5 overflow-hidden text-sm text-[rgba(187,33,33,1)] whitespace-nowrap leading-none justify-center w-[103px] px-3 py-[9px] rounded-[50px]">
-          <span className="self-stretch my-auto">Urgente</span>
-        </div>
-      );
-    }
-    return null;
-  };
+  const containerClasses = communication.priority === 'urgent' 
+    ? "border-2 border-[rgba(220,38,38,1)]" 
+    : "border border-[rgba(237,237,237,1)]";
 
   return (
     <section className="w-full mt-[30px]">
-      <h2 className="text-[rgba(11,9,43,1)] text-base font-medium leading-none">
+      <h2 className="text-[rgba(11,9,43,1)] text-base font-medium leading-none mb-4">
         Comunicados
       </h2>
-      <div className="border min-h-[169px] w-full overflow-hidden mt-4 rounded-[10px] border-[rgba(237,237,237,1)] border-solid">
-        <div className="flex w-full flex-col items-stretch font-medium justify-center px-3 py-4">
-          <div className="flex w-full gap-[40px_46px] justify-between">
-            <h3 className="text-[rgba(11,9,43,1)] text-base leading-4 w-[198px]">
-              {communication.title}
-            </h3>
-            {getPriorityBadge()}
+      
+      <div className={`${containerClasses} w-full overflow-hidden rounded-[10px] border-solid bg-white px-4 py-5`}>
+        <div className="flex w-full justify-between items-start mb-4">
+          <h3 className="text-[rgba(11,9,43,1)] text-lg font-semibold leading-tight flex-1 pr-4">
+            {communication.title}
+          </h3>
+          
+          <div className="flex flex-col items-end gap-2">
+            <span className="text-[rgba(117,117,117,1)] text-sm">Hoy</span>
+            <div className="flex gap-1 items-center">
+              {communication.priority === 'urgent' && (
+                <span className="text-[rgba(220,38,38,1)] text-sm font-semibold">
+                  Urgente
+                </span>
+              )}
+              <span className="text-[rgba(220,38,38,1)] text-sm">•</span>
+              <span className="text-[rgba(220,38,38,1)] text-sm font-normal">
+                {communication.category}
+              </span>
+            </div>
           </div>
         </div>
-        <div className="bg-[rgba(237,237,237,1)] min-h-[105px] w-full text-[13px] px-3 py-4">
-          <p className="text-[rgba(11,9,43,1)] font-normal leading-4">
-            {communication.content}
-          </p>
-          <div className="flex w-full gap-[40px_100px] text-right leading-none justify-between mt-7">
-            <span className="text-[rgba(117,117,117,1)] font-semibold">
-              {communication.category}
+        
+        <p className="text-[rgba(11,9,43,1)] text-base leading-relaxed mb-4">
+          {communication.content}
+        </p>
+        
+        {communication.date && (
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[rgba(235,239,205,1)] rounded-full mb-4">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="text-[rgba(139,145,93,1)]">
+              <path d="M6 2V5M14 2V5M3 8H17M5 4H15C16.1046 4 17 4.89543 17 6V16C17 17.1046 16.1046 18 15 18H5C3.89543 18 3 17.1046 3 16V6C3 4.89543 3.89543 4 5 4Z" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"/>
+            </svg>
+            <span className="text-[rgba(139,145,93,1)] text-sm">
+              {communication.date}
             </span>
-            <button 
-              onClick={onViewAll}
-              className="text-[rgba(0,110,111,1)] font-normal hover:underline transition-all"
-            >
-              Ver todos
-            </button>
           </div>
+        )}
+        
+        <div className="flex justify-end">
+          <button 
+            onClick={onViewAll}
+            className="text-[rgba(0,110,111,1)] text-sm font-normal hover:underline transition-all"
+          >
+            Ver todos
+          </button>
         </div>
       </div>
     </section>
