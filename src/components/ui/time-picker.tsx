@@ -28,16 +28,16 @@ export const TimePicker: React.FC<TimePickerProps> = ({ value, onChange }) => {
   };
 
   return (
-    <div className="flex gap-2 p-2">
+    <div className="flex gap-1 p-2 w-[180px]">
       <div className="flex-1">
-        <div className="text-center text-sm font-medium mb-2 text-gray-700">Hora</div>
-        <ScrollArea className="h-[200px] rounded-md border">
-          <div className="p-1">
+        <div className="text-center text-xs font-medium mb-1 text-gray-700">Hora</div>
+        <ScrollArea className="h-[160px] rounded-md border bg-white">
+          <div className="p-0.5">
             {hours.map((hour) => (
               <button
                 key={hour}
                 onClick={() => handleHourSelect(hour)}
-                className={`w-full px-3 py-2 text-sm rounded hover:bg-gray-100 transition-colors ${
+                className={`w-full px-2 py-1.5 text-sm rounded hover:bg-gray-100 transition-colors ${
                   selectedHour === hour
                     ? 'bg-teal-600 text-white hover:bg-teal-700'
                     : 'text-gray-700'
@@ -50,14 +50,14 @@ export const TimePicker: React.FC<TimePickerProps> = ({ value, onChange }) => {
         </ScrollArea>
       </div>
       <div className="flex-1">
-        <div className="text-center text-sm font-medium mb-2 text-gray-700">Minutos</div>
-        <ScrollArea className="h-[200px] rounded-md border">
-          <div className="p-1">
+        <div className="text-center text-xs font-medium mb-1 text-gray-700">Min</div>
+        <ScrollArea className="h-[160px] rounded-md border bg-white">
+          <div className="p-0.5">
             {minutes.map((minute) => (
               <button
                 key={minute}
                 onClick={() => handleMinuteSelect(minute)}
-                className={`w-full px-3 py-2 text-sm rounded hover:bg-gray-100 transition-colors ${
+                className={`w-full px-2 py-1.5 text-sm rounded hover:bg-gray-100 transition-colors ${
                   selectedMinute === minute
                     ? 'bg-teal-600 text-white hover:bg-teal-700'
                     : 'text-gray-700'
