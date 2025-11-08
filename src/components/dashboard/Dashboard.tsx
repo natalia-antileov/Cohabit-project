@@ -46,6 +46,10 @@ export const Dashboard: React.FC = () => {
     setCurrentSection('comunicados');
   };
 
+  const handleGoToPayment = () => {
+  setCurrentSection('pagos');
+  };
+
   const renderHomePage = () => (
     <>
       <DashboardHeader userName={userData.name} />
@@ -60,7 +64,7 @@ export const Dashboard: React.FC = () => {
           <PaymentSection 
           payment={paymentData}
           onGoToPayment={handleGoToPayment}
-        />
+          />
           <CommunicationSection 
             communication={communicationData}
             onViewAll={handleViewAllCommunications}
