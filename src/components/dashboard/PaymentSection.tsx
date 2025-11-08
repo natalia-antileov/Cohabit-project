@@ -37,7 +37,7 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment }) => {
       <h2 className="text-[rgba(11,9,43,1)] text-base font-medium">
         Pagos pendientes o próximos
       </h2>
-      <div className="border w-full overflow-hidden mt-4 rounded-[10px] border-[rgba(237,237,237,1)] border-solid">
+      <div className="bg-[rgba(245,245,245,1)] w-full overflow-hidden mt-4 rounded-[10px]">
         <div className="flex w-full items-center justify-between px-3 py-4">
           <div className="text-black text-[32px] font-black">
             {payment.amount}
@@ -82,6 +82,9 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment }) => {
               {payment.period}
             </div>
           </div>
+          <button className="w-full mt-4 px-4 py-2.5 text-sm font-semibold text-[rgba(0,110,111,1)] bg-white rounded-lg border border-[rgba(0,110,111,1)] border-solid hover:bg-[rgba(0,110,111,0.05)] transition-colors">
+            Ir a pagar
+          </button>
         </div>
       </div>
     </section>
