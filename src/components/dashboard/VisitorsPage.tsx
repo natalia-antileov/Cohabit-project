@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 
 export const VisitorsPage: React.FC = () => {
   const [transportType, setTransportType] = useState<'foot' | 'vehicle'>('foot');
+  const [visitorType, setVisitorType] = useState<'family' | 'service' | 'other'>('family');
   const [selectedVisit, setSelectedVisit] = useState<number | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [formData, setFormData] = useState({
@@ -134,6 +135,25 @@ export const VisitorsPage: React.FC = () => {
                   </PopoverContent>
                 </Popover>
               </div>
+            </div>
+
+            {/* Visitor Type Selection */}
+            <div>
+              <label className="block text-sm font-medium mb-2">Tipo de visitante</label>
+              <RadioGroup value={visitorType} onValueChange={(value) => setVisitorType(value as 'family' | 'service' | 'other')}>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="family" id="family" />
+                  <Label htmlFor="family">Familia/Amigos</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="service" id="service" />
+                  <Label htmlFor="service">Servicio externo</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="other" id="other" />
+                  <Label htmlFor="other">Otro</Label>
+                </div>
+              </RadioGroup>
             </div>
 
             {/* Transport Type Selection */}
