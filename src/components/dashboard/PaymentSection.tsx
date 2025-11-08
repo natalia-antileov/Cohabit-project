@@ -10,6 +10,7 @@ interface PaymentData {
 
 interface PaymentSectionProps {
   payment: PaymentData;
+  onGoToPayment: () => void;  
 }
 
 export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment }) => {
