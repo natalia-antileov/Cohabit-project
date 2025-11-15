@@ -384,7 +384,7 @@ export const ReservationsPage: React.FC = () => {
 
             <div className="flex items-start justify-between text-sm mb-4">
               <div className="flex items-start gap-2">
-                <Users className="w-5 h-5 text-gray-400 mt-0.5" />
+                <Users className="w-5 h-5 mt-0.5" style={{ color: '#79792B' }} />
                 <div>
                   <p className="text-xs text-[#757575] uppercase tracking-wide mb-0.5">
                     Capacidad
@@ -393,7 +393,7 @@ export const ReservationsPage: React.FC = () => {
                 </div>
               </div>
               <div className="flex items-start gap-2">
-                <MapPin className="w-5 h-5 text-gray-400 mt-0.5" />
+                <MapPin className="w-5 h-5 mt-0.5" style={{ color: '#79792B' }} />
                 <div>
                   <p className="text-xs text-[#757575] uppercase tracking-wide mb-0.5">
                     Localización
