@@ -1,231 +1,430 @@
-import React, { useState } from 'react';
-import { DollarSign, ChevronDown, ChevronUp } from 'lucide-react';
+import React, { useState } from "react";
+import { ChevronDown, ChevronUp, CreditCard, Plus } from "lucide-react";
+import { BottomDrawer } from "../ui/BottomDrawer";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+
+interface PaymentMethod {
+  id: string;
+  type: "mastercard" | "visa";
+  bank: string;
+  lastDigits: string;
+}
+
+interface PaymentItem {
+  name: string;
+  amount: number;
+  subcategories?: { name: string; amount: number }[];
+}
 
 export const PaymentsPage: React.FC = () => {
-  const [selectedPaymentItems, setSelectedPaymentItems] = useState<string[]>(['gastos_comunes']);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('');
-  const [installments, setInstallments] = useState<number>(1);
-  const [expandedPaymentItem, setExpandedPaymentItem] = useState<string | null>(null);
+  const [isCommonExpanded, setIsCommonExpanded] = useState(false);
+  const [isHomeExpanded, setIsHomeExpanded] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
+  const [cardNumber, setCardNumber] = useState("");
+  const [cardName, setCardName] = useState("");
+  const [cardExpiry, setCardExpiry] = useState("");
+  const [cardCVV, setCardCVV] = useState("");
+  const [saveCard, setSaveCard] = useState(false);
 
-  const paymentData = {
-    pending: 125000,
-    dueDate: '15 Oct 2024',
-    status: 'pending'
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([
+    { id: "1", type: "mastercard", bank: "Banco AB", lastDigits: "1234" },
+    { id: "2", type: "visa", bank: "Banco CD", lastDigits: "5678" },
+  ]);
+
+  const totalAmount = 326000;
+  const daysLate = 10;
+
+  const commonExpenses: PaymentItem = {
+    name: "Gastos comunes (Oct 2025)",
+    amount: 205000,
+    subcategories: [
+      { name: "Amenidades", amount: 120000 },
+      { name: "Mantención y operaciones", amount: 30000 },
+      { name: "Seguridad", amount: 40000 },
+      { name: "Administración", amount: 8000 },
+      { name: "Fondos de reserva", amount: 7000 },
+    ],
   };
 
-  const paymentMethods = [
-    { id: 'tarjeta_1', name: 'Tarjeta **** 1234', type: 'Visa' },
-    { id: 'tarjeta_2', name: 'Tarjeta **** 5678', type: 'Mastercard' },
-  ];
+  const homeExpenses: PaymentItem = {
+    name: "Gastos del hogar (Oct 2025)",
+    amount: 71000,
+    subcategories: [
+      { name: "Agua", amount: 23500 },
+      { name: "Electricidad", amount: 15700 },
+      { name: "Gas", amount: 8800 },
+      { name: "Cable & internet", amount: 18000 },
+      { name: "Lavandería", amount: 5000 },
+    ],
+  };
 
-  const paymentItems = [
-    { 
-      id: 'gastos_comunes', 
-      name: 'Gastos Comunes', 
-      amount: 95000,
-      breakdown: [
-        { name: 'Administración', amount: 35000 },
-        { name: 'Mantención general', amount: 25000 },
-        { name: 'Servicios básicos', amount: 20000 },
-        { name: 'Seguridad', amount: 15000 }
-      ]
-    },
-    { id: 'fondo_reserva', name: 'Fondo de Reserva', amount: 20000 },
-    { id: 'multa', name: 'Multa por Atraso', amount: 10000 },
-  ];
+  const lateFee = 50000;
+
+  const formatCurrency = (amount: number) => {
+    return `$${amount.toLocaleString("es-CL")}`;
+  };
+
+  const formatCardNumber = (value: string) => {
+    const numbers = value.replace(/\s/g, "");
+    const formatted = numbers.match(/.{1,4}/g)?.join(" ") || numbers;
+    return formatted;
+  };
+
+  const formatExpiry = (value: string) => {
+    const numbers = value.replace(/\D/g, "");
+    if (numbers.length >= 2) {
+      return numbers.slice(0, 2) + "/" + numbers.slice(2, 4);
+    }
+    return numbers;
+  };
+
+  const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\s/g, "");
+    if (value.length <= 16 && /^\d*$/.test(value)) {
+      setCardNumber(value);
+    }
+  };
+
+  const handleExpiryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, "");
+    if (value.length <= 4) {
+      setCardExpiry(value);
+    }
+  };
+
+  const handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value.length <= 3 && /^\d*$/.test(value)) {
+      setCardCVV(value);
+    }
+  };
+
+  const handleAddCard = () => {
+    if (cardNumber.length === 16 && cardName && cardExpiry.length === 4 && cardCVV.length === 3) {
+      const newCard: PaymentMethod = {
+        id: Date.now().toString(),
+        type: cardNumber.startsWith("4") ? "visa" : "mastercard",
+        bank: "Banco Nuevo",
+        lastDigits: cardNumber.slice(-4),
+      };
+      setPaymentMethods([...paymentMethods, newCard]);
+      handleCloseDrawer();
+      alert("¡Tarjeta agregada exitosamente!");
+    }
+  };
+
+  const handleCloseDrawer = () => {
+    setIsDrawerOpen(false);
+    setTimeout(() => {
+      setCardNumber("");
+      setCardName("");
+      setCardExpiry("");
+      setCardCVV("");
+      setSaveCard(false);
+    }, 300);
+  };
 
   const handlePayment = () => {
-    const selectedItems = paymentItems.filter(item => selectedPaymentItems.includes(item.id));
-    const total = selectedItems.reduce((sum, item) => sum + item.amount, 0);
-    const totalWithInstallments = installments > 1 ? total / installments : total;
-    
-    alert(`Pago de $${totalWithInstallments.toLocaleString()} procesado exitosamente${installments > 1 ? ` (Cuota 1 de ${installments})` : ''}`);
+    if (selectedMethod) {
+      alert("¡Pago procesado exitosamente!");
+    }
   };
 
-  const totalSelected = paymentItems
-    .filter(item => selectedPaymentItems.includes(item.id))
-    .reduce((sum, item) => sum + item.amount, 0);
-
   return (
-    <div className="min-h-screen bg-gray-50 p-4 pb-24">
-      <div className="max-w-2xl mx-auto space-y-6">
-        {/* Header Card */}
-        <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-2xl p-6 shadow-lg">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-lg font-semibold">Pagos</h3>
-              <p className="opacity-90">Octubre 2024</p>
-            </div>
-            <DollarSign className="h-8 w-8 opacity-80" />
-          </div>
-          <div className="text-3xl font-bold mb-2">${paymentData.pending.toLocaleString()}</div>
-          <p className="text-sm opacity-90">Vence el {paymentData.dueDate}</p>
+    <div className="w-full min-h-screen bg-gray-50 flex flex-col items-center p-4">
+      <div className="w-full max-w-md">
+        <div className="flex items-center mb-4">
+          <button className="mr-3">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <h1 className="text-xl font-bold">Pagos</h1>
         </div>
 
-        {/* Payment Items */}
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-bold">Desglose de Pagos</h3>
-            <button 
-              className="text-sm text-teal-600 hover:text-teal-700 font-medium"
-              onClick={() => {
-                if (selectedPaymentItems.length === paymentItems.length) {
-                  setSelectedPaymentItems([]);
-                } else {
-                  setSelectedPaymentItems(paymentItems.map(item => item.id));
-                }
-              }}
+        <Tabs defaultValue="pagar" className="w-full">
+          <TabsList className="w-full grid grid-cols-2 mb-4 bg-transparent border-b border-gray-200 rounded-none h-auto p-0">
+            <TabsTrigger
+              value="pagar"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#006E6F] data-[state=active]:text-[#006E6F] data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-2"
             >
-              {selectedPaymentItems.length === paymentItems.length ? 'Deseleccionar Todo' : 'Seleccionar Todo'}
+              Pagar
+            </TabsTrigger>
+            <TabsTrigger
+              value="historial"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#006E6F] data-[state=active]:text-[#006E6F] data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-2"
+            >
+              Historial de Pagos
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Tab: Pagar */}
+          <TabsContent value="pagar" className="mt-0">
+            {/* Total Amount Card */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-4">
+              <p className="text-sm text-gray-600 mb-1">Total a pagar</p>
+              <p className="text-4xl font-bold text-[#79792B] mb-1">
+                {formatCurrency(totalAmount)}
+              </p>
+              <p className="text-xs text-red-600 font-medium">
+                Retrasado por {daysLate} días
+              </p>
+            </div>
+
+            {/* Expenses Breakdown */}
+            <div className="bg-[#79792B] rounded-xl p-4 mb-4 text-white">
+              {/* Common Expenses */}
+              <button
+                onClick={() => setIsCommonExpanded(!isCommonExpanded)}
+                className="w-full flex items-center justify-between mb-2"
+              >
+                <span className="text-sm font-medium">{commonExpenses.name}</span>
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold">{formatCurrency(commonExpenses.amount)}</span>
+                  {isCommonExpanded ? (
+                    <ChevronUp className="w-4 h-4" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4" />
+                  )}
+                </div>
+              </button>
+
+              {isCommonExpanded && (
+                <div className="ml-4 mb-3 space-y-1.5">
+                  {commonExpenses.subcategories?.map((item, idx) => (
+                    <div key={idx} className="flex justify-between text-sm">
+                      <span className="text-white/90">{item.name}</span>
+                      <span className="text-white">{formatCurrency(item.amount)}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Home Expenses */}
+              <button
+                onClick={() => setIsHomeExpanded(!isHomeExpanded)}
+                className="w-full flex items-center justify-between mb-2"
+              >
+                <span className="text-sm font-medium">{homeExpenses.name}</span>
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold">{formatCurrency(homeExpenses.amount)}</span>
+                  {isHomeExpanded ? (
+                    <ChevronUp className="w-4 h-4" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4" />
+                  )}
+                </div>
+              </button>
+
+              {isHomeExpanded && (
+                <div className="ml-4 mb-3 space-y-1.5">
+                  {homeExpenses.subcategories?.map((item, idx) => (
+                    <div key={idx} className="flex justify-between text-sm">
+                      <span className="text-white/90">{item.name}</span>
+                      <span className="text-white">{formatCurrency(item.amount)}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Late Fee */}
+              <div className="flex items-center justify-between pt-2 border-t border-white/20">
+                <span className="text-sm font-medium">Multa por retraso de pago</span>
+                <span className="font-semibold">{formatCurrency(lateFee)}</span>
+              </div>
+            </div>
+
+            {/* Payment Methods */}
+            <div className="mb-4">
+              <p className="text-sm font-semibold text-gray-700 mb-3">Método de pago</p>
+              
+              <div className="space-y-2">
+                {paymentMethods.map((method) => (
+                  <button
+                    key={method.id}
+                    onClick={() => setSelectedMethod(method.id)}
+                    className={`w-full flex items-center gap-3 p-3 rounded-lg border-2 transition-all ${
+                      selectedMethod === method.id
+                        ? "border-[#006E6F] bg-[#006E6F]/5"
+                        : "border-gray-200 bg-white"
+                    }`}
+                  >
+                    {method.type === "mastercard" ? (
+                      <div className="w-10 h-7 bg-red-600 rounded flex items-center justify-center text-white text-xs font-bold">
+                        MC
+                      </div>
+                    ) : (
+                      <div className="w-10 h-7 bg-blue-600 rounded flex items-center justify-center text-white text-xs font-bold">
+                        VISA
+                      </div>
+                    )}
+                    <span className="text-sm font-medium text-gray-800">
+                      {method.bank} *****{method.lastDigits}
+                    </span>
+                  </button>
+                ))}
+
+                <button
+                  onClick={() => setIsDrawerOpen(true)}
+                  className="w-full flex items-center justify-center gap-2 p-3 rounded-lg border-2 border-dashed border-gray-300 bg-white hover:border-[#006E6F] hover:bg-[#006E6F]/5 transition-all"
+                >
+                  <Plus className="w-5 h-5 text-[#006E6F]" />
+                  <span className="text-sm font-medium text-[#006E6F]">Nueva tarjeta</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Pay Button */}
+            <button
+              onClick={handlePayment}
+              disabled={!selectedMethod}
+              className={`w-full py-3.5 rounded-xl font-bold text-base text-white transition-all ${
+                selectedMethod
+                  ? "bg-[#006E6F] hover:bg-[#005a5b]"
+                  : "bg-gray-300 cursor-not-allowed"
+              }`}
+            >
+              Pagar
             </button>
-          </div>
-          
-          <div className="space-y-4">
-            {paymentItems.map((item) => (
-              <div key={item.id} className="border border-gray-200 rounded-lg">
-                <div className="flex items-center justify-between p-4">
-                  <div className="flex items-center space-x-3 flex-1">
-                    <input
-                      type="checkbox"
-                      checked={selectedPaymentItems.includes(item.id)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setSelectedPaymentItems([...selectedPaymentItems, item.id]);
-                        } else {
-                          setSelectedPaymentItems(selectedPaymentItems.filter(id => id !== item.id));
-                        }
-                      }}
-                      className="w-4 h-4 text-teal-600 rounded"
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <span className="font-medium">{item.name}</span>
-                        {item.breakdown && (
-                          <button
-                            onClick={() => setExpandedPaymentItem(expandedPaymentItem === item.id ? null : item.id)}
-                            className="p-1 hover:bg-gray-100 rounded"
-                          >
-                            {expandedPaymentItem === item.id ? (
-                              <ChevronUp className="h-4 w-4" />
-                            ) : (
-                              <ChevronDown className="h-4 w-4" />
-                            )}
-                          </button>
-                        )}
-                      </div>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {item.id === 'gastos_comunes' && 'Mantención, servicios básicos, administración'}
-                        {item.id === 'fondo_reserva' && 'Fondo para reparaciones mayores'}
-                        {item.id === 'multa' && 'Por retraso en pago anterior'}
-                      </p>
-                    </div>
-                  </div>
-                  <span className="font-bold ml-4">${item.amount.toLocaleString()}</span>
-                </div>
-                
-                {item.breakdown && expandedPaymentItem === item.id && (
-                  <div className="px-4 pb-4">
-                    <div className="bg-gray-50 rounded-lg p-3 space-y-2">
-                      <p className="text-sm font-medium text-gray-600">Desglose:</p>
-                      {item.breakdown.map((subItem, index) => (
-                        <div key={index} className="flex justify-between items-center text-sm">
-                          <span>{subItem.name}</span>
-                          <span className="font-medium">${subItem.amount.toLocaleString()}</span>
-                        </div>
-                      ))}
-                      <hr className="my-2" />
-                      <div className="flex justify-between items-center text-sm font-bold">
-                        <span>Total</span>
-                        <span>${item.amount.toLocaleString()}</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-            
-            <div className="border-t-2 pt-4">
-              <div className="flex justify-between font-bold text-lg">
-                <span>Total Seleccionado</span>
-                <span>${totalSelected.toLocaleString()}</span>
-              </div>
+          </TabsContent>
+
+          {/* Tab: Historial */}
+          <TabsContent value="historial" className="mt-0">
+            <div className="text-center py-12">
+              <div className="text-gray-400 mb-2">📋</div>
+              <p className="text-gray-500 text-sm">No hay pagos registrados</p>
             </div>
-          </div>
-        </div>
-
-        {/* Payment Method */}
-        <div className="bg-white rounded-xl shadow-md p-6 space-y-4">
-          <h3 className="text-lg font-bold">Método de Pago</h3>
-          
-          <div>
-            <label className="block text-sm font-medium mb-2">Tarjetas guardadas</label>
-            <select 
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-              value={selectedPaymentMethod}
-              onChange={(e) => setSelectedPaymentMethod(e.target.value)}
-            >
-              <option value="">Seleccionar tarjeta...</option>
-              {paymentMethods.map((method) => (
-                <option key={method.id} value={method.id}>
-                  {method.name} ({method.type})
-                </option>
-              ))}
-              <option value="new">Agregar nueva tarjeta</option>
-            </select>
-          </div>
-
-          {selectedPaymentMethod === 'new' && (
-            <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Número de tarjeta</label>
-                  <input className="w-full p-2 border border-gray-300 rounded-lg" placeholder="1234 5678 9012 3456" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Nombre del titular</label>
-                  <input className="w-full p-2 border border-gray-300 rounded-lg" placeholder="Roberto González" />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Vencimiento</label>
-                  <input className="w-full p-2 border border-gray-300 rounded-lg" placeholder="MM/AA" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">CVV</label>
-                  <input className="w-full p-2 border border-gray-300 rounded-lg" placeholder="123" />
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div>
-            <label className="block text-sm font-medium mb-2">Cuotas</label>
-            <select 
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-              value={installments}
-              onChange={(e) => setInstallments(parseInt(e.target.value))}
-            >
-              <option value={1}>1 cuota (sin interés)</option>
-              <option value={3}>3 cuotas (sin interés)</option>
-              <option value={6}>6 cuotas (+2% interés)</option>
-              <option value={12}>12 cuotas (+5% interés)</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Pay Button */}
-        <button 
-          className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-          onClick={handlePayment}
-          disabled={selectedPaymentItems.length === 0 || !selectedPaymentMethod}
-        >
-          Pagar ${installments > 1 ? 
-            Math.round(totalSelected / installments).toLocaleString() 
-            : totalSelected.toLocaleString()}
-          {installments > 1 && ` (Cuota 1 de ${installments})`}
-        </button>
+          </TabsContent>
+        </Tabs>
       </div>
+
+      {/* Bottom Drawer for Adding Card */}
+      <BottomDrawer isOpen={isDrawerOpen} onClose={handleCloseDrawer}>
+        <div className="w-full">
+          <h2 className="text-xl font-bold text-gray-800 mb-6">Agregar tarjeta</h2>
+
+            {/* Card Preview */}
+            <div className="bg-gradient-to-br from-[#79792B] to-[#006E6F] rounded-xl p-6 mb-6 text-white shadow-lg">
+              <div className="mb-8">
+                <p className="text-xs uppercase tracking-wider opacity-80 mb-1">DÉBITO</p>
+                <div className="flex gap-2 text-lg tracking-wider">
+                  {[0, 1, 2, 3].map((group) => (
+                    <span key={group}>
+                      {cardNumber.slice(group * 4, (group + 1) * 4).padEnd(4, "*")}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex justify-between items-end">
+                <div>
+                  <p className="text-xs uppercase opacity-80 mb-1">Nombre y apellido</p>
+                  <p className="font-semibold">
+                    {cardName || "NOMBRE APELLIDO"}
+                  </p>
+                </div>
+                <div className="text-center">
+                  <p className="text-xs uppercase opacity-80 mb-1">Vence</p>
+                  <p className="font-semibold">{formatExpiry(cardExpiry) || "MM/AA"}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs uppercase opacity-80 mb-1">CVV</p>
+                  <p className="font-semibold">{cardCVV || "XXX"}</p>
+                </div>
+              </div>
+
+              <div className="mt-4 flex justify-end">
+                <div className="bg-white/20 px-3 py-1 rounded text-sm font-bold">
+                  VISA
+                </div>
+              </div>
+            </div>
+
+            {/* Form */}
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Número de tarjeta*
+                </label>
+                <input
+                  type="text"
+                  value={formatCardNumber(cardNumber)}
+                  onChange={handleCardNumberChange}
+                  placeholder="XXXX XXXX XXXX XXXX"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Nombre del titular*
+                </label>
+                <input
+                  type="text"
+                  value={cardName}
+                  onChange={(e) => setCardName(e.target.value.toUpperCase())}
+                  placeholder="NOMBRE APELLIDO"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Vencimiento*
+                  </label>
+                  <input
+                    type="text"
+                    value={formatExpiry(cardExpiry)}
+                    onChange={handleExpiryChange}
+                    placeholder="MM/AA"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    CVV*
+                  </label>
+                  <input
+                    type="text"
+                    value={cardCVV}
+                    onChange={handleCVVChange}
+                    placeholder="XXX"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="saveCard"
+                  checked={saveCard}
+                  onChange={(e) => setSaveCard(e.target.checked)}
+                  className="w-4 h-4 text-[#006E6F] border-gray-300 rounded focus:ring-[#006E6F]"
+                />
+                <label htmlFor="saveCard" className="text-sm text-gray-700">
+                  Guardar tarjeta para futuros pagos
+                </label>
+              </div>
+
+              <button
+                onClick={handleAddCard}
+                disabled={cardNumber.length !== 16 || !cardName || cardExpiry.length !== 4 || cardCVV.length !== 3}
+                className={`w-full py-3.5 rounded-xl font-bold text-base text-white transition-all ${
+                  cardNumber.length === 16 && cardName && cardExpiry.length === 4 && cardCVV.length === 3
+                    ? "bg-[#006E6F] hover:bg-[#005a5b]"
+                    : "bg-gray-300 cursor-not-allowed"
+                }`}
+              >
+                Agregar tarjeta
+              </button>
+            </div>
+          </div>
+        </div>
+      </BottomDrawer>
     </div>
   );
 };
