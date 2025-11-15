@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp, CreditCard, Plus } from "lucide-react";
 import { BottomDrawer } from "../ui/BottomDrawer";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
 
 interface PaymentMethod {
   id: string;
