@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { ChevronDown, ChevronUp, CreditCard, Plus } from "lucide-react";
+import { ChevronDown, ChevronUp, Plus } from "lucide-react";
 import { BottomDrawer } from "../ui/BottomDrawer";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 interface PaymentMethod {
   id: string;
@@ -100,6 +100,17 @@ export const PaymentsPage: React.FC = () => {
     }
   };
 
+  const handleCloseDrawer = () => {
+    setIsDrawerOpen(false);
+    setTimeout(() => {
+      setCardNumber("");
+      setCardName("");
+      setCardExpiry("");
+      setCardCVV("");
+      setSaveCard(false);
+    }, 300);
+  };
+
   const handleAddCard = () => {
     if (cardNumber.length === 16 && cardName && cardExpiry.length === 4 && cardCVV.length === 3) {
       const newCard: PaymentMethod = {
@@ -112,17 +123,6 @@ export const PaymentsPage: React.FC = () => {
       handleCloseDrawer();
       alert("¡Tarjeta agregada exitosamente!");
     }
-  };
-
-  const handleCloseDrawer = () => {
-    setIsDrawerOpen(false);
-    setTimeout(() => {
-      setCardNumber("");
-      setCardName("");
-      setCardExpiry("");
-      setCardCVV("");
-      setSaveCard(false);
-    }, 300);
   };
 
   const handlePayment = () => {
@@ -302,126 +302,127 @@ export const PaymentsPage: React.FC = () => {
       {/* Bottom Drawer for Adding Card */}
       <BottomDrawer isOpen={isDrawerOpen} onClose={handleCloseDrawer}>
         <div className="w-full">
-          <h2 className="text-xl font-bold text-gray-800 mb-6">Agregar tarjeta</h2>
+          <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4">
+            Agregar tarjeta
+          </h2>
 
-            {/* Card Preview */}
-            <div className="bg-gradient-to-br from-[#79792B] to-[#006E6F] rounded-xl p-6 mb-6 text-white shadow-lg">
-              <div className="mb-8">
-                <p className="text-xs uppercase tracking-wider opacity-80 mb-1">DÉBITO</p>
-                <div className="flex gap-2 text-lg tracking-wider">
-                  {[0, 1, 2, 3].map((group) => (
-                    <span key={group}>
-                      {cardNumber.slice(group * 4, (group + 1) * 4).padEnd(4, "*")}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex justify-between items-end">
-                <div>
-                  <p className="text-xs uppercase opacity-80 mb-1">Nombre y apellido</p>
-                  <p className="font-semibold">
-                    {cardName || "NOMBRE APELLIDO"}
-                  </p>
-                </div>
-                <div className="text-center">
-                  <p className="text-xs uppercase opacity-80 mb-1">Vence</p>
-                  <p className="font-semibold">{formatExpiry(cardExpiry) || "MM/AA"}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-xs uppercase opacity-80 mb-1">CVV</p>
-                  <p className="font-semibold">{cardCVV || "XXX"}</p>
-                </div>
-              </div>
-
-              <div className="mt-4 flex justify-end">
-                <div className="bg-white/20 px-3 py-1 rounded text-sm font-bold">
-                  VISA
-                </div>
+          {/* Card Preview */}
+          <div className="bg-gradient-to-br from-[#79792B] to-[#006E6F] rounded-xl p-6 mb-6 text-white shadow-lg">
+            <div className="mb-8">
+              <p className="text-xs uppercase tracking-wider opacity-80 mb-1">DÉBITO</p>
+              <div className="flex gap-2 text-lg tracking-wider">
+                {[0, 1, 2, 3].map((group) => (
+                  <span key={group}>
+                    {cardNumber.slice(group * 4, (group + 1) * 4).padEnd(4, "*")}
+                  </span>
+                ))}
               </div>
             </div>
 
-            {/* Form */}
-            <div className="space-y-4">
+            <div className="flex justify-between items-end">
+              <div>
+                <p className="text-xs uppercase opacity-80 mb-1">Nombre y apellido</p>
+                <p className="font-semibold">
+                  {cardName || "NOMBRE APELLIDO"}
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="text-xs uppercase opacity-80 mb-1">Vence</p>
+                <p className="font-semibold">{formatExpiry(cardExpiry) || "MM/AA"}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-xs uppercase opacity-80 mb-1">CVV</p>
+                <p className="font-semibold">{cardCVV || "XXX"}</p>
+              </div>
+            </div>
+
+            <div className="mt-4 flex justify-end">
+              <div className="bg-white/20 px-3 py-1 rounded text-sm font-bold">
+                VISA
+              </div>
+            </div>
+          </div>
+
+          {/* Form */}
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Número de tarjeta*
+              </label>
+              <input
+                type="text"
+                value={formatCardNumber(cardNumber)}
+                onChange={handleCardNumberChange}
+                placeholder="XXXX XXXX XXXX XXXX"
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Nombre del titular*
+              </label>
+              <input
+                type="text"
+                value={cardName}
+                onChange={(e) => setCardName(e.target.value.toUpperCase())}
+                placeholder="NOMBRE APELLIDO"
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Número de tarjeta*
+                  Vencimiento*
                 </label>
                 <input
                   type="text"
-                  value={formatCardNumber(cardNumber)}
-                  onChange={handleCardNumberChange}
-                  placeholder="XXXX XXXX XXXX XXXX"
+                  value={formatExpiry(cardExpiry)}
+                  onChange={handleExpiryChange}
+                  placeholder="MM/AA"
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Nombre del titular*
+                  CVV*
                 </label>
                 <input
                   type="text"
-                  value={cardName}
-                  onChange={(e) => setCardName(e.target.value.toUpperCase())}
-                  placeholder="NOMBRE APELLIDO"
+                  value={cardCVV}
+                  onChange={handleCVVChange}
+                  placeholder="XXX"
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent"
                 />
               </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Vencimiento*
-                  </label>
-                  <input
-                    type="text"
-                    value={formatExpiry(cardExpiry)}
-                    onChange={handleExpiryChange}
-                    placeholder="MM/AA"
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    CVV*
-                  </label>
-                  <input
-                    type="text"
-                    value={cardCVV}
-                    onChange={handleCVVChange}
-                    placeholder="XXX"
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent"
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="saveCard"
-                  checked={saveCard}
-                  onChange={(e) => setSaveCard(e.target.checked)}
-                  className="w-4 h-4 text-[#006E6F] border-gray-300 rounded focus:ring-[#006E6F]"
-                />
-                <label htmlFor="saveCard" className="text-sm text-gray-700">
-                  Guardar tarjeta para futuros pagos
-                </label>
-              </div>
-
-              <button
-                onClick={handleAddCard}
-                disabled={cardNumber.length !== 16 || !cardName || cardExpiry.length !== 4 || cardCVV.length !== 3}
-                className={`w-full py-3.5 rounded-xl font-bold text-base text-white transition-all ${
-                  cardNumber.length === 16 && cardName && cardExpiry.length === 4 && cardCVV.length === 3
-                    ? "bg-[#006E6F] hover:bg-[#005a5b]"
-                    : "bg-gray-300 cursor-not-allowed"
-                }`}
-              >
-                Agregar tarjeta
-              </button>
             </div>
+
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="saveCard"
+                checked={saveCard}
+                onChange={(e) => setSaveCard(e.target.checked)}
+                className="w-4 h-4 text-[#006E6F] border-gray-300 rounded focus:ring-[#006E6F]"
+              />
+              <label htmlFor="saveCard" className="text-sm text-gray-700">
+                Guardar tarjeta para futuros pagos
+              </label>
+            </div>
+
+            <button
+              onClick={handleAddCard}
+              disabled={cardNumber.length !== 16 || !cardName || cardExpiry.length !== 4 || cardCVV.length !== 3}
+              className={`w-full py-3.5 rounded-xl font-bold text-base text-white transition-all ${
+                cardNumber.length === 16 && cardName && cardExpiry.length === 4 && cardCVV.length === 3
+                  ? "bg-[#006E6F] hover:bg-[#005a5b]"
+                  : "bg-gray-300 cursor-not-allowed"
+              }`}
+            >
+              Agregar tarjeta
+            </button>
           </div>
         </div>
       </BottomDrawer>
