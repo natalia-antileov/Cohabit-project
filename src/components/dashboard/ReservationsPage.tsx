@@ -282,7 +282,7 @@ export const ReservationsPage: React.FC = () => {
                     alt={space.name}
                     className="w-12 h-12 mb-2"
                   />
-                  <span className="text-sm font-medium text-lime-700">
+                  <span className="text-sm font-medium" style={{ color: '#79792B' }}>
                     {space.name}
                   </span>
                 </button>
