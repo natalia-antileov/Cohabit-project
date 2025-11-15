@@ -252,13 +252,13 @@ export const ReservationsPage: React.FC = () => {
           <TabsList className="w-full grid grid-cols-2 mb-4 bg-transparent border-b border-gray-200 rounded-none h-auto p-0">
             <TabsTrigger
               value="reservar"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-lime-700 data-[state=active]:text-lime-700 data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-2"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#006E6F] data-[state=active]:text-[#006E6F] data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-2"
             >
               Reservar
             </TabsTrigger>
             <TabsTrigger
               value="mis-reservas"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-lime-700 data-[state=active]:text-lime-700 data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-2"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#006E6F] data-[state=active]:text-[#006E6F] data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-2"
             >
               Mis reservas
             </TabsTrigger>
