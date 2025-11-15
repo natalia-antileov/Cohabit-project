@@ -236,6 +236,7 @@ export const PaymentsPage: React.FC = () => {
                 <span className="font-semibold">{formatCurrency(lateFee)}</span>
               </div>
             </div>
+            </div>
 
             {/* Payment Methods */}
             <div className="mb-4">
