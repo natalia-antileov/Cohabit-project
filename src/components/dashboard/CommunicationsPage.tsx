@@ -141,11 +141,7 @@ export const CommunicationsPage: React.FC = () => {
     type: 'actionable' | 'detail';
     icon: 'clock' | 'calendar';
   }) => (
-    <div className={`inline-flex items-center space-x-2 px-3 py-1 rounded-full border ${
-      type === 'actionable' 
-        ? 'bg-[#006E6F] border-[#006E6F] text-white' 
-        : 'bg-[#DDDFA8] border-[#DDDFA8] text-[#79792B]'
-    }`}>
+    <div className="inline-flex items-center space-x-2 text-[#79792B]">
       {icon === 'clock' ? (
         <Clock className="w-4 h-4" />
       ) : (
