@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ChevronDown, ChevronUp, Plus } from "lucide-react";
+import { ChevronDown, ChevronUp, Plus, Trash2 } from "lucide-react";
 import { BottomDrawer } from "../ui/BottomDrawer";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 interface PaymentMethod {
@@ -136,6 +136,14 @@ export const PaymentsPage: React.FC = () => {
       alert("¡Tarjeta agregada exitosamente!");
     }
   };
+  const handleDeleteCard = (cardId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setPaymentMethods(paymentMethods.filter(method => method.id !== cardId));
+    if (selectedMethod === cardId) {
+      setSelectedMethod(null);
+    }
+  };
+
   const handlePayment = () => {
     if (selectedMethod) {
       alert("¡Pago procesado exitosamente!");
@@ -219,15 +227,24 @@ export const PaymentsPage: React.FC = () => {
               <p className="text-sm font-semibold text-gray-700 mb-3">Método de pago</p>
               
               <div className="space-y-2">
-                {paymentMethods.map(method => <button key={method.id} onClick={() => setSelectedMethod(method.id)} className={`w-full flex items-center gap-3 p-3 rounded-lg border-2 transition-all ${selectedMethod === method.id ? "border-[#006E6F] bg-[#006E6F]/5" : "border-gray-200 bg-white"}`}>
-                    {method.type === "mastercard" ? <div className="w-10 h-7 bg-red-600 rounded flex items-center justify-center text-white text-xs font-bold">
-                        MC
-                      </div> : <div className="w-10 h-7 bg-blue-600 rounded flex items-center justify-center text-white text-xs font-bold">
-                        VISA
-                      </div>}
-                    <span className="text-sm font-medium text-gray-800">
-                      {method.bank} *****{method.lastDigits}
-                    </span>
+                {paymentMethods.map(method => <button key={method.id} onClick={() => setSelectedMethod(method.id)} className={`w-full flex items-center justify-between gap-3 p-3 rounded-lg border-2 transition-all ${selectedMethod === method.id ? "border-[#006E6F] bg-[#006E6F]/5" : "border-gray-200 bg-white"}`}>
+                    <div className="flex items-center gap-3">
+                      {method.type === "mastercard" ? <div className="w-10 h-7 bg-red-600 rounded flex items-center justify-center text-white text-xs font-bold">
+                          MC
+                        </div> : <div className="w-10 h-7 bg-blue-600 rounded flex items-center justify-center text-white text-xs font-bold">
+                          VISA
+                        </div>}
+                      <span className="text-sm font-medium text-gray-800">
+                        {method.bank} *****{method.lastDigits}
+                      </span>
+                    </div>
+                    <button
+                      onClick={(e) => handleDeleteCard(method.id, e)}
+                      className="p-2 hover:bg-[#006E6F]/10 rounded-lg transition-all"
+                      aria-label="Eliminar tarjeta"
+                    >
+                      <Trash2 className="w-4 h-4" style={{ color: '#006E6F' }} />
+                    </button>
                   </button>)}
 
                 <button onClick={() => setIsDrawerOpen(true)} className="w-full flex items-center justify-center gap-2 p-3 rounded-lg border-2 border-dashed border-gray-300 bg-white hover:border-[#006E6F] hover:bg-[#006E6F]/5 transition-all">
