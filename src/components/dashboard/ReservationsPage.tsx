@@ -428,11 +428,11 @@ export const ReservationsPage: React.FC = () => {
                     key={slot.time}
                     disabled={!slot.available}
                     onClick={() => setSelectedTime(slot.time)}
-                    className={`py-2.5 rounded-lg border text-xs sm:text-sm font-medium transition-all ${
+                    className={`py-2.5 rounded-lg border-2 text-xs sm:text-sm font-medium transition-all ${
                       !slot.available
                         ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200"
                         : selectedTime === slot.time
-                        ? "bg-[#006E6F] text-white border-[#006E6F]"
+                        ? "border-[#006E6F] bg-[#006E6F]/20 text-gray-800"
                         : "bg-white border-gray-300 hover:border-[#006E6F]"
                     }`}
                   >
