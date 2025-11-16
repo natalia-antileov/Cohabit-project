@@ -93,7 +93,7 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="max-w-[480px] w-full mx-auto min-h-screen">
-      <main className="bg-white relative flex min-h-screen w-full flex-col items-center pb-5 overflow-y-auto">
+      <main className="bg-gray-50 relative flex min-h-screen w-full flex-col items-center pb-5 overflow-y-auto">
         {renderCurrentPage()}
         
         <div className="fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto">
