@@ -1,333 +1,383 @@
-import React, { useState } from 'react';
-import { Users, UserPlus, CheckCircle, Clock, Calendar as CalendarIcon } from 'lucide-react';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { TimePicker } from '@/components/ui/time-picker';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
-import { cn } from '@/lib/utils';
+import React, { useState } from "react";
+import { Calendar, Clock, X } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { TimePicker } from "@/components/ui/time-picker";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+import { cn } from "@/lib/utils";
 
-export const VisitorsPage: React.FC = () => {
-  const [transportType, setTransportType] = useState<'foot' | 'vehicle'>('foot');
-  const [visitorType, setVisitorType] = useState<'family' | 'service' | 'other'>('family');
-  const [selectedVisit, setSelectedVisit] = useState<number | null>(null);
+interface SavedVisitor {
+  id: string;
+  name: string;
+  lastName: string;
+  rut: string;
+}
+
+export const VisitsPage: React.FC = () => {
+  const [showSavedVisitorBanner, setShowSavedVisitorBanner] = useState(true);
+  const [selectedVisitor, setSelectedVisitor] = useState<string>("");
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [rut, setRut] = useState("");
+  const [tipoVisitante, setTipoVisitante] = useState("familia");
+  const [guardarVisitante, setGuardarVisitante] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [formData, setFormData] = useState({
-    name: '',
-    rut: '',
-    date: '',
-    time: '',
-    reason: '',
-    licensePlate: ''
-  });
+  const [horaEntrada, setHoraEntrada] = useState("");
+  const [horaSalida, setHoraSalida] = useState("");
+  const [medioLlegada, setMedioLlegada] = useState("vehiculo");
+  const [patente, setPatente] = useState("");
 
-  const visitorsData = [
-    { id: 1, name: 'Carlos Pérez', date: '2024-10-18', time: '14:30', status: 'approved', transport: 'vehicle', plate: 'ABC-1234' },
-    { id: 2, name: 'María González', date: '2024-10-19', time: '10:00', status: 'pending', transport: 'foot', plate: null }
+  const savedVisitors: SavedVisitor[] = [
+    { id: "1", name: "Mauricio", lastName: "Ramos", rut: "12345678-9" },
+    { id: "2", name: "Ana", lastName: "Silva", rut: "98765432-1" },
   ];
 
-  const handleRegisterVisitor = () => {
-    if (!formData.name || !formData.rut || !formData.date || !formData.time) {
-      alert('Por favor, completa todos los campos obligatorios');
+  const handleRegister = () => {
+    if (!nombre || !apellido || !rut || !selectedDate || !horaEntrada || !horaSalida) {
+      alert("Por favor, completa todos los campos obligatorios");
       return;
     }
-    if (transportType === 'vehicle' && !formData.licensePlate) {
-      alert('Por favor, ingresa la matrícula del vehículo');
+    if (medioLlegada === "vehiculo" && !patente) {
+      alert("Por favor, ingresa la patente del vehículo");
       return;
     }
-    alert('¡Visita registrada! La visita ha sido registrada exitosamente en el sistema.');
-    setFormData({ name: '', rut: '', date: '', time: '', reason: '', licensePlate: '' });
-    setTransportType('foot');
+    alert("¡Visita registrada exitosamente!");
   };
 
-  const handleVisitClick = (visitId: number) => {
-    setSelectedVisit(selectedVisit === visitId ? null : visitId);
-  };
-
-  const handleFormChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleVisitorSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const visitorId = e.target.value;
+    setSelectedVisitor(visitorId);
+    
+    if (visitorId) {
+      const visitor = savedVisitors.find(v => v.id === visitorId);
+      if (visitor) {
+        setNombre(visitor.name);
+        setApellido(visitor.lastName);
+        setRut(visitor.rut);
+      }
+    } else {
+      setNombre("");
+      setApellido("");
+      setRut("");
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 pb-24">
-      <div className="max-w-2xl mx-auto space-y-6">
-        {/* Register New Visit */}
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <h3 className="text-lg font-bold mb-4">Registrar Nueva Visita</h3>
+    <div className="w-full min-h-screen bg-gray-50 flex flex-col items-center p-4">
+      <div className="w-full max-w-md">
+        <div className="flex items-center mb-4">
+          <button className="mr-3">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <h1 className="text-xl font-bold">Visitas</h1>
+        </div>
 
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Nombre</label>
-                <input
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                  placeholder="Nombre del visitante"
-                  value={formData.name}
-                  onChange={(e) => handleFormChange('name', e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">RUT</label>
-                <input
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                  placeholder="12.345.678-9"
-                  value={formData.rut}
-                  onChange={(e) => handleFormChange('rut', e.target.value)}
-                />
-              </div>
-            </div>
+        <Tabs defaultValue="registrar" className="w-full">
+          <TabsList className="w-full grid grid-cols-2 mb-4 bg-transparent border-b border-gray-200 rounded-none h-auto p-0">
+            <TabsTrigger
+              value="registrar"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#006E6F] data-[state=active]:text-[#006E6F] data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-2"
+            >
+              Registrar visita
+            </TabsTrigger>
+            <TabsTrigger
+              value="proximas"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#006E6F] data-[state=active]:text-[#006E6F] data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-2"
+            >
+              Próximas visitas
+            </TabsTrigger>
+          </TabsList>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Fecha</label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <button
-                      className={cn(
-                        "w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white flex items-center justify-between hover:border-teal-300 transition-colors",
-                        !selectedDate && "text-gray-400"
-                      )}
-                    >
-                      <span>
-                        {selectedDate ? format(selectedDate, "dd/MM/yyyy", { locale: es }) : "DD/MM/AAAA"}
-                      </span>
-                      <CalendarIcon className="w-5 h-5 text-teal-600" />
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={selectedDate}
-                      onSelect={(date) => {
-                        setSelectedDate(date);
-                        if (date) {
-                          handleFormChange('date', format(date, "yyyy-MM-dd"));
-                        }
-                      }}
-                      disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
-                      initialFocus
-                      className="pointer-events-auto"
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Hora</label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <button
-                      className={cn(
-                        "w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white flex items-center justify-between hover:border-teal-300 transition-colors",
-                        !formData.time && "text-gray-400"
-                      )}
-                    >
-                      <span>{formData.time || "HH:MM"}</span>
-                      <Clock className="w-5 h-5 text-teal-600" />
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <TimePicker
-                      value={formData.time}
-                      onChange={(time) => handleFormChange('time', time)}
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-            </div>
-
-            {/* Visitor Type Selection */}
-            <div>
-              <label className="block text-sm font-medium mb-2">Tipo de visitante</label>
-              <RadioGroup value={visitorType} onValueChange={(value) => setVisitorType(value as 'family' | 'service' | 'other')}>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="family" id="family" />
-                  <Label htmlFor="family">Familia/Amigos</Label>
+          {/* Tab: Registrar visita */}
+          <TabsContent value="registrar" className="mt-0">
+            {/* Saved Visitor Banner */}
+            {showSavedVisitorBanner && (
+              <div className="bg-[#79792B]/20 rounded-lg p-4 mb-4 relative">
+                <button
+                  onClick={() => setShowSavedVisitorBanner(false)}
+                  className="absolute top-3 right-3"
+                >
+                  <X className="w-5 h-5 text-gray-700" />
+                </button>
+                <p className="font-medium text-gray-800 mb-3">
+                  ¿Quieres usar un visitante guardado?
+                </p>
+                <div className="relative">
+                  <select
+                    value={selectedVisitor}
+                    onChange={handleVisitorSelect}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm appearance-none bg-white focus:ring-2 focus:ring-[#006E6F] focus:border-transparent"
+                  >
+                    <option value="">Seleccionar visitante</option>
+                    {savedVisitors.map((visitor) => (
+                      <option key={visitor.id} value={visitor.id}>
+                        {visitor.name} {visitor.lastName}
+                      </option>
+                    ))}
+                  </select>
+                  <svg
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="service" id="service" />
-                  <Label htmlFor="service">Servicio externo</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="other" id="other" />
-                  <Label htmlFor="other">Otro</Label>
-                </div>
-              </RadioGroup>
-            </div>
-
-            {/* Transport Type Selection */}
-            <div>
-              <label className="block text-sm font-medium mb-2">Medio de transporte</label>
-              <RadioGroup value={transportType} onValueChange={(value) => setTransportType(value as 'foot' | 'vehicle')}>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="foot" id="foot" />
-                  <Label htmlFor="foot">A pie</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="vehicle" id="vehicle" />
-                  <Label htmlFor="vehicle">Vehículo</Label>
-                </div>
-              </RadioGroup>
-            </div>
-
-            {/* License Plate Field - Only show if vehicle is selected */}
-            {transportType === 'vehicle' && (
-              <div>
-                <label className="block text-sm font-medium mb-1">Matrícula / Patente</label>
-                <input
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                  placeholder="ABC-1234"
-                  value={formData.licensePlate}
-                  onChange={(e) => handleFormChange('licensePlate', e.target.value)}
-                />
               </div>
             )}
 
-            <div>
-              <label className="block text-sm font-medium mb-1">Motivo de visita (opcional)</label>
-              <textarea
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none"
-                rows={3}
-                placeholder="Describe brevemente el motivo de la visita..."
-                value={formData.reason}
-                onChange={(e) => handleFormChange('reason', e.target.value)}
-              />
+            {/* Información del visitante */}
+            <div className="mb-6">
+              <h2 className="font-semibold text-gray-800 mb-4">Información del visitante</h2>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Nombre*
+                  </label>
+                  <input
+                    type="text"
+                    value={nombre}
+                    onChange={(e) => setNombre(e.target.value)}
+                    placeholder="Ej: Mauricio"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Apellido*
+                  </label>
+                  <input
+                    type="text"
+                    value={apellido}
+                    onChange={(e) => setApellido(e.target.value)}
+                    placeholder="Ej: Ramos"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Rut*
+                  </label>
+                  <input
+                    type="text"
+                    value={rut}
+                    onChange={(e) => setRut(e.target.value)}
+                    placeholder="Ej: 12345678-9"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                    Tipo de visitante*
+                  </label>
+                  <div className="flex gap-4">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        value="familia"
+                        checked={tipoVisitante === "familia"}
+                        onChange={(e) => setTipoVisitante(e.target.value)}
+                        className="w-5 h-5 text-[#006E6F] border-gray-300 focus:ring-[#006E6F]"
+                      />
+                      <span className="text-sm text-gray-700">Familia/Amigos</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        value="servicio"
+                        checked={tipoVisitante === "servicio"}
+                        onChange={(e) => setTipoVisitante(e.target.value)}
+                        className="w-5 h-5 text-[#006E6F] border-gray-300 focus:ring-[#006E6F]"
+                      />
+                      <span className="text-sm text-gray-700">Servicio Externo</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        value="otro"
+                        checked={tipoVisitante === "otro"}
+                        onChange={(e) => setTipoVisitante(e.target.value)}
+                        className="w-5 h-5 text-[#006E6F] border-gray-300 focus:ring-[#006E6F]"
+                      />
+                      <span className="text-sm text-gray-700">Otro</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="guardar"
+                    checked={guardarVisitante}
+                    onChange={(e) => setGuardarVisitante(e.target.checked)}
+                    className="w-4 h-4 text-[#006E6F] border-gray-300 rounded focus:ring-[#006E6F]"
+                  />
+                  <label htmlFor="guardar" className="text-sm text-gray-700">
+                    Guardar visitante para futuras visitas
+                  </label>
+                </div>
+              </div>
             </div>
 
-            <button
-              className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center space-x-2 transition-all"
-              onClick={handleRegisterVisitor}
-            >
-              <UserPlus className="w-5 h-5" />
-              <span>Registrar Visita</span>
-            </button>
-          </div>
-        </div>
+            {/* Información de la visita */}
+            <div className="mb-6">
+              <h2 className="font-semibold text-gray-800 mb-4">Información de la visita</h2>
 
-        {/* Scheduled Visits */}
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <h3 className="text-lg font-bold mb-4">Visitas Programadas</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Fecha*
+                  </label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button
+                        className={cn(
+                          "w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent bg-white flex items-center justify-between hover:border-[#006E6F] transition-colors",
+                          !selectedDate && "text-gray-400"
+                        )}
+                      >
+                        <span>
+                          {selectedDate ? format(selectedDate, "dd/MM/yyyy", { locale: es }) : "DD/MM/AAAA"}
+                        </span>
+                        <Calendar className="w-5 h-5 text-[#006E6F]" />
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <CalendarComponent
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={setSelectedDate}
+                        disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                        initialFocus
+                        className="pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
 
-          <div className="space-y-3">
-            {visitorsData.map((visitor) => (
-              <div key={visitor.id} className="border border-gray-200 rounded-lg overflow-hidden transition-all">
-                <button
-                  onClick={() => handleVisitClick(visitor.id)}
-                  className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors text-left"
-                >
-                  <div className="flex items-center space-x-3 flex-1">
-                    <div className="bg-teal-100 p-3 rounded-full">
-                      <Users className="h-5 w-5 text-teal-600" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-medium text-gray-900">{visitor.name}</p>
-                      <p className="text-sm text-gray-500">
-                        {visitor.date} a las {visitor.time}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    {visitor.status === 'approved' ? (
-                      <div className="flex items-center space-x-1 bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full">
-                        <CheckCircle className="h-4 w-4" />
-                        <span className="text-xs font-medium">Aprobado</span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center space-x-1 bg-amber-100 text-amber-700 px-3 py-1 rounded-full">
-                        <Clock className="h-4 w-4" />
-                        <span className="text-xs font-medium">Pendiente</span>
-                      </div>
-                    )}
-                  </div>
-                </button>
-
-                {/* Details Section */}
-                {selectedVisit === visitor.id && (
-                  <div className="border-t p-4 space-y-3" style={{ backgroundColor: '#DDDFA8' }}>
-                    <div className="space-y-2">
-                      <p className="text-sm font-semibold" style={{ color: '#79792B' }}>Detalles de la Visita</p>
-
-                      <div className="grid grid-cols-2 gap-3 text-sm">
-                        <div>
-                          <p className="text-xs font-medium" style={{ color: '#79792B' }}>RUT Visitante</p>
-                          <p style={{ color: '#006E6F' }} className="font-medium">12.345.678-9</p>
-                        </div>
-                        <div>
-                          <p className="text-xs font-medium" style={{ color: '#79792B' }}>Motivo</p>
-                          <p style={{ color: '#006E6F' }} className="font-medium">Visita familiar</p>
-                        </div>
-                      </div>
-
-                      {/* Transport Details */}
-                      <div className="pt-2 border-t" style={{ borderColor: '#79792B' }}>
-                        <p className="text-xs font-medium mb-2" style={{ color: '#79792B' }}>Transporte</p>
-                        <div className="grid grid-cols-2 gap-3 text-sm">
-                          <div>
-                            <p className="text-xs font-medium" style={{ color: '#79792B' }}>Medio</p>
-                            <p style={{ color: '#006E6F' }} className="font-medium">
-                              {visitor.transport === 'foot' ? 'A pie' : 'Vehículo'}
-                            </p>
-                          </div>
-                          {visitor.plate && (
-                            <div>
-                              <p className="text-xs font-medium" style={{ color: '#79792B' }}>Matrícula</p>
-                              <p style={{ color: '#006E6F' }} className="font-medium">{visitor.plate}</p>
-                            </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Hora de entrada*
+                    </label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <button
+                          className={cn(
+                            "w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent bg-white flex items-center justify-between hover:border-[#006E6F] transition-colors",
+                            !horaEntrada && "text-gray-400"
                           )}
-                        </div>
-                      </div>
+                        >
+                          <span>{horaEntrada || "HH:MM"}</span>
+                          <Clock className="w-5 h-5 text-[#006E6F]" />
+                        </button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <TimePicker
+                          value={horaEntrada}
+                          onChange={setHoraEntrada}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
 
-                      {/* Action Buttons */}
-                      <div className="pt-3 flex gap-2">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Hora de salida*
+                    </label>
+                    <Popover>
+                      <PopoverTrigger asChild>
                         <button
-                          className="flex-1 py-2 px-3 rounded text-sm font-medium transition-all"
-                          style={{ backgroundColor: '#006E6F', color: 'white' }}
-                          onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
-                          onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+                          className={cn(
+                            "w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent bg-white flex items-center justify-between hover:border-[#006E6F] transition-colors",
+                            !horaSalida && "text-gray-400"
+                          )}
                         >
-                          Aprobar
+                          <span>{horaSalida || "HH:MM"}</span>
+                          <Clock className="w-5 h-5 text-[#006E6F]" />
                         </button>
-                        <button
-                          className="flex-1 py-2 px-3 rounded text-sm font-medium transition-all"
-                          style={{ backgroundColor: '#79792B', color: 'white' }}
-                          onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
-                          onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-                        >
-                          Rechazar
-                        </button>
-                      </div>
-                    </div>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <TimePicker
+                          value={horaSalida}
+                          onChange={setHoraSalida}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                    Medio de llegada*
+                  </label>
+                  <div className="flex gap-6">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        value="vehiculo"
+                        checked={medioLlegada === "vehiculo"}
+                        onChange={(e) => setMedioLlegada(e.target.value)}
+                        className="w-5 h-5 text-[#006E6F] border-gray-300 focus:ring-[#006E6F]"
+                      />
+                      <span className="text-sm text-gray-700">Vehículo</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        value="apie"
+                        checked={medioLlegada === "apie"}
+                        onChange={(e) => setMedioLlegada(e.target.value)}
+                        className="w-5 h-5 text-[#006E6F] border-gray-300 focus:ring-[#006E6F]"
+                      />
+                      <span className="text-sm text-gray-700">A pie</span>
+                    </label>
+                  </div>
+                </div>
+
+                {medioLlegada === "vehiculo" && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Patente*
+                    </label>
+                    <input
+                      type="text"
+                      value={patente}
+                      onChange={(e) => setPatente(e.target.value.toUpperCase())}
+                      placeholder="Ej: NOPQ12"
+                      className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent"
+                    />
                   </div>
                 )}
               </div>
-            ))}
-          </div>
+            </div>
 
-          {visitorsData.length === 0 && (
-            <div className="text-center py-8">
-              <Users className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500">No hay visitas programadas</p>
-            </div>
-          )}
-        </div>
+            {/* Register Button */}
+            <button
+              onClick={handleRegister}
+              className="w-full py-3.5 rounded-xl font-bold text-base text-white bg-[#006E6F] hover:bg-[#005a5b] transition-all"
+            >
+              Registrar
+            </button>
+          </TabsContent>
 
-        {/* Information Card */}
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-          <div className="flex items-start space-x-3">
-            <div className="bg-blue-100 p-2 rounded-full mt-0.5">
-              <svg className="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+          {/* Tab: Próximas visitas */}
+          <TabsContent value="proximas" className="mt-0">
+            <div className="text-center py-12">
+              <div className="text-gray-400 mb-2">👥</div>
+              <p className="text-gray-500 text-sm">No hay próximas visitas registradas</p>
             </div>
-            <div className="flex-1">
-              <h4 className="text-sm font-semibold text-blue-900 mb-1">Información Importante</h4>
-              <p className="text-sm text-blue-800">
-                Todas las visitas deben ser registradas con anticipación. El personal de seguridad verificará la identidad del visitante al momento de ingreso.
-              </p>
-            </div>
-          </div>
-        </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
