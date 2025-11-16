@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp, Plus, Trash2 } from "lucide-react";
 import { BottomDrawer } from "../ui/BottomDrawer";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from ..ui/tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 interface PaymentMethod {
   id: string;
@@ -242,6 +242,7 @@ export const PaymentsPage: React.FC = () => {
               <div className="flex items-center justify-between pt-2 border-t border-white/20">
                 <span className="text-sm font-medium">Multa por retraso de pago</span>
                 <span className="font-semibold">{formatCurrency(lateFee)}</span>
+              </div>
               </div>
             </div>
 
