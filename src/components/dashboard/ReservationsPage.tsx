@@ -407,15 +407,12 @@ export const ReservationsPage: React.FC = () => {
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                 Fecha*
               </label>
-              <div className="relative">
-                <input
-                  type="date"
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent min-h-[44px]"
-                />
-                <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
-              </div>
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent min-h-[44px]"
+              />
             </div>
 
             <div className="mb-4">
