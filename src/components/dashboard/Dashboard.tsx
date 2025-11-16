@@ -6,7 +6,7 @@ import { CommunicationSection } from './CommunicationSection';
 import { BottomNavigation } from './BottomNavigation';
 import { PaymentsPage } from './PaymentsPage';
 import { ReservationsPage } from './ReservationsPage';
-import { VisitorsPage } from './VisitorsPage';
+import { VisitsPage } from './VisitorsPage';
 import { CommunicationsPage } from './CommunicationsPage';
 
 type PageType = 'inicio' | 'pagos' | 'reservas' | 'visitas' | 'comunicados';
@@ -83,7 +83,7 @@ export const Dashboard: React.FC = () => {
       case 'reservas':
         return <ReservationsPage />;
       case 'visitas':
-        return <VisitorsPage />;
+        return <VisitsPage />;
       case 'comunicados':
         return <CommunicationsPage />;
       default:
