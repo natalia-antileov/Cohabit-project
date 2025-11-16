@@ -96,7 +96,7 @@ export const VisitsPage: React.FC = () => {
           <TabsContent value="registrar" className="mt-0">
             {/* Saved Visitor Banner */}
             {showSavedVisitorBanner && (
-              <div className="bg-[#79792B]/20 rounded-lg p-4 mb-4 relative">
+              <div className="bg-[DDDFA8] rounded-lg p-4 mb-4 relative">
                 <button
                   onClick={() => setShowSavedVisitorBanner(false)}
                   className="absolute top-3 right-3"
