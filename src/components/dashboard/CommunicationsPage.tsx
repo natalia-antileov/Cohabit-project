@@ -195,7 +195,7 @@ export const CommunicationsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white p-4 pb-24">
+    <div className="min-h-screen bg-gray-50 p-4 pb-24">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="mb-6">
