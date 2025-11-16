@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+// Agregamos las importaciones necesarias del segundo código
 import { Calendar, MapPin, Users, Clock, Edit2, Trash2 } from "lucide-react";
 import { BottomDrawer } from "../ui/BottomDrawer";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
@@ -13,6 +14,13 @@ import {
   AlertDialogTitle,
 } from "../ui/alert-dialog";
 
+// Componentes y utilidades del segundo código (asumiendo rutas estándar)
+import { Calendar as CalendarComponent } from "@/components/ui/calendar"; // O la ruta correcta
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"; // O la ruta correcta
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+import { cn } from "@/lib/utils"; // Utilidad para concatenar clases (Tailwind)
+
 interface Reservation {
   id: string;
   spaceName: string;
@@ -24,7 +32,8 @@ interface Reservation {
 
 export const ReservationsPage: React.FC = () => {
   const [selectedSpace, setSelectedSpace] = useState<string | null>(null);
-  const [selectedDate, setSelectedDate] = useState<string>("");
+  // CORRECCIÓN 2: Cambiar el estado para usar un objeto Date o undefined
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedTime, setSelectedTime] = useState<string>("");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -37,7 +46,8 @@ export const ReservationsPage: React.FC = () => {
       id: "1",
       spaceName: "Piscina",
       spaceIcon: "/piscina-icon.png",
-      date: "2024-11-15",
+      // Dejamos la fecha como string para el manejo de datos de back-end
+      date: "2024-11-15", 
       time: "15:00 - 17:00",
       status: "upcoming",
     },
@@ -60,6 +70,7 @@ export const ReservationsPage: React.FC = () => {
   ]);
 
   const spaces = [
+    // ... (datos de spaces sin cambios)
     {
       id: "piscina",
       name: "Piscina",
@@ -165,7 +176,8 @@ export const ReservationsPage: React.FC = () => {
     setIsDrawerOpen(false);
     setTimeout(() => {
       setSelectedSpace(null);
-      setSelectedDate("");
+      // Limpiar estados de fecha a undefined
+      setSelectedDate(undefined); 
       setSelectedTime("");
       setIsEditing(false);
       setEditingReservationId(null);
@@ -173,28 +185,37 @@ export const ReservationsPage: React.FC = () => {
   };
 
   const handleReserve = () => {
+    // Aseguramos que selectedDate exista y sea una fecha para formatearla
+    if (!selectedDate || !selectedTime || !selected) {
+      alert("Por favor, selecciona una fecha y hora válidas.");
+      return;
+    }
+    
+    // Formateamos la fecha al formato de string 'YYYY-MM-DD' antes de guardar
+    const formattedDate = format(selectedDate, 'yyyy-MM-dd');
+
     if (isEditing && editingReservationId) {
       // Actualizar reserva existente
       setMyReservations(prev => 
         prev.map(res => 
           res.id === editingReservationId
-            ? { ...res, date: selectedDate, time: selectedTime }
+            ? { ...res, date: formattedDate, time: selectedTime }
             : res
         )
       );
-      alert(`¡Reserva actualizada!\n${selected?.name} - ${selectedDate}\nHorario: ${selectedTime}`);
+      alert(`¡Reserva actualizada!\n${selected.name} - ${formattedDate}\nHorario: ${selectedTime}`);
     } else {
       // Nueva reserva
       const newReservation: Reservation = {
         id: Date.now().toString(),
-        spaceName: selected?.name || "",
-        spaceIcon: selected?.icon || "",
-        date: selectedDate,
+        spaceName: selected.name || "",
+        spaceIcon: selected.icon || "",
+        date: formattedDate,
         time: selectedTime,
         status: "upcoming",
       };
       setMyReservations(prev => [...prev, newReservation]);
-      alert(`¡Reserva confirmada!\n${selected?.name} - ${selectedDate}\nHorario: ${selectedTime}`);
+      alert(`¡Reserva confirmada!\n${selected.name} - ${formattedDate}\nHorario: ${selectedTime}`);
     }
     handleCloseDrawer();
   };
@@ -203,7 +224,8 @@ export const ReservationsPage: React.FC = () => {
     const space = spaces.find(s => s.name === reservation.spaceName);
     if (space) {
       setSelectedSpace(space.id);
-      setSelectedDate(reservation.date);
+      // CORRECCIÓN: Convertir el string de fecha a un objeto Date para la edición
+      setSelectedDate(new Date(reservation.date)); 
       setSelectedTime(reservation.time);
       setIsEditing(true);
       setEditingReservationId(reservation.id);
@@ -218,8 +240,10 @@ export const ReservationsPage: React.FC = () => {
     }
   };
 
+  // Función de formato para la vista de Mis Reservas
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
+    // Usamos date-fns para un formato consistente si es necesario, pero mantenemos la lógica local si es compatible
     return date.toLocaleDateString("es-CL", {
       day: "numeric",
       month: "long",
@@ -295,7 +319,8 @@ export const ReservationsPage: React.FC = () => {
             <div className="space-y-3">
               {myReservations.length === 0 ? (
                 <div className="text-center py-12">
-                  <div className="text-gray-400 mb-2">📅</div>
+                  {/* Ícono corregido para consistencia */}
+                  <Calendar className="w-8 h-8 mx-auto mb-2" style={{ color: '#006E6F' }} />
                   <p className="text-gray-500 text-sm">
                     No tienes reservas aún
                   </p>
@@ -343,11 +368,13 @@ export const ReservationsPage: React.FC = () => {
 
                     <div className="space-y-2 text-sm text-gray-600">
                       <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4 text-gray-400" />
+                        {/* Ícono de calendario corregido con color primario */}
+                        <Calendar className="w-4 h-4" style={{ color: '#006E6F' }} />
                         <span>{formatDate(reservation.date)}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-gray-400" />
+                         {/* Ícono de reloj corregido con color primario */}
+                        <Clock className="w-4 h-4" style={{ color: '#006E6F' }} />
                         <span>{reservation.time}</span>
                       </div>
                     </div>
@@ -403,17 +430,38 @@ export const ReservationsPage: React.FC = () => {
               </div>
             </div>
 
+          {/* CORRECCIÓN 3: Reemplazar <input type="date"> por el componente Popover */}
           <div className="mb-3">
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                Fecha*
-              </label>
-              <input
-                type="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent min-h-[44px]"
-              />
-            </div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+              Fecha*
+            </label>
+            <Popover>
+                <PopoverTrigger asChild>
+                    <button
+                        className={cn(
+                            "w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent bg-white flex items-center justify-between hover:border-[#006E6F] transition-colors min-h-[44px]",
+                            !selectedDate && "text-gray-400"
+                        )}
+                    >
+                        <span>
+                            {selectedDate ? format(selectedDate, "dd/MM/yyyy", { locale: es }) : "DD/MM/AAAA"}
+                        </span>
+                        <Calendar className="w-5 h-5 text-[#006E6F]" />
+                    </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                    <CalendarComponent
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={setSelectedDate}
+                        disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                        initialFocus
+                        locale={es} // Aseguramos que el calendario use español
+                        className="pointer-events-auto"
+                    />
+                </PopoverContent>
+            </Popover>
+          </div>
 
             <div className="mb-4">
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">
@@ -441,7 +489,8 @@ export const ReservationsPage: React.FC = () => {
 
             <button
               onClick={handleReserve}
-              disabled={!selectedDate || !selectedTime}
+              // El botón ahora se habilita si selectedDate es un objeto Date y selectedTime existe
+              disabled={!selectedDate || !selectedTime} 
               className={`w-full py-3 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base text-white transition-all ${
                 selectedDate && selectedTime
                   ? "bg-[#006E6F] hover:bg-[#005a5b]"
