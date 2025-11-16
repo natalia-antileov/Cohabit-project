@@ -110,8 +110,9 @@ export const VisitsPage: React.FC = () => {
                   <select
                     value={selectedVisitor}
                     onChange={handleVisitorSelect}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 pr-10 text-sm appearance-none bg-white focus:ring-2 focus:ring-[#006E6F] focus:border-transparent [&::-ms-expand]:hidden"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 pr-10 text-sm bg-white focus:ring-2 focus:ring-[#006E6F] focus:border-transparent"
                     style={{ 
+                      appearance: 'none',
                       WebkitAppearance: 'none',
                       MozAppearance: 'none',
                     }}
@@ -368,7 +369,7 @@ export const VisitsPage: React.FC = () => {
             {/* Register Button */}
             <button
               onClick={handleRegister}
-              className="w-full py-3.5 rounded-xl font-bold text-base text-white bg-[#006E6F] hover:bg-[#005a5b] transition-all"
+              className="w-full py-3.5 rounded-xl font-bold text-base text-white bg-[#006E6F] hover:bg-[#005a5b] transition-all mb-20"
             >
               Registrar
             </button>
