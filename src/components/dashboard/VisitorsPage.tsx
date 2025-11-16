@@ -110,7 +110,11 @@ export const VisitsPage: React.FC = () => {
                   <select
                     value={selectedVisitor}
                     onChange={handleVisitorSelect}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm appearance-none bg-white focus:ring-2 focus:ring-[#006E6F] focus:border-transparent"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 pr-10 text-sm appearance-none bg-white focus:ring-2 focus:ring-[#006E6F] focus:border-transparent [&::-ms-expand]:hidden"
+                    style={{ 
+                      WebkitAppearance: 'none',
+                      MozAppearance: 'none',
+                    }}
                   >
                     <option value="">Seleccionar visitante</option>
                     {savedVisitors.map((visitor) => (
