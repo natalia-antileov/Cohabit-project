@@ -239,7 +239,7 @@ export const PaymentsPage: React.FC = () => {
               )}
 
               {/* Late Fee */}
-              <div className="flex items-center justify-between pt-2 border-t border-white/20">
+              <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">Multa por retraso de pago</span>
                 <span className="font-semibold">{formatCurrency(lateFee)}</span>
               </div>
