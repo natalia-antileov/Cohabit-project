@@ -64,19 +64,14 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate, 
             className={`self-center flex min-h-[60px] w-[60px] items-center gap-2.5 overflow-hidden justify-center h-[60px] px-[9px] rounded-[100px] transition-colors ${
               isActive 
                 ? 'bg-[rgba(0,110,111,1)] hover:bg-[rgba(0,90,91,1)]' 
-                : 'bg-transparent'
+                : 'bg-[rgba(117,117,117,1)] hover:bg-[rgba(97,97,97,1)]'
             }`}
             aria-label={item.label}
           >
             <img
               src={item.icon}
               alt=""
-              className="aspect-[1] object-contain w-8 self-stretch my-auto transition-all"
-              style={
-                isActive 
-                  ? { filter: 'none' }
-                  : { filter: 'invert(47%) sepia(0%) saturate(0%) hue-rotate(195deg) brightness(95%) contrast(88%)' }
-              }
+              className="aspect-[1] object-contain w-8 self-stretch my-auto"
             />
           </button>
           <span className={`${activeClasses} text-xs font-medium leading-none text-center mt-1`}>
@@ -94,7 +89,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate, 
             className={`flex min-h-8 w-8 flex-col items-center text-[23px] font-black justify-center h-8 px-[9px] rounded-[114px] transition-colors ${
               isActive 
                 ? 'bg-[rgba(0,110,111,1)] text-white hover:bg-[rgba(0,90,91,1)]' 
-                : 'bg-transparent text-[rgba(117,117,117,1)]'
+                : 'bg-[rgba(117,117,117,1)] text-white hover:bg-[rgba(97,97,97,1)]'
             }`}
             aria-label={item.label}
           >
@@ -117,15 +112,11 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate, 
           <img
             src={item.icon}
             alt=""
-            className="aspect-[1] object-contain w-8 transition-all"
+            className="aspect-[1] object-contain w-8"
             style={
               isActive 
-                ? { 
-                    filter: 'invert(29%) sepia(64%) saturate(1426%) hue-rotate(155deg) brightness(94%) contrast(101%)'
-                  }
-                : { 
-                    filter: 'invert(47%) sepia(0%) saturate(0%) hue-rotate(195deg) brightness(95%) contrast(88%)'
-                  }
+                ? { filter: 'brightness(0) saturate(100%) invert(29%) sepia(64%) saturate(1426%) hue-rotate(155deg) brightness(94%) contrast(101%)' }
+                : { filter: 'brightness(0) saturate(100%) invert(47%) sepia(0%) saturate(0%) hue-rotate(195deg) brightness(95%) contrast(88%)' }
             }
           />
         </button>
@@ -149,7 +140,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate, 
 
 // Demo
 export default function Demo() {
-  const [currentTab, setCurrentTab] = useState('inicio');
+  const [currentTab, setCurrentTab] = useState('visitas');
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
