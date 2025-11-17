@@ -38,7 +38,7 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment, onGoToP
       <h2 className="text-[rgba(11,9,43,1)] text-base font-medium">
         Pagos pendientes o próximos
       </h2>
-      <div className="w-full overflow-hidden mt-3 rounded-[10px]">
+      <div className="w-full overflow-hidden mt-2 rounded-[10px]">
         <div className="bg-[#FFFFFF] flex w-full items-center justify-between px-3 py-4">
           <div className="text-black text-[32px] font-black">
             {payment.amount}
@@ -47,7 +47,7 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment, onGoToP
         </div>
         
         <div className="bg-[#DDDFA8] px-3 py-4">
-          <div className="flex w-full justify-between mb-3">
+          <div className="flex w-full justify-between mb-2">
             <div className="flex gap-2">
               <img
                 src="https://api.builder.io/api/v1/image/assets/TEMP/2f79892bb0e8262740a5880d686ae5e0c6a66b18?placeholderIfAbsent=true"
@@ -86,7 +86,7 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment, onGoToP
             </div>
           </div>
           
-          <div className="flex w-full justify-end mt-3">
+          <div className="flex w-full justify-end mt-2">
             <button 
               onClick={onGoToPayment}
               className="text-[rgba(0,110,111,1)] text-sm font-normal hover:underline transition-all"
