@@ -7,12 +7,14 @@ import { TimePicker } from "@/components/ui/time-picker";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { cn } from "@/lib/utils";
+
 interface SavedVisitor {
   id: string;
   name: string;
   lastName: string;
   rut: string;
 }
+
 export const VisitsPage: React.FC = () => {
   const [showSavedVisitorBanner, setShowSavedVisitorBanner] = useState(true);
   const [selectedVisitor, setSelectedVisitor] = useState<string>("");
@@ -26,6 +28,7 @@ export const VisitsPage: React.FC = () => {
   const [horaSalida, setHoraSalida] = useState("");
   const [medioLlegada, setMedioLlegada] = useState("vehiculo");
   const [patente, setPatente] = useState("");
+
   const savedVisitors: SavedVisitor[] = [{
     id: "1",
     name: "Mauricio",
@@ -37,6 +40,14 @@ export const VisitsPage: React.FC = () => {
     lastName: "Silva",
     rut: "98765432-1"
   }];
+
+  // Validación para habilitar el botón
+  const isFormValid = () => {
+    const basicFieldsValid = nombre && apellido && rut && selectedDate && horaEntrada && horaSalida;
+    const vehicleFieldValid = medioLlegada === "apie" || (medioLlegada === "vehiculo" && patente);
+    return basicFieldsValid && vehicleFieldValid;
+  };
+
   const handleRegister = () => {
     if (!nombre || !apellido || !rut || !selectedDate || !horaEntrada || !horaSalida) {
       alert("Por favor, completa todos los campos obligatorios");
@@ -48,6 +59,7 @@ export const VisitsPage: React.FC = () => {
     }
     alert("¡Visita registrada exitosamente!");
   };
+
   const handleVisitorSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const visitorId = e.target.value;
     setSelectedVisitor(visitorId);
@@ -64,6 +76,7 @@ export const VisitsPage: React.FC = () => {
       setRut("");
     }
   };
+
   return <div className="w-full min-h-screen bg-gray-50 flex flex-col items-center p-4">
       <div className="w-full max-w-md">
         <div className="flex items-center mb-4">
@@ -261,8 +274,16 @@ export const VisitsPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Register Button */}
-            <button onClick={handleRegister} className="w-full py-3.5 rounded-xl font-bold text-base text-white bg-[#006E6F] hover:bg-[#005a5b] transition-all mb-20">
+            {/* Register Button con validación */}
+            <button 
+              onClick={handleRegister}
+              disabled={!isFormValid()}
+              className={`w-full py-3 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base text-white transition-all mb-20 ${
+                isFormValid()
+                  ? "bg-[#006E6F] hover:bg-[#005a5b]"
+                  : "bg-gray-300 cursor-not-allowed"
+              }`}
+            >
               Registrar
             </button>
           </TabsContent>
