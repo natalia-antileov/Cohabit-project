@@ -61,17 +61,22 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate, 
         <div key={item.id} className="flex flex-col items-stretch w-[60px]">
           <button
             onClick={() => handleNavigate(item.id)}
-            className={`self-center flex min-h-[60px] w-[60px] items-center gap-2.5 overflow-hidden justify-center h-[60px] px-[9px] rounded-[100px] transition-all ${
+            className={`self-center flex min-h-[60px] w-[60px] items-center gap-2.5 overflow-hidden justify-center h-[60px] px-[9px] rounded-[100px] transition-colors ${
               isActive 
                 ? 'bg-[rgba(0,110,111,1)] hover:bg-[rgba(0,90,91,1)]' 
-                : 'bg-[rgba(117,117,117,0.2)] hover:bg-[rgba(117,117,117,0.3)]'
+                : 'bg-transparent'
             }`}
             aria-label={item.label}
           >
             <img
               src={item.icon}
               alt=""
-              className={`aspect-[1] object-contain w-8 self-stretch my-auto transition-opacity ${isActive ? 'opacity-100' : 'opacity-50'}`}
+              className="aspect-[1] object-contain w-8 self-stretch my-auto transition-all"
+              style={
+                isActive 
+                  ? { filter: 'none' }
+                  : { filter: 'invert(47%) sepia(0%) saturate(0%) hue-rotate(195deg) brightness(95%) contrast(88%)' }
+              }
             />
           </button>
           <span className={`${activeClasses} text-xs font-medium leading-none text-center mt-1`}>
@@ -86,14 +91,14 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate, 
         <div key={item.id} className="flex flex-col items-center whitespace-nowrap leading-none w-[75px]">
           <button
             onClick={() => handleNavigate(item.id)}
-            className={`flex min-h-8 w-8 flex-col items-center text-[23px] font-black justify-center h-8 px-[9px] rounded-[114px] transition-all ${
+            className={`flex min-h-8 w-8 flex-col items-center text-[23px] font-black justify-center h-8 px-[9px] rounded-[114px] transition-colors ${
               isActive 
                 ? 'bg-[rgba(0,110,111,1)] text-white hover:bg-[rgba(0,90,91,1)]' 
-                : 'bg-[rgba(117,117,117,0.2)] text-[rgba(117,117,117,1)] hover:bg-[rgba(117,117,117,0.3)]'
+                : 'bg-transparent text-[rgba(117,117,117,1)]'
             }`}
             aria-label={item.label}
           >
-            <span className={isActive ? 'opacity-100' : 'opacity-50'}>$</span>
+            <span>$</span>
           </button>
           <span className={`${activeClasses} text-xs font-medium mt-1`}>
             {item.label}
@@ -116,12 +121,10 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate, 
             style={
               isActive 
                 ? { 
-                    filter: 'invert(29%) sepia(64%) saturate(1426%) hue-rotate(155deg) brightness(94%) contrast(101%)',
-                    opacity: 1
+                    filter: 'invert(29%) sepia(64%) saturate(1426%) hue-rotate(155deg) brightness(94%) contrast(101%)'
                   }
                 : { 
-                    filter: 'none',
-                    opacity: 0.5
+                    filter: 'invert(47%) sepia(0%) saturate(0%) hue-rotate(195deg) brightness(95%) contrast(88%)'
                   }
             }
           />
