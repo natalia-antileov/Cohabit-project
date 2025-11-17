@@ -86,7 +86,7 @@ export const VisitsPage: React.FC = () => {
           {/* Tab: Registrar visita */}
           <TabsContent value="registrar" className="mt-0">
             {/* Saved Visitor Banner */}
-            {showSavedVisitorBanner && <div className="bg-[DDDFA8] rounded-lg p-4 mb-4 relative">
+            {showSavedVisitorBanner && <div className="bg-[#DDDFA8] rounded-lg p-4 mb-4 relative">
                 <button onClick={() => setShowSavedVisitorBanner(false)} className="absolute top-3 right-3">
                   <X className="w-5 h-5 text-gray-700" />
                 </button>
