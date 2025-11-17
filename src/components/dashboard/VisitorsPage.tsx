@@ -7,14 +7,12 @@ import { TimePicker } from "@/components/ui/time-picker";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { cn } from "@/lib/utils";
-
 interface SavedVisitor {
   id: string;
   name: string;
   lastName: string;
   rut: string;
 }
-
 export const VisitsPage: React.FC = () => {
   const [showSavedVisitorBanner, setShowSavedVisitorBanner] = useState(true);
   const [selectedVisitor, setSelectedVisitor] = useState<string>("");
@@ -28,12 +26,17 @@ export const VisitsPage: React.FC = () => {
   const [horaSalida, setHoraSalida] = useState("");
   const [medioLlegada, setMedioLlegada] = useState("vehiculo");
   const [patente, setPatente] = useState("");
-
-  const savedVisitors: SavedVisitor[] = [
-    { id: "1", name: "Mauricio", lastName: "Ramos", rut: "12345678-9" },
-    { id: "2", name: "Ana", lastName: "Silva", rut: "98765432-1" },
-  ];
-
+  const savedVisitors: SavedVisitor[] = [{
+    id: "1",
+    name: "Mauricio",
+    lastName: "Ramos",
+    rut: "12345678-9"
+  }, {
+    id: "2",
+    name: "Ana",
+    lastName: "Silva",
+    rut: "98765432-1"
+  }];
   const handleRegister = () => {
     if (!nombre || !apellido || !rut || !selectedDate || !horaEntrada || !horaSalida) {
       alert("Por favor, completa todos los campos obligatorios");
@@ -45,11 +48,9 @@ export const VisitsPage: React.FC = () => {
     }
     alert("¡Visita registrada exitosamente!");
   };
-
   const handleVisitorSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const visitorId = e.target.value;
     setSelectedVisitor(visitorId);
-    
     if (visitorId) {
       const visitor = savedVisitors.find(v => v.id === visitorId);
       if (visitor) {
@@ -63,31 +64,21 @@ export const VisitsPage: React.FC = () => {
       setRut("");
     }
   };
-
-  return (
-    <div className="w-full min-h-screen bg-gray-50 flex flex-col items-center p-4">
+  return <div className="w-full min-h-screen bg-gray-50 flex flex-col items-center p-4">
       <div className="w-full max-w-md">
         <div className="flex items-center mb-4">
           <button className="mr-3">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
+            
           </button>
           <h1 className="text-xl font-bold">Visitas</h1>
         </div>
 
         <Tabs defaultValue="registrar" className="w-full">
           <TabsList className="w-full grid grid-cols-2 mb-4 bg-transparent border-b border-gray-200 rounded-none h-auto p-0">
-            <TabsTrigger
-              value="registrar"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#006E6F] data-[state=active]:text-[#006E6F] data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-2"
-            >
+            <TabsTrigger value="registrar" className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#006E6F] data-[state=active]:text-[#006E6F] data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-2">
               Registrar visita
             </TabsTrigger>
-            <TabsTrigger
-              value="proximas"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#006E6F] data-[state=active]:text-[#006E6F] data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-2"
-            >
+            <TabsTrigger value="proximas" className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#006E6F] data-[state=active]:text-[#006E6F] data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-2">
               Próximas visitas
             </TabsTrigger>
           </TabsList>
@@ -95,46 +86,29 @@ export const VisitsPage: React.FC = () => {
           {/* Tab: Registrar visita */}
           <TabsContent value="registrar" className="mt-0">
             {/* Saved Visitor Banner */}
-            {showSavedVisitorBanner && (
-              <div className="bg-[DDDFA8] rounded-lg p-4 mb-4 relative">
-                <button
-                  onClick={() => setShowSavedVisitorBanner(false)}
-                  className="absolute top-3 right-3"
-                >
+            {showSavedVisitorBanner && <div className="bg-[DDDFA8] rounded-lg p-4 mb-4 relative">
+                <button onClick={() => setShowSavedVisitorBanner(false)} className="absolute top-3 right-3">
                   <X className="w-5 h-5 text-gray-700" />
                 </button>
                 <p className="font-medium text-gray-800 mb-3">
                   ¿Quieres usar un visitante guardado?
                 </p>
                 <div className="relative">
-                  <select
-                    value={selectedVisitor}
-                    onChange={handleVisitorSelect}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 pr-10 text-sm bg-white focus:ring-2 focus:ring-[#006E6F] focus:border-transparent"
-                    style={{ 
-                      appearance: 'none',
-                      WebkitAppearance: 'none',
-                      MozAppearance: 'none',
-                    }}
-                  >
+                  <select value={selectedVisitor} onChange={handleVisitorSelect} className="w-full border border-gray-300 rounded-lg px-4 py-3 pr-10 text-sm bg-white focus:ring-2 focus:ring-[#006E6F] focus:border-transparent" style={{
+                appearance: 'none',
+                WebkitAppearance: 'none',
+                MozAppearance: 'none'
+              }}>
                     <option value="">Seleccionar visitante</option>
-                    {savedVisitors.map((visitor) => (
-                      <option key={visitor.id} value={visitor.id}>
+                    {savedVisitors.map(visitor => <option key={visitor.id} value={visitor.id}>
                         {visitor.name} {visitor.lastName}
-                      </option>
-                    ))}
+                      </option>)}
                   </select>
-                  <svg
-                    className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
+                  <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
-              </div>
-            )}
+              </div>}
 
             {/* Información del visitante */}
             <div className="mb-6">
@@ -145,39 +119,21 @@ export const VisitsPage: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Nombre*
                   </label>
-                  <input
-                    type="text"
-                    value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                    placeholder="Ej: Mauricio"
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent"
-                  />
+                  <input type="text" value={nombre} onChange={e => setNombre(e.target.value)} placeholder="Ej: Mauricio" className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent" />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Apellido*
                   </label>
-                  <input
-                    type="text"
-                    value={apellido}
-                    onChange={(e) => setApellido(e.target.value)}
-                    placeholder="Ej: Ramos"
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent"
-                  />
+                  <input type="text" value={apellido} onChange={e => setApellido(e.target.value)} placeholder="Ej: Ramos" className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent" />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Rut*
                   </label>
-                  <input
-                    type="text"
-                    value={rut}
-                    onChange={(e) => setRut(e.target.value)}
-                    placeholder="Ej: 12345678-9"
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent"
-                  />
+                  <input type="text" value={rut} onChange={e => setRut(e.target.value)} placeholder="Ej: 12345678-9" className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent" />
                 </div>
 
                 <div>
@@ -186,46 +142,22 @@ export const VisitsPage: React.FC = () => {
                   </label>
                   <div className="flex gap-4">
                     <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        value="familia"
-                        checked={tipoVisitante === "familia"}
-                        onChange={(e) => setTipoVisitante(e.target.value)}
-                        className="w-5 h-5 text-[#006E6F] border-gray-300 focus:ring-[#006E6F]"
-                      />
+                      <input type="radio" value="familia" checked={tipoVisitante === "familia"} onChange={e => setTipoVisitante(e.target.value)} className="w-5 h-5 text-[#006E6F] border-gray-300 focus:ring-[#006E6F]" />
                       <span className="text-sm text-gray-700">Familia/Amigos</span>
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        value="servicio"
-                        checked={tipoVisitante === "servicio"}
-                        onChange={(e) => setTipoVisitante(e.target.value)}
-                        className="w-5 h-5 text-[#006E6F] border-gray-300 focus:ring-[#006E6F]"
-                      />
+                      <input type="radio" value="servicio" checked={tipoVisitante === "servicio"} onChange={e => setTipoVisitante(e.target.value)} className="w-5 h-5 text-[#006E6F] border-gray-300 focus:ring-[#006E6F]" />
                       <span className="text-sm text-gray-700">Servicio Externo</span>
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        value="otro"
-                        checked={tipoVisitante === "otro"}
-                        onChange={(e) => setTipoVisitante(e.target.value)}
-                        className="w-5 h-5 text-[#006E6F] border-gray-300 focus:ring-[#006E6F]"
-                      />
+                      <input type="radio" value="otro" checked={tipoVisitante === "otro"} onChange={e => setTipoVisitante(e.target.value)} className="w-5 h-5 text-[#006E6F] border-gray-300 focus:ring-[#006E6F]" />
                       <span className="text-sm text-gray-700">Otro</span>
                     </label>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    id="guardar"
-                    checked={guardarVisitante}
-                    onChange={(e) => setGuardarVisitante(e.target.checked)}
-                    className="w-4 h-4 text-[#006E6F] border-gray-300 rounded focus:ring-[#006E6F]"
-                  />
+                  <input type="checkbox" id="guardar" checked={guardarVisitante} onChange={e => setGuardarVisitante(e.target.checked)} className="w-4 h-4 text-[#006E6F] border-gray-300 rounded focus:ring-[#006E6F]" />
                   <label htmlFor="guardar" className="text-sm text-gray-700">
                     Guardar visitante para futuras visitas
                   </label>
@@ -244,27 +176,17 @@ export const VisitsPage: React.FC = () => {
                   </label>
                   <Popover>
                     <PopoverTrigger asChild>
-                      <button
-                        className={cn(
-                          "w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent bg-white flex items-center justify-between hover:border-[#006E6F] transition-colors",
-                          !selectedDate && "text-gray-400"
-                        )}
-                      >
+                      <button className={cn("w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent bg-white flex items-center justify-between hover:border-[#006E6F] transition-colors", !selectedDate && "text-gray-400")}>
                         <span>
-                          {selectedDate ? format(selectedDate, "dd/MM/yyyy", { locale: es }) : "DD/MM/AAAA"}
+                          {selectedDate ? format(selectedDate, "dd/MM/yyyy", {
+                          locale: es
+                        }) : "DD/MM/AAAA"}
                         </span>
                         <Calendar className="w-5 h-5 text-[#006E6F]" />
                       </button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
-                      <CalendarComponent
-                        mode="single"
-                        selected={selectedDate}
-                        onSelect={setSelectedDate}
-                        disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
-                        initialFocus
-                        className="pointer-events-auto"
-                      />
+                      <CalendarComponent mode="single" selected={selectedDate} onSelect={setSelectedDate} disabled={date => date < new Date(new Date().setHours(0, 0, 0, 0))} initialFocus className="pointer-events-auto" />
                     </PopoverContent>
                   </Popover>
                 </div>
@@ -276,21 +198,13 @@ export const VisitsPage: React.FC = () => {
                     </label>
                     <Popover>
                       <PopoverTrigger asChild>
-                        <button
-                          className={cn(
-                            "w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent bg-white flex items-center justify-between hover:border-[#006E6F] transition-colors",
-                            !horaEntrada && "text-gray-400"
-                          )}
-                        >
+                        <button className={cn("w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent bg-white flex items-center justify-between hover:border-[#006E6F] transition-colors", !horaEntrada && "text-gray-400")}>
                           <span>{horaEntrada || "HH:MM"}</span>
                           <Clock className="w-5 h-5 text-[#006E6F]" />
                         </button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0" align="start">
-                        <TimePicker
-                          value={horaEntrada}
-                          onChange={setHoraEntrada}
-                        />
+                        <TimePicker value={horaEntrada} onChange={setHoraEntrada} />
                       </PopoverContent>
                     </Popover>
                   </div>
@@ -301,21 +215,13 @@ export const VisitsPage: React.FC = () => {
                     </label>
                     <Popover>
                       <PopoverTrigger asChild>
-                        <button
-                          className={cn(
-                            "w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent bg-white flex items-center justify-between hover:border-[#006E6F] transition-colors",
-                            !horaSalida && "text-gray-400"
-                          )}
-                        >
+                        <button className={cn("w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent bg-white flex items-center justify-between hover:border-[#006E6F] transition-colors", !horaSalida && "text-gray-400")}>
                           <span>{horaSalida || "HH:MM"}</span>
                           <Clock className="w-5 h-5 text-[#006E6F]" />
                         </button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0" align="start">
-                        <TimePicker
-                          value={horaSalida}
-                          onChange={setHoraSalida}
-                        />
+                        <TimePicker value={horaSalida} onChange={setHoraSalida} />
                       </PopoverContent>
                     </Popover>
                   </div>
@@ -327,50 +233,27 @@ export const VisitsPage: React.FC = () => {
                   </label>
                   <div className="flex gap-6">
                     <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        value="vehiculo"
-                        checked={medioLlegada === "vehiculo"}
-                        onChange={(e) => setMedioLlegada(e.target.value)}
-                        className="w-5 h-5 text-[#006E6F] border-gray-300 focus:ring-[#006E6F]"
-                      />
+                      <input type="radio" value="vehiculo" checked={medioLlegada === "vehiculo"} onChange={e => setMedioLlegada(e.target.value)} className="w-5 h-5 text-[#006E6F] border-gray-300 focus:ring-[#006E6F]" />
                       <span className="text-sm text-gray-700">Vehículo</span>
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        value="apie"
-                        checked={medioLlegada === "apie"}
-                        onChange={(e) => setMedioLlegada(e.target.value)}
-                        className="w-5 h-5 text-[#006E6F] border-gray-300 focus:ring-[#006E6F]"
-                      />
+                      <input type="radio" value="apie" checked={medioLlegada === "apie"} onChange={e => setMedioLlegada(e.target.value)} className="w-5 h-5 text-[#006E6F] border-gray-300 focus:ring-[#006E6F]" />
                       <span className="text-sm text-gray-700">A pie</span>
                     </label>
                   </div>
                 </div>
 
-                {medioLlegada === "vehiculo" && (
-                  <div>
+                {medioLlegada === "vehiculo" && <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Patente*
                     </label>
-                    <input
-                      type="text"
-                      value={patente}
-                      onChange={(e) => setPatente(e.target.value.toUpperCase())}
-                      placeholder="Ej: NOPQ12"
-                      className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent"
-                    />
-                  </div>
-                )}
+                    <input type="text" value={patente} onChange={e => setPatente(e.target.value.toUpperCase())} placeholder="Ej: NOPQ12" className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent" />
+                  </div>}
               </div>
             </div>
 
             {/* Register Button */}
-            <button
-              onClick={handleRegister}
-              className="w-full py-3.5 rounded-xl font-bold text-base text-white bg-[#006E6F] hover:bg-[#005a5b] transition-all mb-20"
-            >
+            <button onClick={handleRegister} className="w-full py-3.5 rounded-xl font-bold text-base text-white bg-[#006E6F] hover:bg-[#005a5b] transition-all mb-20">
               Registrar
             </button>
           </TabsContent>
@@ -384,6 +267,5 @@ export const VisitsPage: React.FC = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </div>
-  );
+    </div>;
 };
