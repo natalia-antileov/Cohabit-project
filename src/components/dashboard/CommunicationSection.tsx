@@ -23,13 +23,13 @@ export const CommunicationSection: React.FC<CommunicationSectionProps> = ({
 
   return (
     <section className="w-full mt-[30px]">
-      <h2 className="text-[rgba(11,9,43,1)] text-base font-medium leading-none mb-2">
+      <h2 className="text-[rgba(11,9,43,1)] text-base font-medium leading-none mb-4">
         Comunicados
       </h2>
       
       <div className={`${containerClasses} w-full overflow-hidden rounded-[10px] border-solid bg-white px-4 py-5`}>
-        <div className="flex w-full justify-between items-start mb-2">
-          <h3 className="text-lg font-bold text-gray-900 mb-1">
+        <div className="flex w-full justify-between items-start mb-4">
+          <h3 className="text-[rgba(11,9,43,1)] text-lg font-semibold leading-tight flex-1 pr-4">
             {communication.title}
           </h3>
           
