@@ -22,10 +22,10 @@ export const Dashboard: React.FC = () => {
   };
 
   const paymentData = {
-    amount: '$300.0000',
-    status: 'pending' as const,
-    dueDate: 'Nov 30',
-    period: 'Nov 2025',
+    amount: '$326.000',
+    status: 'overdue' as const,
+    dueDate: 'Oct 30',
+    period: 'Oct 2025',
     daysOverdue: 10
   };
 
