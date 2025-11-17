@@ -146,18 +146,18 @@ export const VisitsPage: React.FC = () => {
                       <span className="text-sm text-gray-700">Familia/Amigos</span>
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="radio" value="servicio" checked={tipoVisitante === "servicio"} onChange={e => setTipoVisitante(e.target.value)} className="w-5 h-5 text-[#006E6F] border-gray-300 focus:ring-[#006E6F]" />
+                      <input type="radio" value="servicio" checked={tipoVisitante === "servicio"} onChange={e => setTipoVisitante(e.target.value)} className="w-5 h-5 accent-[#006E6F] border-gray-300 focus:ring-[#006E6F]" />
                       <span className="text-sm text-gray-700">Servicio Externo</span>
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="radio" value="otro" checked={tipoVisitante === "otro"} onChange={e => setTipoVisitante(e.target.value)} className="w-5 h-5 text-[#006E6F] border-gray-300 focus:ring-[#006E6F]" />
+                      <input type="radio" value="otro" checked={tipoVisitante === "otro"} onChange={e => setTipoVisitante(e.target.value)} className="w-5 h-5 accent-[#006E6F] border-gray-300 focus:ring-[#006E6F]" />
                       <span className="text-sm text-gray-700">Otro</span>
                     </label>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <input type="checkbox" id="guardar" checked={guardarVisitante} onChange={e => setGuardarVisitante(e.target.checked)} className="w-4 h-4 text-[#006E6F] border-gray-300 rounded focus:ring-[#006E6F]" />
+                  <input type="checkbox" id="guardar" checked={guardarVisitante} onChange={e => setGuardarVisitante(e.target.checked)} className="w-4 h-4 accent-[#006E6F] border-gray-300 rounded focus:ring-[#006E6F]" />
                   <label htmlFor="guardar" className="text-sm text-gray-700">
                     Guardar visitante para futuras visitas
                   </label>
@@ -233,11 +233,11 @@ export const VisitsPage: React.FC = () => {
                   </label>
                   <div className="flex gap-6">
                     <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="radio" value="vehiculo" checked={medioLlegada === "vehiculo"} onChange={e => setMedioLlegada(e.target.value)} className="w-5 h-5 text-[#006E6F] border-gray-300 focus:ring-[#006E6F]" />
+                      <input type="radio" value="vehiculo" checked={medioLlegada === "vehiculo"} onChange={e => setMedioLlegada(e.target.value)} className="w-5 h-5 accent-[#006E6F] border-gray-300 focus:ring-[#006E6F]" />
                       <span className="text-sm text-gray-700">Vehículo</span>
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="radio" value="apie" checked={medioLlegada === "apie"} onChange={e => setMedioLlegada(e.target.value)} className="w-5 h-5 text-[#006E6F] border-gray-300 focus:ring-[#006E6F]" />
+                      <input type="radio" value="apie" checked={medioLlegada === "apie"} onChange={e => setMedioLlegada(e.target.value)} className="w-5 h-5 accent-[#006E6F] border-gray-300 focus:ring-[#006E6F]" />
                       <span className="text-sm text-gray-700">A pie</span>
                     </label>
                   </div>
