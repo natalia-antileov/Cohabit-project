@@ -29,7 +29,7 @@ export const CommunicationSection: React.FC<CommunicationSectionProps> = ({
       
       <div className={`${containerClasses} w-full overflow-hidden rounded-[10px] border-solid bg-white px-4 py-5`}>
         <div className="flex w-full justify-between items-start mb-4">
-          <h3 className="text-[rgba(11,9,43,1)] text-lg font-semibold leading-tight flex-1 pr-4">
+          <h3 className="text-lg font-bold text-gray-900 mb-3">
             {communication.title}
           </h3>
           
