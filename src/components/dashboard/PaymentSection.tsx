@@ -40,7 +40,7 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment, onGoToP
       </h2>
       <div className="w-full overflow-hidden mt-2 rounded-[10px] border-1">
         <div className="bg-[#FFFFFF] flex w-full items-center justify-between px-3 py-4">
-          <div className="text-black text-[32px] font-black">
+          <div className="text-[#79792B] text-[32px] font-black">
             {payment.amount}
           </div>
           {getStatusBadge()}
