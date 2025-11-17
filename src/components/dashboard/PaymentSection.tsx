@@ -16,10 +16,10 @@ interface PaymentSectionProps {
 export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment, onGoToPayment }) => {
   const getStatusBadge = () => {
     switch (payment.status) {
-      case 'overdue':
+      case 'pending':
         return (
-          <div className="bg-[rgba(223,170,170,1)] self-stretch flex min-h-[31px] items-center gap-2.5 overflow-hidden text-sm text-[rgba(187,33,33,1)] font-medium justify-center w-[103px] my-auto px-3 py-[9px] rounded-[50px]">
-            <span className="self-stretch my-auto">Atrasado</span>
+          <div className="bg-[rgba(250,242,200,1)] self-stretch flex min-h-[31px] items-center gap-2.5 overflow-hidden text-sm text-[rgba(169,137,10,1)] font-medium justify-center w-[103px] my-auto px-3 py-[9px] rounded-[50px]">
+            <span className="self-stretch my-auto">Pendiente</span>
           </div>
         );
       case 'overdue':
@@ -38,7 +38,7 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment, onGoToP
       <h2 className="text-[rgba(11,9,43,1)] text-base font-medium">
         Pagos pendientes o próximos
       </h2>
-      <div className="w-full overflow-hidden mt-4 rounded-[10px] border">
+      <div className="w-full overflow-hidden mt-4 rounded-[10px]">
         <div className="bg-[#FFFFFF] flex w-full items-center justify-between px-3 py-4">
           <div className="text-black text-[32px] font-black">
             {payment.amount}
