@@ -25,7 +25,7 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment, onGoToP
       case 'overdue':
         return (
           <div className="bg-[rgba(223,170,170,1)] self-stretch flex min-h-[31px] items-center gap-2.5 overflow-hidden text-sm text-[rgba(187,33,33,1)] font-medium justify-center w-[103px] my-auto px-3 py-[9px] rounded-[50px]">
-            <span className="self-stretch my-auto">Vencido</span>
+            <span className="self-stretch my-auto">Atrasado</span>
           </div>
         );
       default:
@@ -38,7 +38,7 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment, onGoToP
       <h2 className="text-[rgba(11,9,43,1)] text-base font-medium">
         Pagos pendientes o próximos
       </h2>
-      <div className="w-full overflow-hidden mt-2 rounded-[10px] border-1">
+      <div className="w-full overflow-hidden mt-4 rounded-[10px]">
         <div className="bg-[#FFFFFF] flex w-full items-center justify-between px-3 py-4">
           <div className="text-black text-[32px] font-black">
             {payment.amount}
@@ -46,8 +46,8 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment, onGoToP
           {getStatusBadge()}
         </div>
         
-        <div className="bg-[#DDDFA8] px-3 py-4">
-          <div className="flex w-full justify-between mb-2">
+        <div className="bg-[#79792B] px-3 py-4">
+          <div className="flex w-full justify-between mb-4">
             <div className="flex gap-2">
               <img
                 src="https://api.builder.io/api/v1/image/assets/TEMP/2f79892bb0e8262740a5880d686ae5e0c6a66b18?placeholderIfAbsent=true"
@@ -86,7 +86,7 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment, onGoToP
             </div>
           </div>
           
-          <div className="flex w-full justify-end mt-2">
+          <div className="flex w-full justify-end mt-4">
             <button 
               onClick={onGoToPayment}
               className="text-[rgba(0,110,111,1)] text-sm font-normal hover:underline transition-all"
@@ -103,8 +103,8 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment, onGoToP
 // Demo
 export default function Demo() {
   const samplePayment: PaymentData = {
-    amount: "$150.000",
-    status: 'pending',
+    amount: "$326.000",
+    status: 'overdue',
     dueDate: "15/11/2024",
     period: "Noviembre 2024",
     daysOverdue: 5
