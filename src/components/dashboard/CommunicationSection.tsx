@@ -18,7 +18,7 @@ export const CommunicationSection: React.FC<CommunicationSectionProps> = ({
   onViewAll 
 }) => {
   const containerClasses = communication.priority === 'urgent' 
-    ? "border-2 border-[rgba(220,38,38,1)]" 
+    ? "border border-red-300" 
     : "border border-[rgba(237,237,237,1)]";
   
   return (
@@ -29,7 +29,7 @@ export const CommunicationSection: React.FC<CommunicationSectionProps> = ({
       
       <div className={`${containerClasses} w-full overflow-hidden rounded-[10px] border-solid bg-white px-4 py-5`}>
         <div className="flex w-full justify-between items-start mb-3">
-          <h3 className="text-[rgba(11,9,43,1)] text-lg font-semibold leading-tight flex-1 pr-4">
+          <h3 className="text-[rgba(11,9,43,1)] text-base font-semibold leading-tight flex-1 pr-4">
             {communication.title}
           </h3>
           
