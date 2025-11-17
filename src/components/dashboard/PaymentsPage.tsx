@@ -251,7 +251,7 @@ export const PaymentsPage: React.FC = () => {
             </div>
 
             {/* Pay Button */}
-            <button onClick={handlePayment} disabled={!selectedMethod} className={`w-full py-3.5 rounded-xl font-bold text-base text-white transition-all ${selectedMethod ? "bg-[#006E6F] hover:bg-[#005a5b]" : "bg-gray-300 cursor-not-allowed"}`}>
+            <button onClick={handlePayment} disabled={!selectedMethod} className={`w-full py-3.5 rounded-xl font-bold text-base text-white transition-all ${selectedMethod ? "bg-[#006E6F] hover:bg-[#005a5b]" : "bg-gray-300 cursor-not-allowed"} mb-20`}>
               Pagar
             </button>
           </TabsContent>
