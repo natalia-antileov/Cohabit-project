@@ -290,7 +290,7 @@ export const ReservationsPage: React.FC = () => {
 
           {/* Tab: Reservar */}
           <TabsContent value="reservar" className="mt-0">
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="block text-sm font-medium text-gray-700 mb-2">
               Selecciona un espacio común:
             </p>
 
