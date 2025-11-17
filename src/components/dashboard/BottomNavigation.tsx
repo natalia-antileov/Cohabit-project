@@ -115,7 +115,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate, 
             className="aspect-[1] object-contain w-8"
             style={
               isActive 
-                ? { filter: 'brightness(0) saturate(100%) invert(29%) sepia(64%) saturate(1426%) hue-rotate(155deg) brightness(85%) contrast(101%)' }
+                ? { filter: 'brightness(0) saturate(100%) invert(29%) sepia(64%) saturate(1426%) hue-rotate(155deg) brightness(94%) contrast(101%)' }
                 : { filter: 'brightness(0) saturate(100%) invert(47%) sepia(0%) saturate(0%) hue-rotate(195deg) brightness(95%) contrast(88%)' }
             }
           />
