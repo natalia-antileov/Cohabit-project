@@ -170,6 +170,8 @@ export const VisitsPage: React.FC = () => {
                   </label>
                 </div>
               )}
+              </div>
+            </div>
 
 
             {/* Información de la visita */}
