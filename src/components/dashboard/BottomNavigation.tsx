@@ -106,7 +106,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate, 
       <div key={item.id} className={`${baseClasses} ${activeClasses} w-[75px]`}>
         <button
           onClick={() => handleNavigate(item.id)}
-          className="hover:opacity-70 transition-opacity"
+          className="transition-opacity"
           aria-label={item.label}
         >
           <img
