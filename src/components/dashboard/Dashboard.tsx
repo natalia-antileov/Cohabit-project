@@ -47,7 +47,7 @@ export const Dashboard: React.FC = () => {
   };
 
   const handleGoToPayment = () => {
-  setCurrentSection('pagos');
+    setCurrentSection('pagos');
   };
 
   const renderHomePage = () => (
@@ -59,11 +59,11 @@ export const Dashboard: React.FC = () => {
         backgroundImage={userData.apartmentImage}
       />
       
-      <div className="z-0 w-full px-[19px] pt-[60px] flex-1 flex flex-col justify-between">
-        <div className="space-y-[15px]">
+      <div className="z-0 w-full px-4 pt-6 flex-1 flex flex-col justify-between mb-20">
+        <div className="space-y-3">
           <PaymentSection 
-          payment={paymentData}
-          onGoToPayment={handleGoToPayment}
+            payment={paymentData}
+            onGoToPayment={handleGoToPayment}
           />
           <CommunicationSection 
             communication={communicationData}
