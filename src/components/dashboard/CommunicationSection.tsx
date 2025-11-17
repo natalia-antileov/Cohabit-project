@@ -18,7 +18,7 @@ export const CommunicationSection: React.FC<CommunicationSectionProps> = ({
   onViewAll 
 }) => {
   const containerClasses = communication.priority === 'urgent' 
-    ? "border border-red-300" 
+    ? "border-2 border-red-300" 
     : "border border-[rgba(237,237,237,1)]";
   
   return (
