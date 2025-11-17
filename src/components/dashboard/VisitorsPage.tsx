@@ -119,21 +119,21 @@ export const VisitsPage: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Nombre*
                   </label>
-                  <input type="text" value={nombre} onChange={e => setNombre(e.target.value)} placeholder="Ej: Mauricio" className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent" />
+                  <input type="text" value={nombre} onChange={e => setNombre(e.target.value)} placeholder="Ej: Mauricio" className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-[#006E6F]" />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Apellido*
                   </label>
-                  <input type="text" value={apellido} onChange={e => setApellido(e.target.value)} placeholder="Ej: Ramos" className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent" />
+                  <input type="text" value={apellido} onChange={e => setApellido(e.target.value)} placeholder="Ej: Ramos" className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-[#006E6F]" />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Rut*
                   </label>
-                  <input type="text" value={rut} onChange={e => setRut(e.target.value)} placeholder="Ej: 12345678-9" className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent" />
+                  <input type="text" value={rut} onChange={e => setRut(e.target.value)} placeholder="Ej: 12345678-9" className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-[#006E6F]" />
                 </div>
 
                 <div>
@@ -156,14 +156,21 @@ export const VisitsPage: React.FC = () => {
                   </div>
                 </div>
 
+                {selectedVisitor === "" && (
                 <div className="flex items-center gap-2">
-                  <input type="checkbox" id="guardar" checked={guardarVisitante} onChange={e => setGuardarVisitante(e.target.checked)} className="w-4 h-4 accent-[#006E6F] border-gray-300 rounded focus:ring-[#006E6F]" />
+                  <input
+                    type="checkbox"
+                    id="guardar"
+                    checked={guardarVisitante}
+                    onChange={e => setGuardarVisitante(e.target.checked)}
+                    className="w-4 h-4 accent-[#006E6F] border-gray-300 rounded focus:ring-[#006E6F]"
+                  />
                   <label htmlFor="guardar" className="text-sm text-gray-700">
                     Guardar visitante para futuras visitas
                   </label>
                 </div>
-              </div>
-            </div>
+              )}
+
 
             {/* Información de la visita */}
             <div className="mb-6">
@@ -247,7 +254,7 @@ export const VisitsPage: React.FC = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Patente*
                     </label>
-                    <input type="text" value={patente} onChange={e => setPatente(e.target.value.toUpperCase())} placeholder="Ej: NOPQ12" className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent" />
+                    <input type="text" value={patente} onChange={e => setPatente(e.target.value.toUpperCase())} placeholder="Ej: NOPQ12" className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-[#006E6F]" />
                   </div>}
               </div>
             </div>
