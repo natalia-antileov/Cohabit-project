@@ -169,7 +169,7 @@ export const VisitsPage: React.FC = () => {
                     Guardar visitante para futuras visitas
                   </label>
                 </div>
-              )
+              )}
 
 
             {/* Información de la visita */}
