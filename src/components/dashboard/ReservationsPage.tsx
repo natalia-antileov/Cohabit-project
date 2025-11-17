@@ -320,7 +320,7 @@ export const ReservationsPage: React.FC = () => {
               {myReservations.length === 0 ? (
                 <div className="text-center py-12">
                   {/* Ícono corregido para consistencia */}
-                  <Calendar className="w-8 h-8 mx-auto mb-2" style={{ color: '#006E6F' }} />
+                  <Calendar className="w-8 h-8 mx-auto mb-2" style={{ color: '#79792B' }} />
                   <p className="text-gray-500 text-sm">
                     No tienes reservas aún
                   </p>
@@ -368,13 +368,13 @@ export const ReservationsPage: React.FC = () => {
 
                     <div className="space-y-2 text-sm text-gray-600">
                       <div className="flex items-center gap-2">
-                        {/* Ícono de calendario corregido con color primario */}
-                        <Calendar className="w-4 h-4" style={{ color: '#006E6F' }} />
+                        {/* Ícono de calendario*/}
+                        <Calendar className="w-4 h-4" style={{ color: '#79792B' }} />
                         <span>{formatDate(reservation.date)}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                         {/* Ícono de reloj corregido con color primario */}
-                        <Clock className="w-4 h-4" style={{ color: '#006E6F' }} />
+                         {/* Ícono de reloj*/}
+                        <Clock className="w-4 h-4" style={{ color: '#79792B' }} />
                         <span>{reservation.time}</span>
                       </div>
                     </div>
