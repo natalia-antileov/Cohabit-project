@@ -112,12 +112,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate, 
           <img
             src={item.icon}
             alt=""
-            className="aspect-[1] object-contain w-8"
-            style={
-              isActive 
-                ? { filter: 'brightness(0) saturate(100%) invert(29%) sepia(64%) saturate(1426%) hue-rotate(155deg) brightness(94%) contrast(101%)' }
-                : { filter: 'brightness(0) saturate(100%) invert(47%) sepia(0%) saturate(0%) hue-rotate(195deg) brightness(95%) contrast(88%)' }
-            }
+            className={`aspect-[1] object-contain w-8 transition-opacity ${isActive ? 'opacity-100' : 'opacity-50'}`}
           />
         </button>
         <span className="mt-1">{item.label}</span>
@@ -137,3 +132,26 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onNavigate, 
     </nav>
   );
 };
+
+// Demo
+export default function Demo() {
+  const [currentTab, setCurrentTab] = useState('inicio');
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="flex-1 p-8 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Tab actual: {currentTab}</h1>
+          <p className="text-gray-600">Haz clic en los íconos de navegación abajo</p>
+        </div>
+      </div>
+      
+      <div className="fixed bottom-0 left-0 right-0">
+        <BottomNavigation 
+          onNavigate={(tabId) => setCurrentTab(tabId)}
+          activeTab={currentTab}
+        />
+      </div>
+    </div>
+  );
+}
