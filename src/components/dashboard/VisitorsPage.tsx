@@ -142,7 +142,7 @@ export const VisitsPage: React.FC = () => {
                   </label>
                   <div className="flex gap-4">
                     <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="radio" value="familia" checked={tipoVisitante === "familia"} onChange={e => setTipoVisitante(e.target.value)} className="w-5 h-5 text-[#006E6F] border-gray-300 focus:ring-[#006E6F]" />
+                      <input type="radio" value="familia" checked={tipoVisitante === "familia"} onChange={e => setTipoVisitante(e.target.value)} className="w-5 h-5 accent-[#006E6F] border-gray-300 focus:ring-[#006E6F]" />
                       <span className="text-sm text-gray-700">Familia/Amigos</span>
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer">
