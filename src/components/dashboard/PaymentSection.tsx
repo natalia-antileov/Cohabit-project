@@ -39,7 +39,7 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment, onGoToP
       <h2 className="text-[rgba(11,9,43,1)] text-base font-medium">
         Pagos pendientes o próximos
       </h2>
-      <div className="bg-[rgba(245,245,245,1)] w-full overflow-hidden mt-4 rounded-[10px] px-3 py-4">
+      <div className="bg-[#DDDFA8] w-full overflow-hidden mt-4 rounded-[10px] px-3 py-4">
         <div className="flex w-full items-center justify-between mb-4">
           <div className="text-black text-[32px] font-black">
             {payment.amount}
