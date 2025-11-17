@@ -16,10 +16,10 @@ interface PaymentSectionProps {
 export const PaymentSection: React.FC<PaymentSectionProps> = ({ payment, onGoToPayment }) => {
   const getStatusBadge = () => {
     switch (payment.status) {
-      case 'pending':
+      case 'overdue':
         return (
-          <div className="bg-[rgba(250,242,200,1)] self-stretch flex min-h-[31px] items-center gap-2.5 overflow-hidden text-sm text-[rgba(169,137,10,1)] font-medium justify-center w-[103px] my-auto px-3 py-[9px] rounded-[50px]">
-            <span className="self-stretch my-auto">Pendiente</span>
+          <div className="bg-[rgba(223,170,170,1)] self-stretch flex min-h-[31px] items-center gap-2.5 overflow-hidden text-sm text-[rgba(187,33,33,1)] font-medium justify-center w-[103px] my-auto px-3 py-[9px] rounded-[50px]">
+            <span className="self-stretch my-auto">Atrasado</span>
           </div>
         );
       case 'overdue':
