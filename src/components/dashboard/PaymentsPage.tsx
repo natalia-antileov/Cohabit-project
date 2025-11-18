@@ -444,24 +444,18 @@ export const PaymentsPage: React.FC = () => {
               </div>
             ) : (
               <div className="space-y-4 pb-20">
-                {/* Resumen estadístico */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 rounded-xl p-4 border border-emerald-200">
-                    <div className="flex items-center gap-2 mb-2">
-                      <TrendingUp className="w-4 h-4 text-emerald-600" />
-                      <span className="text-xs font-semibold text-emerald-700 uppercase tracking-wide">Total pagado</span>
-                    </div>
-                    <p className="text-lg font-bold text-emerald-800">
+                {/* Resumen estadístico - Compacto */}
+                <div className="flex gap-3">
+                  <div className="flex-1 bg-emerald-50 rounded-lg p-3 border border-emerald-200">
+                    <p className="text-xs text-emerald-700 font-semibold mb-1">Total pagado</p>
+                    <p className="text-base font-bold text-emerald-800">
                       {formatCurrency(getPaymentStats().totalAmount)}
                     </p>
                   </div>
 
-                  <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-xl p-4 border border-blue-200">
-                    <div className="flex items-center gap-2 mb-2">
-                      <CheckCircle2 className="w-4 h-4 text-blue-600" />
-                      <span className="text-xs font-semibold text-blue-700 uppercase tracking-wide">Transacciones</span>
-                    </div>
-                    <p className="text-lg font-bold text-blue-800">
+                  <div className="flex-1 bg-blue-50 rounded-lg p-3 border border-blue-200">
+                    <p className="text-xs text-blue-700 font-semibold mb-1">Pagos</p>
+                    <p className="text-base font-bold text-blue-800">
                       {getPaymentStats().totalCompleted}
                     </p>
                   </div>
@@ -513,80 +507,59 @@ export const PaymentsPage: React.FC = () => {
                         <div key={payment.id}>
                           <button
                             onClick={() => setExpandedPaymentId(isExpanded ? null : payment.id)}
-                            className={`w-full border rounded-xl p-4 transition-all duration-200 text-left ${borderColor} ${bgColor}`}
+                            className={`w-full border rounded-xl p-3.5 transition-all duration-200 text-left ${borderColor} ${bgColor}`}
                           >
-                            <div className="flex items-start justify-between mb-3">
-                              <div className="flex items-start gap-3 flex-1">
-                                <div className={`mt-0.5 rounded-lg p-2.5 ${statusConfig.color}`}>
-                                  <CreditCard className="w-5 h-5" />
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <h4 className="font-semibold text-gray-800 text-sm truncate">
+                                    Pago {payment.period}
+                                  </h4>
+                                  <span className={`px-2 py-0.5 rounded-full text-xs font-semibold flex items-center gap-1 flex-shrink-0 ${statusConfig.color}`}>
+                                    {statusConfig.icon}
+                                    {statusConfig.label}
+                                  </span>
                                 </div>
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <h4 className="font-bold text-gray-800 text-sm">
-                                      {payment.description}
-                                    </h4>
-                                    <span className={`px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1 ${statusConfig.color}`}>
-                                      {statusConfig.icon}
-                                      {statusConfig.label}
-                                    </span>
-                                  </div>
-                                  <p className="text-xs text-gray-500 flex items-center gap-2">
-                                    <Calendar className="w-3 h-3" />
-                                    {format(parseISO(payment.date), "dd 'de' MMMM 'de' yyyy", { locale: es })}
-                                    <span className="text-emerald-600 font-semibold">•</span>
-                                    <span className="text-emerald-600">{getRelativeTime(payment.date)}</span>
-                                  </p>
+                                <p className="text-xs text-gray-500 mb-2">
+                                  {format(parseISO(payment.date), "dd MMM yyyy", { locale: es })}
+                                  <span className="text-emerald-600 font-semibold mx-1">•</span>
+                                  <span className="text-emerald-600 font-medium">{getRelativeTime(payment.date)}</span>
+                                </p>
+                                <div className="flex items-center gap-2">
+                                  <img
+                                    src={payment.method.type === "visa" ? "/visa.png" : "/mastercard.png"}
+                                    alt={payment.method.type}
+                                    className="w-5 h-3 object-contain"
+                                  />
+                                  <span className="text-xs text-gray-600">
+                                    •••• {payment.method.lastDigits}
+                                  </span>
                                 </div>
                               </div>
-                              <div className="text-right">
-                                <p className="font-bold text-gray-800">
+                              <div className="text-right flex-shrink-0">
+                                <p className="font-bold text-gray-800 text-sm">
                                   {formatCurrency(payment.amount)}
                                 </p>
                                 {isExpanded ? (
-                                  <ChevronUp className="w-4 h-4 text-gray-600 ml-auto mt-1" />
+                                  <ChevronUp className="w-4 h-4 text-gray-600 ml-auto mt-0.5" />
                                 ) : (
-                                  <ChevronDown className="w-4 h-4 text-gray-600 ml-auto mt-1" />
+                                  <ChevronDown className="w-4 h-4 text-gray-600 ml-auto mt-0.5" />
                                 )}
                               </div>
-                            </div>
-
-                            <div className="flex items-center justify-between text-xs">
-                              <div className="flex items-center gap-2">
-                                <img
-                                  src={payment.method.type === "visa" ? "/visa.png" : "/mastercard.png"}
-                                  alt={payment.method.type}
-                                  className="w-6 h-4 object-contain"
-                                />
-                                <span className="text-gray-600">
-                                  {payment.method.bank} •••• {payment.method.lastDigits}
-                                </span>
-                              </div>
-                              <span className="text-gray-500 font-mono">
-                                {payment.reference}
-                              </span>
                             </div>
                           </button>
 
                           {/* Detalles expandibles */}
                           {isExpanded && payment.items && payment.items.length > 0 && (
-                            <div className="bg-gray-50 rounded-b-xl border border-t-0 border-gray-200 p-4 space-y-2">
-                              <p className="text-xs font-bold text-gray-600 uppercase tracking-wide mb-3">
-                                Desglose de pago
-                              </p>
+                            <div className="bg-gray-50 rounded-b-xl border border-t-0 border-gray-200 p-3 space-y-1.5">
                               {payment.items.map((item, itemIdx) => (
-                                <div key={itemIdx} className="flex items-center justify-between text-sm">
-                                  <span className="text-gray-700">{item.name}</span>
-                                  <span className="font-semibold text-gray-800">
+                                <div key={itemIdx} className="flex items-center justify-between text-xs">
+                                  <span className="text-gray-600">{item.name}</span>
+                                  <span className="font-semibold text-gray-700">
                                     {formatCurrency(item.amount)}
                                   </span>
                                 </div>
                               ))}
-                              <div className="border-t border-gray-300 pt-2 mt-2 flex items-center justify-between text-sm font-bold">
-                                <span className="text-gray-700">Total</span>
-                                <span className="text-emerald-600">
-                                  {formatCurrency(payment.amount)}
-                                </span>
-                              </div>
                             </div>
                           )}
                         </div>
