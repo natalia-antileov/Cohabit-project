@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { ChevronDown, ChevronUp, Plus, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Plus, Trash2, CheckCircle2, AlertCircle, CreditCard, TrendingUp, Calendar } from "lucide-react";
 import { BottomDrawer } from "../ui/BottomDrawer";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { format, differenceInDays, parseISO } from "date-fns";
+import { es } from "date-fns/locale";
 interface PaymentMethod {
   id: string;
   type: "mastercard" | "visa";
@@ -16,6 +18,25 @@ interface PaymentItem {
     amount: number;
   }[];
 }
+
+interface Payment {
+  id: string;
+  date: string; // YYYY-MM-DD
+  amount: number;
+  status: "completed" | "pending" | "failed";
+  method: {
+    type: "mastercard" | "visa";
+    lastDigits: string;
+    bank: string;
+  };
+  reference: string;
+  description: string;
+  period: string; // Ej: "Octubre 2025"
+  items?: {
+    name: string;
+    amount: number;
+  }[];
+}
 export const PaymentsPage: React.FC = () => {
   const [isCommonExpanded, setIsCommonExpanded] = useState(false);
   const [isHomeExpanded, setIsHomeExpanded] = useState(false);
@@ -26,6 +47,8 @@ export const PaymentsPage: React.FC = () => {
   const [cardExpiry, setCardExpiry] = useState("");
   const [cardCVV, setCardCVV] = useState("");
   const [saveCard, setSaveCard] = useState(false);
+  const [expandedPaymentId, setExpandedPaymentId] = useState<string | null>(null);
+  const [selectedPeriodFilter, setSelectedPeriodFilter] = useState<string>("todos");
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([{
     id: "1",
     type: "mastercard",
@@ -37,6 +60,92 @@ export const PaymentsPage: React.FC = () => {
     bank: "Banco CD",
     lastDigits: "5678"
   }]);
+
+  // Mock data de pagos realizados
+  const [payments, setPayments] = useState<Payment[]>([
+    {
+      id: "PAY001",
+      date: "2025-11-15",
+      amount: 326000,
+      status: "completed",
+      method: { type: "visa", lastDigits: "5678", bank: "Banco CD" },
+      reference: "TRX-20251115-001",
+      description: "Pago de gastos - Octubre 2025",
+      period: "Octubre 2025",
+      items: [
+        { name: "Gastos comunes", amount: 205000 },
+        { name: "Gastos del hogar", amount: 71000 },
+        { name: "Multa por retraso", amount: 50000 }
+      ]
+    },
+    {
+      id: "PAY002",
+      date: "2025-10-10",
+      amount: 276000,
+      status: "completed",
+      method: { type: "mastercard", lastDigits: "1234", bank: "Banco AB" },
+      reference: "TRX-20251010-002",
+      description: "Pago de gastos - Septiembre 2025",
+      period: "Septiembre 2025",
+      items: [
+        { name: "Gastos comunes", amount: 195000 },
+        { name: "Gastos del hogar", amount: 81000 }
+      ]
+    },
+    {
+      id: "PAY003",
+      date: "2025-09-12",
+      amount: 267500,
+      status: "completed",
+      method: { type: "visa", lastDigits: "5678", bank: "Banco CD" },
+      reference: "TRX-20250912-003",
+      description: "Pago de gastos - Agosto 2025",
+      period: "Agosto 2025",
+      items: [
+        { name: "Gastos comunes", amount: 200000 },
+        { name: "Gastos del hogar", amount: 67500 }
+      ]
+    },
+    {
+      id: "PAY004",
+      date: "2025-08-08",
+      amount: 282000,
+      status: "completed",
+      method: { type: "mastercard", lastDigits: "1234", bank: "Banco AB" },
+      reference: "TRX-20250808-004",
+      description: "Pago de gastos - Julio 2025",
+      period: "Julio 2025",
+      items: [
+        { name: "Gastos comunes", amount: 205000 },
+        { name: "Gastos del hogar", amount: 77000 }
+      ]
+    },
+    {
+      id: "PAY005",
+      date: "2025-07-15",
+      amount: 275000,
+      status: "completed",
+      method: { type: "visa", lastDigits: "5678", bank: "Banco CD" },
+      reference: "TRX-20250715-005",
+      description: "Pago de gastos - Junio 2025",
+      period: "Junio 2025",
+      items: [
+        { name: "Gastos comunes", amount: 198000 },
+        { name: "Gastos del hogar", amount: 77000 }
+      ]
+    },
+    {
+      id: "PAY006",
+      date: "2025-06-10",
+      amount: 150000,
+      status: "failed",
+      method: { type: "mastercard", lastDigits: "1234", bank: "Banco AB" },
+      reference: "TRX-20250610-006",
+      description: "Intento de pago - Mayo 2025",
+      period: "Mayo 2025",
+      items: []
+    }
+  ]);
   const totalAmount = 326000;
   const daysLate = 10;
   const commonExpenses: PaymentItem = {
@@ -80,8 +189,71 @@ export const PaymentsPage: React.FC = () => {
     }]
   };
   const lateFee = 50000;
+
+  // Funciones de utilidad para pagos
   const formatCurrency = (amount: number) => {
     return `$${amount.toLocaleString("es-CL")}`;
+  };
+
+  const getRelativeTime = (dateString: string) => {
+    const date = new Date(dateString);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    date.setHours(0, 0, 0, 0);
+
+    const daysAgo = differenceInDays(today, date);
+    if (daysAgo === 0) return "Hoy";
+    if (daysAgo === 1) return "Ayer";
+    if (daysAgo < 7) return `Hace ${daysAgo} días`;
+    if (daysAgo < 30) return `Hace ${Math.floor(daysAgo / 7)} semanas`;
+    return `Hace ${Math.floor(daysAgo / 30)} meses`;
+  };
+
+  const getPaymentStatusConfig = (status: string) => {
+    const configs = {
+      completed: {
+        label: "Completado",
+        color: "bg-emerald-100 text-emerald-700",
+        icon: <CheckCircle2 className="w-4 h-4" />
+      },
+      pending: {
+        label: "Pendiente",
+        color: "bg-amber-100 text-amber-700",
+        icon: <AlertCircle className="w-4 h-4" />
+      },
+      failed: {
+        label: "Rechazado",
+        color: "bg-red-100 text-red-700",
+        icon: <AlertCircle className="w-4 h-4" />
+      }
+    };
+    return configs[status as keyof typeof configs];
+  };
+
+  const groupPaymentsByPeriod = () => {
+    const grouped: { [key: string]: Payment[] } = {};
+    payments.forEach(payment => {
+      if (!grouped[payment.period]) {
+        grouped[payment.period] = [];
+      }
+      grouped[payment.period].push(payment);
+    });
+    return grouped;
+  };
+
+  const getFilteredPayments = () => {
+    if (selectedPeriodFilter === "todos") return payments;
+    return payments.filter(p => p.period === selectedPeriodFilter);
+  };
+
+  const getPaymentStats = () => {
+    const completed = payments.filter(p => p.status === "completed");
+    const totalAmount = completed.reduce((sum, p) => sum + p.amount, 0);
+    return {
+      totalCompleted: completed.length,
+      totalAmount,
+      lastPayment: completed.length > 0 ? completed[0] : null
+    };
   };
   const formatCardNumber = (value: string) => {
     const numbers = value.replace(/\s/g, "");
@@ -258,10 +430,172 @@ export const PaymentsPage: React.FC = () => {
 
           {/* Tab: Historial */}
           <TabsContent value="historial" className="mt-0">
-            <div className="text-center py-12">
-              <div className="text-gray-400 mb-2">📋</div>
-              <p className="text-gray-500 text-sm">No hay pagos registrados</p>
-            </div>
+            {payments.length === 0 ? (
+              <div className="text-center py-16 px-4">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
+                  <CreditCard className="w-8 h-8" style={{ color: '#79792B' }} />
+                </div>
+                <h3 className="text-gray-800 font-semibold mb-1 text-base">
+                  No hay pagos registrados
+                </h3>
+                <p className="text-gray-500 text-sm">
+                  Tus transacciones aparecerán aquí
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4 pb-20">
+                {/* Resumen estadístico */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 rounded-xl p-4 border border-emerald-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <TrendingUp className="w-4 h-4 text-emerald-600" />
+                      <span className="text-xs font-semibold text-emerald-700 uppercase tracking-wide">Total pagado</span>
+                    </div>
+                    <p className="text-lg font-bold text-emerald-800">
+                      {formatCurrency(getPaymentStats().totalAmount)}
+                    </p>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-xl p-4 border border-blue-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <CheckCircle2 className="w-4 h-4 text-blue-600" />
+                      <span className="text-xs font-semibold text-blue-700 uppercase tracking-wide">Transacciones</span>
+                    </div>
+                    <p className="text-lg font-bold text-blue-800">
+                      {getPaymentStats().totalCompleted}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Filtro de períodos */}
+                {Object.keys(groupPaymentsByPeriod()).length > 1 && (
+                  <div className="flex gap-2 overflow-x-auto pb-2">
+                    <button
+                      onClick={() => setSelectedPeriodFilter("todos")}
+                      className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
+                        selectedPeriodFilter === "todos"
+                          ? "bg-[#006E6F] text-white"
+                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      }`}
+                    >
+                      Todos
+                    </button>
+                    {Object.keys(groupPaymentsByPeriod()).map(period => (
+                      <button
+                        key={period}
+                        onClick={() => setSelectedPeriodFilter(period)}
+                        className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
+                          selectedPeriodFilter === period
+                            ? "bg-[#006E6F] text-white"
+                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        }`}
+                      >
+                        {period}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Historial de pagos agrupado */}
+                <div className="space-y-3">
+                  {getFilteredPayments().length === 0 ? (
+                    <div className="text-center py-8 text-gray-500 text-sm">
+                      No hay pagos en este período
+                    </div>
+                  ) : (
+                    getFilteredPayments().map((payment, idx) => {
+                      const statusConfig = getPaymentStatusConfig(payment.status);
+                      const isExpanded = expandedPaymentId === payment.id;
+                      const borderColor = payment.status === "completed" ? "border-emerald-100" : payment.status === "failed" ? "border-red-100" : "border-amber-100";
+                      const bgColor = payment.status === "completed" ? "hover:bg-emerald-50" : payment.status === "failed" ? "hover:bg-red-50" : "hover:bg-amber-50";
+
+                      return (
+                        <div key={payment.id}>
+                          <button
+                            onClick={() => setExpandedPaymentId(isExpanded ? null : payment.id)}
+                            className={`w-full border rounded-xl p-4 transition-all duration-200 text-left ${borderColor} ${bgColor}`}
+                          >
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="flex items-start gap-3 flex-1">
+                                <div className={`mt-0.5 rounded-lg p-2.5 ${statusConfig.color}`}>
+                                  <CreditCard className="w-5 h-5" />
+                                </div>
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <h4 className="font-bold text-gray-800 text-sm">
+                                      {payment.description}
+                                    </h4>
+                                    <span className={`px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1 ${statusConfig.color}`}>
+                                      {statusConfig.icon}
+                                      {statusConfig.label}
+                                    </span>
+                                  </div>
+                                  <p className="text-xs text-gray-500 flex items-center gap-2">
+                                    <Calendar className="w-3 h-3" />
+                                    {format(parseISO(payment.date), "dd 'de' MMMM 'de' yyyy", { locale: es })}
+                                    <span className="text-emerald-600 font-semibold">•</span>
+                                    <span className="text-emerald-600">{getRelativeTime(payment.date)}</span>
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <p className="font-bold text-gray-800">
+                                  {formatCurrency(payment.amount)}
+                                </p>
+                                {isExpanded ? (
+                                  <ChevronUp className="w-4 h-4 text-gray-600 ml-auto mt-1" />
+                                ) : (
+                                  <ChevronDown className="w-4 h-4 text-gray-600 ml-auto mt-1" />
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="flex items-center justify-between text-xs">
+                              <div className="flex items-center gap-2">
+                                <img
+                                  src={payment.method.type === "visa" ? "/visa.png" : "/mastercard.png"}
+                                  alt={payment.method.type}
+                                  className="w-6 h-4 object-contain"
+                                />
+                                <span className="text-gray-600">
+                                  {payment.method.bank} •••• {payment.method.lastDigits}
+                                </span>
+                              </div>
+                              <span className="text-gray-500 font-mono">
+                                {payment.reference}
+                              </span>
+                            </div>
+                          </button>
+
+                          {/* Detalles expandibles */}
+                          {isExpanded && payment.items && payment.items.length > 0 && (
+                            <div className="bg-gray-50 rounded-b-xl border border-t-0 border-gray-200 p-4 space-y-2">
+                              <p className="text-xs font-bold text-gray-600 uppercase tracking-wide mb-3">
+                                Desglose de pago
+                              </p>
+                              {payment.items.map((item, itemIdx) => (
+                                <div key={itemIdx} className="flex items-center justify-between text-sm">
+                                  <span className="text-gray-700">{item.name}</span>
+                                  <span className="font-semibold text-gray-800">
+                                    {formatCurrency(item.amount)}
+                                  </span>
+                                </div>
+                              ))}
+                              <div className="border-t border-gray-300 pt-2 mt-2 flex items-center justify-between text-sm font-bold">
+                                <span className="text-gray-700">Total</span>
+                                <span className="text-emerald-600">
+                                  {formatCurrency(payment.amount)}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+            )}
           </TabsContent>
         </Tabs>
       </div>
