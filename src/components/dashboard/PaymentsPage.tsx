@@ -461,34 +461,6 @@ export const PaymentsPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Filtro de períodos */}
-                {Object.keys(groupPaymentsByPeriod()).length > 1 && (
-                  <div className="flex gap-2 overflow-x-auto pb-2">
-                    <button
-                      onClick={() => setSelectedPeriodFilter("todos")}
-                      className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
-                        selectedPeriodFilter === "todos"
-                          ? "bg-[#006E6F] text-white"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      }`}
-                    >
-                      Todos
-                    </button>
-                    {Object.keys(groupPaymentsByPeriod()).map(period => (
-                      <button
-                        key={period}
-                        onClick={() => setSelectedPeriodFilter(period)}
-                        className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
-                          selectedPeriodFilter === period
-                            ? "bg-[#006E6F] text-white"
-                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                        }`}
-                      >
-                        {period}
-                      </button>
-                    ))}
-                  </div>
-                )}
 
                 {/* Historial de pagos agrupado */}
                 <div className="space-y-3">
@@ -498,43 +470,26 @@ export const PaymentsPage: React.FC = () => {
                     </div>
                   ) : (
                     getFilteredPayments().map((payment, idx) => {
-                      const statusConfig = getPaymentStatusConfig(payment.status);
                       const isExpanded = expandedPaymentId === payment.id;
-                      const borderColor = payment.status === "completed" ? "border-emerald-100" : payment.status === "failed" ? "border-red-100" : "border-amber-100";
-                      const bgColor = payment.status === "completed" ? "hover:bg-emerald-50" : payment.status === "failed" ? "hover:bg-red-50" : "hover:bg-amber-50";
+                      const bgColor = payment.status === "completed" ? "bg-emerald-50" : payment.status === "failed" ? "bg-red-50" : "bg-amber-50";
+                      const hoverBgColor = payment.status === "completed" ? "hover:bg-emerald-100/50" : payment.status === "failed" ? "hover:bg-red-100/50" : "hover:bg-amber-100/50";
 
                       return (
                         <div key={payment.id}>
                           <button
                             onClick={() => setExpandedPaymentId(isExpanded ? null : payment.id)}
-                            className={`w-full border rounded-xl p-3.5 transition-all duration-200 text-left ${borderColor} ${bgColor}`}
+                            className={`w-full rounded-xl p-3.5 transition-all duration-200 text-left ${bgColor} ${hoverBgColor} border border-gray-200`}
                           >
                             <div className="flex items-start justify-between gap-2">
                               <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2 mb-1">
-                                  <h4 className="font-semibold text-gray-800 text-sm truncate">
-                                    Pago {payment.period}
-                                  </h4>
-                                  <span className={`px-2 py-0.5 rounded-full text-xs font-semibold flex items-center gap-1 flex-shrink-0 ${statusConfig.color}`}>
-                                    {statusConfig.icon}
-                                    {statusConfig.label}
-                                  </span>
-                                </div>
-                                <p className="text-xs text-gray-500 mb-2">
+                                <h4 className="font-semibold text-gray-800 text-sm mb-1 truncate">
+                                  Pago {payment.period}
+                                </h4>
+                                <p className="text-xs text-gray-500">
                                   {format(parseISO(payment.date), "dd MMM yyyy", { locale: es })}
-                                  <span className="text-emerald-600 font-semibold mx-1">•</span>
-                                  <span className="text-emerald-600 font-medium">{getRelativeTime(payment.date)}</span>
+                                  <span className="text-gray-400 mx-1">•</span>
+                                  <span className="font-medium text-gray-600">{getRelativeTime(payment.date)}</span>
                                 </p>
-                                <div className="flex items-center gap-2">
-                                  <img
-                                    src={payment.method.type === "visa" ? "/visa.png" : "/mastercard.png"}
-                                    alt={payment.method.type}
-                                    className="w-5 h-3 object-contain"
-                                  />
-                                  <span className="text-xs text-gray-600">
-                                    •••• {payment.method.lastDigits}
-                                  </span>
-                                </div>
                               </div>
                               <div className="text-right flex-shrink-0">
                                 <p className="font-bold text-gray-800 text-sm">
@@ -550,16 +505,51 @@ export const PaymentsPage: React.FC = () => {
                           </button>
 
                           {/* Detalles expandibles */}
-                          {isExpanded && payment.items && payment.items.length > 0 && (
-                            <div className="bg-gray-50 rounded-b-xl border border-t-0 border-gray-200 p-3 space-y-1.5">
-                              {payment.items.map((item, itemIdx) => (
-                                <div key={itemIdx} className="flex items-center justify-between text-xs">
-                                  <span className="text-gray-600">{item.name}</span>
-                                  <span className="font-semibold text-gray-700">
-                                    {formatCurrency(item.amount)}
+                          {isExpanded && (
+                            <div className="bg-gray-50 rounded-b-xl border border-t-0 border-gray-200 p-3 space-y-2">
+                              {/* Estado y Método de pago */}
+                              <div className="space-y-2 pb-2 border-b border-gray-200">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-xs text-gray-500 font-semibold">Estado</span>
+                                  <span className={`px-2 py-0.5 rounded-full text-xs font-semibold flex items-center gap-1 ${
+                                    payment.status === "completed" ? "bg-emerald-100 text-emerald-700" :
+                                    payment.status === "failed" ? "bg-red-100 text-red-700" :
+                                    "bg-amber-100 text-amber-700"
+                                  }`}>
+                                    {payment.status === "completed" && <CheckCircle2 className="w-3 h-3" />}
+                                    {payment.status === "failed" && <AlertCircle className="w-3 h-3" />}
+                                    {payment.status === "pending" && <AlertCircle className="w-3 h-3" />}
+                                    {payment.status === "completed" ? "Completado" : payment.status === "failed" ? "Rechazado" : "Pendiente"}
                                   </span>
                                 </div>
-                              ))}
+                                <div className="flex items-center justify-between">
+                                  <span className="text-xs text-gray-500 font-semibold">Método de pago</span>
+                                  <div className="flex items-center gap-1.5">
+                                    <img
+                                      src={payment.method.type === "visa" ? "/visa.png" : "/mastercard.png"}
+                                      alt={payment.method.type}
+                                      className="w-5 h-3 object-contain"
+                                    />
+                                    <span className="text-xs text-gray-700 font-medium">
+                                      •••• {payment.method.lastDigits}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Desglose de items */}
+                              {payment.items && payment.items.length > 0 && (
+                                <div className="space-y-1.5">
+                                  {payment.items.map((item, itemIdx) => (
+                                    <div key={itemIdx} className="flex items-center justify-between text-xs">
+                                      <span className="text-gray-600">{item.name}</span>
+                                      <span className="font-semibold text-gray-700">
+                                        {formatCurrency(item.amount)}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>
