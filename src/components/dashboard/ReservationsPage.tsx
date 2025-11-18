@@ -408,7 +408,10 @@ export const ReservationsPage: React.FC = () => {
                         {upcoming.map((reservation) => (
                           <div
                             key={reservation.id}
-                            className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 hover:bg-emerald-100/50 transition-all duration-200"
+                            className="rounded-xl p-4 transition-all duration-200 border"
+                            style={{ backgroundColor: '#DDDFA8', borderColor: '#DDDFA8' }}
+                            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#D4D699')}
+                            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#DDDFA8')}
                           >
 
                             <div className="flex items-start justify-between mb-3">
@@ -431,17 +434,17 @@ export const ReservationsPage: React.FC = () => {
                               <div className="flex gap-1.5">
                                 <button
                                   onClick={() => handleEdit(reservation)}
-                                  className="p-2 hover:bg-emerald-50 rounded-lg transition-colors duration-150"
+                                  className="p-2 hover:opacity-70 rounded-lg transition-opacity duration-150"
                                   title="Editar reserva"
                                 >
-                                  <Edit2 className="w-4 h-4 text-emerald-600" />
+                                  <Edit2 className="w-4 h-4" style={{ color: '#006E6F' }} />
                                 </button>
                                 <button
                                   onClick={() => setReservationToDelete(reservation.id)}
-                                  className="p-2 hover:bg-red-50 rounded-lg transition-colors duration-150"
+                                  className="p-2 hover:opacity-70 rounded-lg transition-opacity duration-150"
                                   title="Eliminar reserva"
                                 >
-                                  <Trash2 className="w-4 h-4 text-red-500" />
+                                  <Trash2 className="w-4 h-4" style={{ color: '#006E6F' }} />
                                 </button>
                               </div>
                             </div>
