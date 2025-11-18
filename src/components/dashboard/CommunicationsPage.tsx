@@ -111,16 +111,16 @@ export const CommunicationsPage: React.FC = () => {
     }
   };
 
-  const getBorderColor = (type: string) => {
+  const getBackgroundColor = (type: string) => {
     switch (type) {
       case 'urgent':
-        return 'border-red-300';
+        return 'bg-red-100';
       case 'maintenance':
-        return 'border-yellow-300';
+        return 'bg-yellow-100';
       case 'general':
-        return 'border-blue-300';
+        return 'bg-blue-100';
       default:
-        return 'border-gray-300';
+        return 'bg-gray-100';
     }
   };
 
@@ -161,7 +161,7 @@ export const CommunicationsPage: React.FC = () => {
           {communications.map((comm) => (
             <div 
               key={comm.id} 
-              className={`bg-white border-2 rounded-lg p-4 ${getBorderColor(comm.type)}`}
+              className={`rounded-lg p-4 border border-gray-200 ${getBackgroundColor(comm.type)}`}
             >
               <div className="flex justify-between items-start mb-2">
                 <h3 className="font-semibold text-gray-900">{comm.title}</h3>
