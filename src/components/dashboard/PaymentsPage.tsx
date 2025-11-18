@@ -249,9 +249,11 @@ export const PaymentsPage: React.FC = () => {
   const getPaymentStats = () => {
     const completed = payments.filter(p => p.status === "completed");
     const totalAmount = completed.reduce((sum, p) => sum + p.amount, 0);
+    const averageAmount = completed.length > 0 ? Math.round(totalAmount / completed.length) : 0;
     return {
       totalCompleted: completed.length,
       totalAmount,
+      averageAmount,
       lastPayment: completed.length > 0 ? completed[0] : null
     };
   };
@@ -447,16 +449,19 @@ export const PaymentsPage: React.FC = () => {
                 {/* Resumen estadístico - Compacto */}
                 <div className="flex gap-3">
                   <div className="flex-1 bg-emerald-50 rounded-lg p-3 border border-emerald-200">
-                    <p className="text-xs text-emerald-700 font-semibold mb-1">Total pagado</p>
+                    <p className="text-xs text-emerald-700 font-semibold mb-1">Promedio de pago</p>
                     <p className="text-base font-bold text-emerald-800">
-                      {formatCurrency(getPaymentStats().totalAmount)}
+                      {formatCurrency(getPaymentStats().averageAmount)}
                     </p>
                   </div>
 
                   <div className="flex-1 bg-blue-50 rounded-lg p-3 border border-blue-200">
-                    <p className="text-xs text-blue-700 font-semibold mb-1">Pagos</p>
+                    <p className="text-xs text-blue-700 font-semibold mb-1">Último pago</p>
                     <p className="text-base font-bold text-blue-800">
-                      {getPaymentStats().totalCompleted}
+                      {getPaymentStats().lastPayment
+                        ? format(parseISO(getPaymentStats().lastPayment!.date), "dd MMM", { locale: es })
+                        : "—"
+                      }
                     </p>
                   </div>
                 </div>
