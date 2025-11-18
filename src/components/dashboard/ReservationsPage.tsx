@@ -408,10 +408,8 @@ export const ReservationsPage: React.FC = () => {
                         {upcoming.map((reservation) => (
                           <div
                             key={reservation.id}
-                            className="bg-white border border-emerald-100 rounded-xl p-4 hover:shadow-lg hover:border-emerald-200 transition-all duration-200 relative overflow-hidden"
+                            className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 hover:bg-emerald-100/50 transition-all duration-200"
                           >
-                            {/* Indicador de borde izquierdo */}
-                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-emerald-500 to-emerald-400" />
 
                             <div className="flex items-start justify-between mb-3">
                               <div className="flex items-center gap-3">
@@ -486,15 +484,15 @@ export const ReservationsPage: React.FC = () => {
                         {completed.map((reservation) => (
                           <div
                             key={reservation.id}
-                            className="bg-gray-50 border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-gray-300 transition-all duration-200 opacity-75"
+                            className="bg-gray-50 border border-gray-200 rounded-xl p-4 hover:bg-gray-100/50 transition-all duration-200"
                           >
                             <div className="flex items-start justify-between mb-3">
                               <div className="flex items-center gap-3">
-                                <div className="relative opacity-70">
+                                <div className="relative">
                                   <img
                                     src={reservation.spaceIcon}
                                     alt={reservation.spaceName}
-                                    className="w-11 h-11 rounded-lg object-cover grayscale"
+                                    className="w-11 h-11 rounded-lg object-cover"
                                   />
                                 </div>
                                 <div className="flex-1">
@@ -506,7 +504,7 @@ export const ReservationsPage: React.FC = () => {
                               </div>
                             </div>
 
-                            <div className="space-y-2 ml-14 opacity-75">
+                            <div className="space-y-2 ml-14">
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
                                   <Calendar className="w-4 h-4 text-gray-400" />
@@ -544,7 +542,7 @@ export const ReservationsPage: React.FC = () => {
                         {cancelled.map((reservation) => (
                           <div
                             key={reservation.id}
-                            className="bg-red-50 border border-red-200 rounded-xl p-4 hover:shadow-md hover:border-red-300 transition-all duration-200"
+                            className="bg-red-50 border border-red-200 rounded-xl p-4 hover:bg-red-100/50 transition-all duration-200"
                           >
                             <div className="flex items-start justify-between mb-3">
                               <div className="flex items-center gap-3">
