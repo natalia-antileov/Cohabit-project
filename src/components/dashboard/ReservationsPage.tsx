@@ -408,10 +408,8 @@ export const ReservationsPage: React.FC = () => {
                         {upcoming.map((reservation) => (
                           <div
                             key={reservation.id}
-                            className="rounded-xl p-4 transition-all duration-200 border"
-                            style={{ backgroundColor: '#DDDFA8', borderColor: '#DDDFA8' }}
-                            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#D4D699')}
-                            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#DDDFA8')}
+                            className="rounded-lg p-5 transition-all duration-200 border-2 bg-blue-50 hover:shadow-md"
+                            style={{ borderColor: '#93C5E8' }}
                           >
 
                             <div className="flex items-start justify-between mb-3">
@@ -420,36 +418,36 @@ export const ReservationsPage: React.FC = () => {
                                   <img
                                     src={reservation.spaceIcon}
                                     alt={reservation.spaceName}
-                                    className="w-11 h-11 rounded-lg object-cover"
+                                    className="w-12 h-12 rounded-lg object-cover"
                                   />
                                 </div>
                                 <div className="flex-1">
-                                  <h3 className="font-bold text-gray-800 text-sm leading-tight">
+                                  <h3 className="font-bold text-gray-800 text-base leading-tight">
                                     {reservation.spaceName}
                                   </h3>
                                   {getStatusBadge(reservation.status, reservation.confirmed)}
                                 </div>
                               </div>
 
-                              <div className="flex gap-1.5">
+                              <div className="flex gap-2">
                                 <button
                                   onClick={() => handleEdit(reservation)}
                                   className="p-2 hover:opacity-70 rounded-lg transition-opacity duration-150"
                                   title="Editar reserva"
                                 >
-                                  <Edit2 className="w-4 h-4" style={{ color: '#006E6F' }} />
+                                  <Edit2 className="w-5 h-5" style={{ color: '#006E6F' }} />
                                 </button>
                                 <button
                                   onClick={() => setReservationToDelete(reservation.id)}
                                   className="p-2 hover:opacity-70 rounded-lg transition-opacity duration-150"
                                   title="Eliminar reserva"
                                 >
-                                  <Trash2 className="w-4 h-4" style={{ color: '#006E6F' }} />
+                                  <Trash2 className="w-5 h-5" style={{ color: '#006E6F' }} />
                                 </button>
                               </div>
                             </div>
 
-                            <div className="space-y-2 ml-14">
+                            <div className="space-y-2 ml-16">
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
                                   <Calendar className="w-4 h-4" style={{ color: '#79792B' }} />
@@ -487,7 +485,8 @@ export const ReservationsPage: React.FC = () => {
                         {completed.map((reservation) => (
                           <div
                             key={reservation.id}
-                            className="bg-gray-50 border border-gray-200 rounded-xl p-4 hover:bg-gray-100/50 transition-all duration-200"
+                            className="rounded-lg p-5 transition-all duration-200 border-2 bg-white hover:shadow-md"
+                            style={{ borderColor: '#FCD34D' }}
                           >
                             <div className="flex items-start justify-between mb-3">
                               <div className="flex items-center gap-3">
@@ -495,11 +494,11 @@ export const ReservationsPage: React.FC = () => {
                                   <img
                                     src={reservation.spaceIcon}
                                     alt={reservation.spaceName}
-                                    className="w-11 h-11 rounded-lg object-cover"
+                                    className="w-12 h-12 rounded-lg object-cover"
                                   />
                                 </div>
                                 <div className="flex-1">
-                                  <h3 className="font-bold text-gray-700 text-sm leading-tight">
+                                  <h3 className="font-bold text-gray-700 text-base leading-tight">
                                     {reservation.spaceName}
                                   </h3>
                                   {getStatusBadge(reservation.status, reservation.confirmed)}
@@ -507,7 +506,7 @@ export const ReservationsPage: React.FC = () => {
                               </div>
                             </div>
 
-                            <div className="space-y-2 ml-14">
+                            <div className="space-y-2 ml-16">
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
                                   <Calendar className="w-4 h-4 text-gray-400" />
@@ -545,7 +544,8 @@ export const ReservationsPage: React.FC = () => {
                         {cancelled.map((reservation) => (
                           <div
                             key={reservation.id}
-                            className="bg-red-50 border border-red-200 rounded-xl p-4 hover:bg-red-100/50 transition-all duration-200"
+                            className="rounded-lg p-5 transition-all duration-200 border-2 bg-white hover:shadow-md"
+                            style={{ borderColor: '#E0E0CC' }}
                           >
                             <div className="flex items-start justify-between mb-3">
                               <div className="flex items-center gap-3">
@@ -553,11 +553,11 @@ export const ReservationsPage: React.FC = () => {
                                   <img
                                     src={reservation.spaceIcon}
                                     alt={reservation.spaceName}
-                                    className="w-11 h-11 rounded-lg object-cover"
+                                    className="w-12 h-12 rounded-lg object-cover"
                                   />
                                 </div>
                                 <div className="flex-1">
-                                  <h3 className="font-bold text-gray-800 text-sm leading-tight">
+                                  <h3 className="font-bold text-gray-800 text-base leading-tight">
                                     {reservation.spaceName}
                                   </h3>
                                   {getStatusBadge(reservation.status, reservation.confirmed)}
@@ -565,7 +565,7 @@ export const ReservationsPage: React.FC = () => {
                               </div>
                             </div>
 
-                            <div className="space-y-2 ml-14">
+                            <div className="space-y-2 ml-16">
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
                                   <Calendar className="w-4 h-4" style={{ color: '#79792B' }} />
