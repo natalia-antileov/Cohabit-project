@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 // Agregamos las importaciones necesarias del segundo código
-import { Calendar, MapPin, Users, Clock, Edit2, Trash2 } from "lucide-react";
+import { Calendar, MapPin, Users, Clock, Edit2, Trash2, CheckCircle2, AlertCircle, MoreVertical } from "lucide-react";
 import { BottomDrawer } from "../ui/BottomDrawer";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
 import {
@@ -17,7 +17,7 @@ import {
 // Componentes y utilidades del segundo código (asumiendo rutas estándar)
 import { Calendar as CalendarComponent } from "@/components/ui/calendar"; // O la ruta correcta
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"; // O la ruta correcta
-import { format } from "date-fns";
+import { format, differenceInDays, isPast } from "date-fns";
 import { es } from "date-fns/locale";
 import { cn } from "@/lib/utils"; // Utilidad para concatenar clases (Tailwind)
 
@@ -28,6 +28,7 @@ interface Reservation {
   date: string;
   time: string;
   status: "upcoming" | "completed" | "cancelled";
+  confirmed?: boolean;
 }
 
 export const ReservationsPage: React.FC = () => {
@@ -47,9 +48,10 @@ export const ReservationsPage: React.FC = () => {
       spaceName: "Piscina",
       spaceIcon: "/piscina-icon.png",
       // Dejamos la fecha como string para el manejo de datos de back-end
-      date: "2024-11-15", 
+      date: "2024-11-15",
       time: "15:00 - 17:00",
       status: "upcoming",
+      confirmed: true,
     },
     {
       id: "2",
@@ -58,6 +60,7 @@ export const ReservationsPage: React.FC = () => {
       date: "2024-11-20",
       time: "11:00 - 13:00",
       status: "upcoming",
+      confirmed: true,
     },
     {
       id: "3",
@@ -66,6 +69,7 @@ export const ReservationsPage: React.FC = () => {
       date: "2024-11-01",
       time: "7:00 - 9:00",
       status: "completed",
+      confirmed: true,
     },
   ]);
 
@@ -213,6 +217,7 @@ export const ReservationsPage: React.FC = () => {
         date: formattedDate,
         time: selectedTime,
         status: "upcoming",
+        confirmed: true,
       };
       setMyReservations(prev => [...prev, newReservation]);
       alert(`¡Reserva confirmada!\n${selected.name} - ${formattedDate}\nHorario: ${selectedTime}`);
@@ -251,19 +256,68 @@ export const ReservationsPage: React.FC = () => {
     });
   };
 
-  const getStatusBadge = (status: string) => {
+  // Función para obtener tiempo relativo (ej: "En 2 días" o "Hace 5 días")
+  const getRelativeTime = (dateString: string, status: string) => {
+    const date = new Date(dateString);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    date.setHours(0, 0, 0, 0);
+
+    if (status === "completed") {
+      const daysAgo = differenceInDays(today, date);
+      if (daysAgo === 0) return "Hoy";
+      if (daysAgo === 1) return "Ayer";
+      return `Hace ${daysAgo} días`;
+    }
+
+    const daysUntil = differenceInDays(date, today);
+    if (daysUntil === 0) return "Hoy";
+    if (daysUntil === 1) return "Mañana";
+    return `En ${daysUntil} días`;
+  };
+
+  // Función para agrupar reservas por estado
+  const groupReservationsByStatus = () => {
+    const upcoming = myReservations.filter(r => r.status === "upcoming");
+    const completed = myReservations.filter(r => r.status === "completed");
+    const cancelled = myReservations.filter(r => r.status === "cancelled");
+    return { upcoming, completed, cancelled };
+  };
+
+  const getStatusBadge = (status: string, confirmed?: boolean) => {
     const statusConfig = {
-      upcoming: { text: "Próxima", color: "bg-blue-100 text-blue-700" },
-      completed: { text: "Completada", color: "bg-gray-100 text-gray-600" },
-      cancelled: { text: "Cancelada", color: "bg-red-100 text-red-700" },
+      upcoming: {
+        text: "Próxima",
+        color: "bg-emerald-100 text-emerald-700",
+        icon: <CheckCircle2 className="w-3 h-3" />
+      },
+      completed: {
+        text: "Completada",
+        color: "bg-gray-100 text-gray-500",
+        icon: null
+      },
+      cancelled: {
+        text: "Cancelada",
+        color: "bg-red-100 text-red-700",
+        icon: null
+      },
     };
     const config = statusConfig[status as keyof typeof statusConfig];
     return (
-      <span
-        className={`px-2 py-1 rounded-full text-xs font-medium ${config.color}`}
-      >
-        {config.text}
-      </span>
+      <div className="flex items-center gap-1.5">
+        <span
+          className={`px-2.5 py-1 rounded-full text-xs font-semibold flex items-center gap-1 ${config.color}`}
+        >
+          {config.icon}
+          {config.text}
+        </span>
+        {status === "upcoming" && !confirmed && (
+          <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700 flex items-center gap-1">
+            <AlertCircle className="w-3 h-3" />
+            Pendiente
+          </span>
+        )}
+      </div>
     );
   };
 
@@ -316,72 +370,227 @@ export const ReservationsPage: React.FC = () => {
 
           {/* Tab: Mis Reservas */}
           <TabsContent value="mis-reservas" className="mt-0">
-            <div className="space-y-3">
-              {myReservations.length === 0 ? (
-                <div className="text-center py-12">
-                  {/* Ícono corregido para consistencia */}
-                  <Calendar className="w-8 h-8 mx-auto mb-2" style={{ color: '#79792B' }} />
-                  <p className="text-gray-500 text-sm">
-                    No tienes reservas aún
-                  </p>
+            {myReservations.length === 0 ? (
+              <div className="text-center py-16 px-4">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
+                  <Calendar className="w-8 h-8" style={{ color: '#79792B' }} />
                 </div>
-              ) : (
-                myReservations.map((reservation) => (
-                  <div
-                    key={reservation.id}
-                    className="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all"
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center gap-3">
-                        <img
-                          src={reservation.spaceIcon}
-                          alt={reservation.spaceName}
-                          className="w-10 h-10"
-                        />
-                        <div>
-                          <h3 className="font-semibold text-gray-800">
-                            {reservation.spaceName}
-                          </h3>
-                          {getStatusBadge(reservation.status)}
-                        </div>
-                      </div>
-                      
-                      {reservation.status === "upcoming" && (
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleEdit(reservation)}
-                            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                            title="Editar"
+                <h3 className="text-gray-800 font-semibold mb-1 text-base">
+                  No tienes reservas aún
+                </h3>
+                <p className="text-gray-500 text-sm mb-4">
+                  Comienza reservando un espacio común
+                </p>
+                <button
+                  onClick={() => {
+                    const tab = document.querySelector('[value="reservar"]') as HTMLElement;
+                    tab?.click();
+                  }}
+                  className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
+                  style={{ backgroundColor: '#006E6F', color: 'white' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#005a5b')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#006E6F')}
+                >
+                  Ver espacios disponibles
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {/* Sección: Próximas Reservas */}
+                {(() => {
+                  const { upcoming } = groupReservationsByStatus();
+                  return upcoming.length > 0 ? (
+                    <div>
+                      <h3 className="text-xs font-bold uppercase tracking-wide text-gray-500 mb-3 pl-1">
+                        Próximas ({upcoming.length})
+                      </h3>
+                      <div className="space-y-3">
+                        {upcoming.map((reservation) => (
+                          <div
+                            key={reservation.id}
+                            className="bg-white border border-emerald-100 rounded-xl p-4 hover:shadow-lg hover:border-emerald-200 transition-all duration-200 relative overflow-hidden"
                           >
-                            <Edit2 className="w-4 h-4 text-gray-600" />
-                          </button>
-                          <button
-                            onClick={() => setReservationToDelete(reservation.id)}
-                            className="p-2 hover:bg-red-50 rounded-lg transition-colors"
-                            title="Eliminar"
-                          >
-                            <Trash2 className="w-4 h-4 text-red-600" />
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                            {/* Indicador de borde izquierdo */}
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-emerald-500 to-emerald-400" />
 
-                    <div className="space-y-2 text-sm text-gray-600">
-                      <div className="flex items-center gap-2">
-                        {/* Ícono de calendario*/}
-                        <Calendar className="w-4 h-4" style={{ color: '#79792B' }} />
-                        <span>{formatDate(reservation.date)}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                         {/* Ícono de reloj*/}
-                        <Clock className="w-4 h-4" style={{ color: '#79792B' }} />
-                        <span>{reservation.time}</span>
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="flex items-center gap-3">
+                                <div className="relative">
+                                  <img
+                                    src={reservation.spaceIcon}
+                                    alt={reservation.spaceName}
+                                    className="w-11 h-11 rounded-lg object-cover"
+                                  />
+                                </div>
+                                <div className="flex-1">
+                                  <h3 className="font-bold text-gray-800 text-sm leading-tight">
+                                    {reservation.spaceName}
+                                  </h3>
+                                  {getStatusBadge(reservation.status, reservation.confirmed)}
+                                </div>
+                              </div>
+
+                              <div className="flex gap-1.5">
+                                <button
+                                  onClick={() => handleEdit(reservation)}
+                                  className="p-2 hover:bg-emerald-50 rounded-lg transition-colors duration-150"
+                                  title="Editar reserva"
+                                >
+                                  <Edit2 className="w-4 h-4 text-emerald-600" />
+                                </button>
+                                <button
+                                  onClick={() => setReservationToDelete(reservation.id)}
+                                  className="p-2 hover:bg-red-50 rounded-lg transition-colors duration-150"
+                                  title="Eliminar reserva"
+                                >
+                                  <Trash2 className="w-4 h-4 text-red-500" />
+                                </button>
+                              </div>
+                            </div>
+
+                            <div className="space-y-2 ml-14">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <Calendar className="w-4 h-4" style={{ color: '#79792B' }} />
+                                  <span className="text-sm text-gray-700 font-medium">
+                                    {formatDate(reservation.date)}
+                                  </span>
+                                </div>
+                                <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
+                                  {getRelativeTime(reservation.date, reservation.status)}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Clock className="w-4 h-4" style={{ color: '#79792B' }} />
+                                <span className="text-sm text-gray-600">
+                                  {reservation.time}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  </div>
-                ))
-              )}
-            </div>
+                  ) : null;
+                })()}
+
+                {/* Sección: Reservas Completadas */}
+                {(() => {
+                  const { completed } = groupReservationsByStatus();
+                  return completed.length > 0 ? (
+                    <div>
+                      <h3 className="text-xs font-bold uppercase tracking-wide text-gray-500 mb-3 pl-1 mt-4">
+                        Completadas ({completed.length})
+                      </h3>
+                      <div className="space-y-3">
+                        {completed.map((reservation) => (
+                          <div
+                            key={reservation.id}
+                            className="bg-gray-50 border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-gray-300 transition-all duration-200 opacity-75"
+                          >
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="flex items-center gap-3">
+                                <div className="relative opacity-70">
+                                  <img
+                                    src={reservation.spaceIcon}
+                                    alt={reservation.spaceName}
+                                    className="w-11 h-11 rounded-lg object-cover grayscale"
+                                  />
+                                </div>
+                                <div className="flex-1">
+                                  <h3 className="font-bold text-gray-700 text-sm leading-tight">
+                                    {reservation.spaceName}
+                                  </h3>
+                                  {getStatusBadge(reservation.status, reservation.confirmed)}
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="space-y-2 ml-14 opacity-75">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <Calendar className="w-4 h-4 text-gray-400" />
+                                  <span className="text-sm text-gray-600">
+                                    {formatDate(reservation.date)}
+                                  </span>
+                                </div>
+                                <span className="text-xs font-semibold text-gray-500 bg-gray-200 px-2.5 py-1 rounded-full">
+                                  {getRelativeTime(reservation.date, reservation.status)}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Clock className="w-4 h-4 text-gray-400" />
+                                <span className="text-sm text-gray-500">
+                                  {reservation.time}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : null;
+                })()}
+
+                {/* Sección: Reservas Canceladas */}
+                {(() => {
+                  const { cancelled } = groupReservationsByStatus();
+                  return cancelled.length > 0 ? (
+                    <div>
+                      <h3 className="text-xs font-bold uppercase tracking-wide text-gray-500 mb-3 pl-1 mt-4">
+                        Canceladas ({cancelled.length})
+                      </h3>
+                      <div className="space-y-3">
+                        {cancelled.map((reservation) => (
+                          <div
+                            key={reservation.id}
+                            className="bg-red-50 border border-red-200 rounded-xl p-4 hover:shadow-md hover:border-red-300 transition-all duration-200"
+                          >
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="flex items-center gap-3">
+                                <div className="relative">
+                                  <img
+                                    src={reservation.spaceIcon}
+                                    alt={reservation.spaceName}
+                                    className="w-11 h-11 rounded-lg object-cover"
+                                  />
+                                </div>
+                                <div className="flex-1">
+                                  <h3 className="font-bold text-gray-800 text-sm leading-tight">
+                                    {reservation.spaceName}
+                                  </h3>
+                                  {getStatusBadge(reservation.status, reservation.confirmed)}
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="space-y-2 ml-14">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <Calendar className="w-4 h-4" style={{ color: '#79792B' }} />
+                                  <span className="text-sm text-gray-700">
+                                    {formatDate(reservation.date)}
+                                  </span>
+                                </div>
+                                <span className="text-xs font-semibold text-red-600 bg-red-100 px-2.5 py-1 rounded-full">
+                                  {getRelativeTime(reservation.date, reservation.status)}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Clock className="w-4 h-4" style={{ color: '#79792B' }} />
+                                <span className="text-sm text-gray-600">
+                                  {reservation.time}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : null;
+                })()}
+              </div>
+            )}
           </TabsContent>
         </Tabs>
       </div>
