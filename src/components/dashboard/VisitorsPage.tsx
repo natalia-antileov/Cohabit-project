@@ -378,7 +378,7 @@ export const VisitsPage: React.FC = () => {
                       <div 
                         key={visit.id} 
                         // Estilo de card replicado (fondo blanco, borde)
-                        className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col transition-all duration-200 hover:shadow-md"
+                        className="bg-white border border-[#BDBE7D] rounded-lg p-4 flex flex-col transition-all duration-200 hover:shadow-md"
                       >
                         
                         {/* Primera fila: Icono, Nombre, Acciones (alineadas arriba a la derecha) */}
@@ -520,7 +520,7 @@ export const VisitsPage: React.FC = () => {
                           {/* Patente (si aplica) */}
                           {visit.type === "vehiculo" && (
                             <div className="text-sm text-gray-500 pl-5">
-                              Patente: **{visit.plate}**
+                              Patente: {visit.plate}
                             </div>
                           )}
                         </div>
