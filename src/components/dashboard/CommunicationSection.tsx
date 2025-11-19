@@ -1,4 +1,5 @@
 import React from 'react';
+import { Calendar } from 'lucide-react';
 
 interface Communication {
   title: string;
@@ -13,13 +14,39 @@ interface CommunicationSectionProps {
   onViewAll: () => void;
 }
 
+// 1. HELPER: Mapea la prioridad/categoría a color de fondo y borde (replicando CommunicationsPage.tsx)
+const getBgColor = (priority: 'normal' | 'urgent', category: string) => {
+  if (priority === 'urgent') return 'bg-red-100';
+  // En CommunicationsPage, 'general' es blue-100. Usamos blue-100 para 'normal'
+  if (category === 'Mantención') return 'bg-yellow-100';
+  return 'bg-blue-100'; 
+};
+
+// 2. HELPER: Mapea la prioridad/categoría a color de texto
+const getTypeColor = (priority: 'normal' | 'urgent', category: string) => {
+  if (priority === 'urgent') return 'text-red-600';
+  if (category === 'Mantención') return 'text-yellow-600';
+  return 'text-blue-600';
+};
+
+
 export const CommunicationSection: React.FC<CommunicationSectionProps> = ({ 
   communication, 
   onViewAll 
 }) => {
+  
+  // Clase de fondo basada en la prioridad/categoría
+  const bgColor = getBgColor(communication.priority, communication.category);
+  // Clase de texto para el tipo de comunicado
+  const typeColor = getTypeColor(communication.priority, communication.category);
+  
+  // El borde es siempre gris-200 (excepto para urgente)
   const containerClasses = communication.priority === 'urgent' 
-    ? "border-2 border-red-300" 
-    : "border border-[rgba(237,237,237,1)]";
+    ? "border-2 border-red-300" // Borde más fuerte para urgente
+    : "border border-gray-200"; // Borde sutil como en CommunicationsPage.tsx
+  
+  const titleColor = "text-gray-900";
+  const contentColor = "text-gray-600";
   
   return (
     <section className="w-full mt-[30px]">
@@ -27,51 +54,55 @@ export const CommunicationSection: React.FC<CommunicationSectionProps> = ({
         Comunicados
       </h2>
       
-      <div className={`${containerClasses} w-full overflow-hidden rounded-[10px] border-solid bg-white px-4 py-5`}>
-        <div className="flex w-full justify-between items-start mb-3">
-          <h3 className="text-[rgba(11,9,43,1)] text-base font-semibold leading-tight flex-1 pr-4">
+      {/* CARD CONTAINER: Incluye la clase de fondo y el borde gris-200 */}
+      <div 
+        className={`${containerClasses} ${bgColor} w-full overflow-hidden rounded-lg border-solid bg-white px-4 py-5`}
+      >
+        
+        {/* FILA SUPERIOR: Título, Fecha Relativa y Tipo/Categoría */}
+        <div className="flex w-full justify-between items-start mb-2"> 
+          {/* Título */}
+          <h3 className={`text-base font-semibold leading-tight flex-1 pr-4 ${titleColor}`}>
             {communication.title}
           </h3>
           
-          <div className="flex flex-col items-end gap-2">
-            <span className="text-[rgba(117,117,117,1)] text-sm">Hoy</span>
-            <div className="flex gap-1 items-center">
-              {communication.priority === 'urgent' && (
-                <span className="text-[rgba(220,38,38,1)] text-sm font-semibold">
-                  Urgente
-                </span>
-              )}
-              <span className="text-[rgba(220,38,38,1)] text-sm">•</span>
-              <span className="text-[rgba(220,38,38,1)] text-sm font-normal">
-                {communication.category}
-              </span>
+          {/* Fecha Relativa y Tipo/Categoría */}
+          <div className="text-right">
+            {/* Fecha Relativa (e.g., Hoy) - usando estándar gray-500 */}
+            <div className={`text-sm text-gray-500`}>Hoy</div> 
+            
+            {/* Tipo/Categoría (e.g., Urgente o Mantención) */}
+            <div className={`text-xs font-medium ${typeColor}`}>
+              {/* Aquí se muestra la categoría. Se usa Urgente o la categoría proporcionada. */}
+              {communication.priority === 'urgent' ? 'Urgente' : communication.category} 
             </div>
           </div>
         </div>
         
-        <p className="text-[rgba(11,9,43,1)] text-base leading-relaxed mb-3">
+        {/* CONTENIDO */}
+        <p className={`text-sm mb-3 leading-relaxed ${contentColor}`}>
           {communication.content}
         </p>
-        
-        {communication.date && (
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[rgba(235,239,205,1)] rounded-full mb-3">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="text-[rgba(139,145,93,1)]">
-              <path d="M6 2V5M14 2V5M3 8H17M5 4H15C16.1046 4 17 4.89543 17 6V16C17 17.1046 16.1046 18 15 18H5C3.89543 18 3 17.1046 3 16V6C3 4.89543 3.89543 4 5 4Z" 
-                    stroke="currentColor" 
-                    strokeWidth="2" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round"/>
-            </svg>
-            <span className="text-[rgba(139,145,93,1)] text-sm">
-              {communication.date}
-            </span>
+
+        {/* DETALLE (FECHA COMPLETA): Replicando el estilo DetailItem de CommunicationsPage */}
+        {communication.date && ( 
+          <div className="flex flex-wrap gap-2 mb-3">
+            <div className="inline-flex items-center space-x-2">
+              {/* Icono de Calendario: text-gray-700 */}
+              <Calendar className="w-4 h-4 text-gray-700" /> 
+              {/* Etiqueta de Fecha: text-gray-700 */}
+              <span className="text-sm text-gray-700">
+                {communication.date}
+              </span>
+            </div>
           </div>
         )}
         
-        <div className="flex justify-end">
+        {/* BOTÓN "Ver todos" */}
+        <div className="flex justify-end pt-3"> 
           <button 
             onClick={onViewAll}
-            className="text-[rgba(0,110,111,1)] text-sm font-normal hover:underline transition-all"
+            className="text-[#006E6F] text-sm font-normal hover:underline transition-all"
           >
             Ver todos
           </button>
@@ -80,25 +111,3 @@ export const CommunicationSection: React.FC<CommunicationSectionProps> = ({
     </section>
   );
 };
-
-// Demo
-export default function Demo() {
-  const sampleCommunication: Communication = {
-    title: "Aviso importante sobre mantenimiento",
-    content: "Se realizará mantenimiento en las áreas comunes el próximo fin de semana. Por favor, tomar las precauciones necesarias.",
-    category: "Mantención",
-    priority: 'urgent',
-    date: "25 de noviembre"
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-md mx-auto">
-        <CommunicationSection 
-          communication={sampleCommunication}
-          onViewAll={() => alert('Ver todos los comunicados')}
-        />
-      </div>
-    </div>
-  );
-}
