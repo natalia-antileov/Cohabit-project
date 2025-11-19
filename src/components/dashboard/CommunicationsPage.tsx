@@ -156,7 +156,7 @@ export const CommunicationsPage: React.FC = () => {
 
     return (
       <div className="mb-6">
-        <h2 className="text-lg font-bold text-gray-900 mb-3">{title}</h2>
+        <h2 className="text-xs font-bold uppercase tracking-wide text-gray-500 mb-3 pl-1 mt-4">{title}</h2>
         <div className="space-y-4">
           {communications.map((comm) => (
             <div 
