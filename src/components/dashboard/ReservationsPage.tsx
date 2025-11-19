@@ -396,6 +396,7 @@ export const ReservationsPage: React.FC = () => {
               </div>
             ) : (
               <div className="space-y-4">
+                
                 {/* Sección: Próximas Reservas */}
                 {(() => {
                   const { upcoming } = groupReservationsByStatus();
