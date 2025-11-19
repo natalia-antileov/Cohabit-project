@@ -4,6 +4,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { TimePicker } from "@/components/ui/time-picker";
+import { BottomDrawer } from "../ui/BottomDrawer";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter } from "@/components/ui/alert-dialog";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
@@ -83,6 +84,8 @@ export const VisitsPage: React.FC = () => {
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedVisitId, setSelectedVisitId] = useState<string | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [editingVisitId, setEditingVisitId] = useState<string | null>(null);
 
   const handleDeleteConfirm = () => {
     if (selectedVisitId) {
@@ -101,6 +104,60 @@ export const VisitsPage: React.FC = () => {
   const handleDeleteClick = (id: string) => {
     setSelectedVisitId(id);
     setOpenDeleteDialog(true);
+  };
+
+  const handleEditClick = (visit: Visitor) => {
+    setEditingVisitId(visit.id);
+    setSelectedDate(new Date(visit.date));
+    setHoraEntrada(visit.arrivalTime);
+    setHoraSalida(visit.departureTime);
+    setMedioLlegada(visit.type);
+    if (visit.plate) {
+      setPatente(visit.plate);
+    }
+    setIsDrawerOpen(true);
+  };
+
+  const handleCloseDrawer = () => {
+    setIsDrawerOpen(false);
+    setTimeout(() => {
+      setEditingVisitId(null);
+      setSelectedDate(undefined);
+      setHoraEntrada("");
+      setHoraSalida("");
+      setMedioLlegada("vehiculo");
+      setPatente("");
+    }, 300);
+  };
+
+  const handleSaveEdit = () => {
+    if (!selectedDate || !horaEntrada || !horaSalida) {
+      alert("Por favor, completa todos los campos obligatorios");
+      return;
+    }
+    if (medioLlegada === "vehiculo" && !patente) {
+      alert("Por favor, ingresa la patente del vehículo");
+      return;
+    }
+
+    if (editingVisitId) {
+      setVisits(prevVisits =>
+        prevVisits.map(visit =>
+          visit.id === editingVisitId
+            ? {
+                ...visit,
+                date: format(selectedDate, 'yyyy-MM-dd'),
+                arrivalTime: horaEntrada,
+                departureTime: horaSalida,
+                type: medioLlegada,
+                plate: medioLlegada === "vehiculo" ? patente : undefined,
+              }
+            : visit
+        )
+      );
+      alert("¡Visita actualizada exitosamente!");
+      handleCloseDrawer();
+    }
   };
 
   const sortedVisits = visits.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
@@ -401,16 +458,16 @@ export const VisitsPage: React.FC = () => {
                           
                           {/* Iconos de acción: Edit y Trash (alineados arriba a la derecha) */}
                           <div className="flex gap-1 ml-auto pt-1">
-                            <button className="p-1.5 text-[#006E6F] hover:bg-[#006E6F]/10 rounded-lg transition-colors" title="Editar visita">
-                              <Edit2 className="w-4 h-4" /> 
+                            <button onClick={() => handleEditClick(visit)} className="p-1.5 text-[#006E6F] hover:bg-[#006E6F]/10 rounded-lg transition-colors" title="Editar visita">
+                              <Edit2 className="w-4 h-4" />
                             </button>
                             {/* Icono de eliminar en verde petróleo (#006E6F) */}
-                            <button 
-                              onClick={() => handleDeleteClick(visit.id)} 
+                            <button
+                              onClick={() => handleDeleteClick(visit.id)}
                               className="p-1.5 text-[#006E6F] hover:bg-[#006E6F]/10 rounded-lg transition-colors"
                               title="Eliminar visita"
                             >
-                              <Trash2 className="w-4 h-4" /> 
+                              <Trash2 className="w-4 h-4" />
                             </button>
                           </div>
                         </div>
@@ -484,12 +541,12 @@ export const VisitsPage: React.FC = () => {
 
                           {/* Iconos de acción: Edit y Trash (alineados arriba a la derecha) */}
                           <div className="flex gap-1 ml-auto pt-1">
-                            <button className="p-1.5 text-[#006E6F] hover:bg-[#006E6F]/10 rounded-lg transition-colors" title="Editar visita">
+                            <button onClick={() => handleEditClick(visit)} className="p-1.5 text-[#006E6F] hover:bg-[#006E6F]/10 rounded-lg transition-colors" title="Editar visita">
                               <Edit2 className="w-4 h-4" />
                             </button>
                             {/* Icono de eliminar en verde petróleo (#006E6F) */}
-                            <button 
-                              onClick={() => handleDeleteClick(visit.id)} 
+                            <button
+                              onClick={() => handleDeleteClick(visit.id)}
                               className="p-1.5 text-[#006E6F] hover:bg-[#006E6F]/10 rounded-lg transition-colors"
                               title="Eliminar visita"
                             >
@@ -540,6 +597,107 @@ export const VisitsPage: React.FC = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* BottomDrawer for editing visit information */}
+      <BottomDrawer isOpen={isDrawerOpen} onClose={handleCloseDrawer}>
+        {isDrawerOpen && (
+          <div className="pb-6">
+            {/* Título */}
+            <h2 className="text-lg font-semibold text-gray-900 mb-6">Información de la visita</h2>
+
+            {/* Información de la visita */}
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Fecha*
+                </label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button className={cn("w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent bg-white flex items-center justify-between hover:border-[#006E6F] transition-colors", !selectedDate && "text-gray-400")}>
+                      <span>
+                        {selectedDate ? format(selectedDate, "dd/MM/yyyy", {
+                        locale: es
+                      }) : "DD/MM/AAAA"}
+                      </span>
+                      <Calendar className="w-5 h-5 text-[#006E6F]" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <CalendarComponent mode="single" selected={selectedDate} onSelect={setSelectedDate} disabled={date => date < new Date(new Date().setHours(0, 0, 0, 0))} initialFocus className="pointer-events-auto" />
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Hora de entrada*
+                  </label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button className={cn("w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent bg-white flex items-center justify-between hover:border-[#006E6F] transition-colors", !horaEntrada && "text-gray-400")}>
+                        <span>{horaEntrada || "HH:MM"}</span>
+                        <Clock className="w-5 h-5 text-[#006E6F]" />
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <TimePicker value={horaEntrada} onChange={setHoraEntrada} />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Hora de salida*
+                  </label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button className={cn("w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-transparent bg-white flex items-center justify-between hover:border-[#006E6F] transition-colors", !horaSalida && "text-gray-400")}>
+                        <span>{horaSalida || "HH:MM"}</span>
+                        <Clock className="w-5 h-5 text-[#006E6F]" />
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <TimePicker value={horaSalida} onChange={setHoraSalida} />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  Medio de llegada*
+                </label>
+                <div className="flex gap-6">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" value="vehiculo" checked={medioLlegada === "vehiculo"} onChange={e => setMedioLlegada(e.target.value)} className="w-5 h-5 accent-[#006E6F] border-gray-300 focus:ring-[#006E6F]" />
+                    <span className="text-sm text-gray-700">Vehículo</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" value="pie" checked={medioLlegada === "pie"} onChange={e => setMedioLlegada(e.target.value)} className="w-5 h-5 accent-[#006E6F] border-gray-300 focus:ring-[#006E6F]" />
+                    <span className="text-sm text-gray-700">A pie</span>
+                  </label>
+                </div>
+              </div>
+
+              {medioLlegada === "vehiculo" && <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Patente*
+                  </label>
+                  <input type="text" value={patente} onChange={e => setPatente(e.target.value.toUpperCase())} placeholder="Ej: NOPQ12" className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#006E6F] focus:border-[#006E6F]" />
+                </div>}
+            </div>
+
+            {/* Save Button */}
+            <button
+              onClick={handleSaveEdit}
+              className="w-full py-3 mt-6 rounded-xl font-bold text-sm text-white bg-[#006E6F] hover:bg-[#005a5b] transition-all"
+            >
+              Guardar
+            </button>
+          </div>
+        )}
+      </BottomDrawer>
 
       {/* Dialogo de confirmación de eliminación */}
       <AlertDialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>

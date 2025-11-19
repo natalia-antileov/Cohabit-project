@@ -6,6 +6,44 @@ interface BottomDrawerProps {
   children: React.ReactNode;
 }
 
+// Estilos de animación
+const drawerStyles = `
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+`;
+
+// Inyectar estilos en el documento
+if (typeof document !== 'undefined') {
+  const styleTag = document.createElement('style');
+  styleTag.textContent = drawerStyles;
+  document.head.appendChild(styleTag);
+}
+
 export const BottomDrawer: React.FC<BottomDrawerProps> = ({
   isOpen,
   onClose,
@@ -83,7 +121,7 @@ export const BottomDrawer: React.FC<BottomDrawerProps> = ({
       {/* Overlay - centrado con max-width */}
       <div className="fixed inset-0 z-40 flex justify-center">
         <div
-          className="w-full max-w-md bg-black bg-opacity-50 transition-opacity duration-300"
+          className="w-full max-w-md bg-black bg-opacity-50 animate-fade-in"
           onClick={onClose}
         />
       </div>
@@ -92,8 +130,8 @@ export const BottomDrawer: React.FC<BottomDrawerProps> = ({
       <div className="fixed inset-x-0 bottom-0 z-50 flex justify-center pointer-events-none">
         <div
           ref={drawerRef}
-          className={`w-full max-w-md bg-white rounded-t-3xl shadow-2xl transform transition-transform duration-300 ease-out max-h-[90vh] flex flex-col pointer-events-auto ${
-            isOpen && !isDragging ? "translate-y-0" : ""
+          className={`w-full max-w-md bg-white rounded-t-3xl shadow-2xl transform max-h-[90vh] flex flex-col pointer-events-auto ${
+            isOpen && !isDragging ? "animate-slide-up" : ""
           }`}
           style={{
             transform: isDragging ? `translateY(${currentY}px)` : undefined,
