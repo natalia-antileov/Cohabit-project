@@ -457,7 +457,7 @@ export const ReservationsPage: React.FC = () => {
                             <div className="space-y-1 ml-13"> {/* Ajuste de margen para alineación */}
                               
                               {/* Fecha */}
-                              <div className="flex items-center gap-1 text-sm text-gray-500">
+                              <div className="flex items-center gap-1 text-sm text-gray-600">
                                 <Calendar className="w-4 h-4" />
                                 <span>
                                   {formatDate(reservation.date)}
