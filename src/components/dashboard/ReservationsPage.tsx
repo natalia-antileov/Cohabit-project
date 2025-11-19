@@ -491,8 +491,8 @@ export const ReservationsPage: React.FC = () => {
                         {completed.map((reservation) => (
                           <div
                             key={reservation.id}
-                            // Estilo de card replicado (fondo blanco, borde sutil gris)
-                            className="bg-white border border-[#BDBE7D] rounded-lg p-4 flex flex-col transition-all duration-200 hover:shadow-md opacity-70"
+                            // Estilo de card replicado (fondo blanco, borde sutil verde lima)
+                            className="bg-white border border-[#DDDFA8] rounded-lg p-4 flex flex-col transition-all duration-200 hover:shadow-md opacity-70"
                           >
                             
                             {/* Primera fila: Icono, Nombre */}
