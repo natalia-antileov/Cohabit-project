@@ -147,7 +147,7 @@ export const CommunicationsPage: React.FC = () => {
       ) : (
         <Calendar className="w-4 h-4" style={{ color: '#79792B' }} />
       )}
-      <span className="text-sm text-gray-600">{label}</span>
+      <span className="text-sm text-gray-400">{label}</span>
     </div>
   );
 
