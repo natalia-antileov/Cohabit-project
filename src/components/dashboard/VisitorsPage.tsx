@@ -384,6 +384,7 @@ export const VisitsPage: React.FC = () => {
                         {/* Primera fila: Icono, Nombre, Acciones (alineadas arriba a la derecha) */}
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex items-center gap-3">
+                            {/* Icono de tipo de llegada */}
                             <div className="pt-0.5">
                               {getArrivalTypeIcon(visit.type)}
                             </div>
@@ -391,7 +392,7 @@ export const VisitsPage: React.FC = () => {
                               <h3 className="text-base font-medium text-gray-800 leading-tight">
                                 {visit.name}
                               </h3>
-                              {/* Chip de "Mañana" - Replicando el estilo de Reservation Page */}
+                              {/* Chip de "Mañana" - Estilo de Reserva (pequeño, debajo del nombre) */}
                               <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full mt-1 inline-block">
                                 Mañana
                               </span>
@@ -403,7 +404,7 @@ export const VisitsPage: React.FC = () => {
                             <button className="p-1.5 text-[#006E6F] hover:bg-[#006E6F]/10 rounded-lg transition-colors" title="Editar visita">
                               <Edit2 className="w-4 h-4" /> 
                             </button>
-                            {/* Icono de eliminar en verde petróleo (#006E6F) - CORREGIDO */}
+                            {/* Icono de eliminar en verde petróleo (#006E6F) */}
                             <button 
                               onClick={() => handleDeleteClick(visit.id)} 
                               className="p-1.5 text-[#006E6F] hover:bg-[#006E6F]/10 rounded-lg transition-colors"
@@ -414,12 +415,20 @@ export const VisitsPage: React.FC = () => {
                           </div>
                         </div>
 
-                        {/* Segunda fila: Información de Fecha, Hora y Patente (alineadas con el diseño) */}
-                        <div className="space-y-1 ml-13"> {/* ml-13 para alinear con el texto del nombre */}
+                        {/* Segunda fila: Información de Fecha y Hora (CORREGIDO: Incluye Calendar) */}
+                        <div className="space-y-1 ml-13"> {/* Margen para alinear con el texto del nombre/chip */}
                           
+                          {/* Fecha */}
+                          <div className="flex items-center gap-1 text-sm text-gray-500">
+                            <Calendar className="w-4 h-4 text-gray-400" />
+                            <span>
+                              {format(new Date(visit.date), "EEEE, d 'de' MMMM", { locale: es })}
+                            </span>
+                          </div>
+
                           {/* Horario */}
                           <div className="flex items-center gap-1 text-sm text-gray-600">
-                            <Clock className="w-4 h-4" />
+                            <Clock className="w-4 h-4 text-gray-400" />
                             <span>
                               {visit.arrivalTime} - {visit.departureTime} hrs
                             </span>
@@ -427,7 +436,7 @@ export const VisitsPage: React.FC = () => {
 
                           {/* Patente (si aplica) */}
                           {visit.type === "vehiculo" && (
-                            <div className="text-sm text-gray-500">
+                            <div className="text-sm text-gray-500 pl-5">
                               Patente: **{visit.plate}**
                             </div>
                           )}
@@ -456,6 +465,7 @@ export const VisitsPage: React.FC = () => {
                         {/* Primera fila: Icono, Nombre, Acciones (alineadas arriba a la derecha) */}
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex items-center gap-3">
+                            {/* Icono de tipo de llegada */}
                             <div className="pt-0.5">
                               {getArrivalTypeIcon(visit.type)}
                             </div>
@@ -463,12 +473,11 @@ export const VisitsPage: React.FC = () => {
                               <h3 className="text-base font-medium text-gray-800 leading-tight">
                                 {visit.name}
                               </h3>
-                              {/* Chip de fecha (Ej: "En 2 días") - Replicando el estilo de Reservation Page */}
+                              {/* Chip de fecha (Ej: "En 2 días") - Estilo de Reserva (pequeño, debajo del nombre) */}
                               <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full mt-1 inline-block">
-                                {/* Esta lógica no estaba en VisitorsPage, la creamos simple. Si es hoy, dice Hoy, si no, el formato de fecha */}
                                 {new Date(visit.date).toDateString() === new Date().toDateString() 
                                   ? "Hoy" 
-                                  : format(new Date(visit.date), "dd/MM", { locale: es })}
+                                  : `En ${Math.abs(new Date(visit.date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24) < 1 ? '1 día' : Math.floor(Math.abs(new Date(visit.date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) + ' días'}`}
                               </span>
                             </div>
                           </div>
@@ -478,7 +487,7 @@ export const VisitsPage: React.FC = () => {
                             <button className="p-1.5 text-[#006E6F] hover:bg-[#006E6F]/10 rounded-lg transition-colors" title="Editar visita">
                               <Edit2 className="w-4 h-4" />
                             </button>
-                            {/* Icono de eliminar en verde petróleo (#006E6F) - CORREGIDO */}
+                            {/* Icono de eliminar en verde petróleo (#006E6F) */}
                             <button 
                               onClick={() => handleDeleteClick(visit.id)} 
                               className="p-1.5 text-[#006E6F] hover:bg-[#006E6F]/10 rounded-lg transition-colors"
@@ -489,12 +498,20 @@ export const VisitsPage: React.FC = () => {
                           </div>
                         </div>
 
-                        {/* Segunda fila: Información de Fecha, Hora y Patente (alineadas con el diseño) */}
-                        <div className="space-y-1 ml-13"> {/* ml-13 para alinear con el texto del nombre */}
+                        {/* Segunda fila: Información de Fecha y Hora (CORREGIDO: Incluye Calendar) */}
+                        <div className="space-y-1 ml-13"> {/* Margen para alinear con el texto del nombre/chip */}
+                          
+                          {/* Fecha */}
+                          <div className="flex items-center gap-1 text-sm text-gray-500">
+                            <Calendar className="w-4 h-4 text-gray-400" />
+                            <span>
+                              {format(new Date(visit.date), "EEEE, d 'de' MMMM", { locale: es })}
+                            </span>
+                          </div>
                           
                           {/* Horario */}
                           <div className="flex items-center gap-1 text-sm text-gray-600">
-                            <Clock className="w-4 h-4" />
+                            <Clock className="w-4 h-4 text-gray-400" />
                             <span>
                               {visit.arrivalTime} - {visit.departureTime} hrs
                             </span>
@@ -502,7 +519,7 @@ export const VisitsPage: React.FC = () => {
                           
                           {/* Patente (si aplica) */}
                           {visit.type === "vehiculo" && (
-                            <div className="text-sm text-gray-500">
+                            <div className="text-sm text-gray-500 pl-5">
                               Patente: **{visit.plate}**
                             </div>
                           )}
