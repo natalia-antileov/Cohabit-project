@@ -402,8 +402,7 @@ export const VisitsPage: React.FC = () => {
                           </button>
                           <button 
                             onClick={() => handleDeleteClick(visit.id)} 
-                            className="p-2 text-[#006E6F] hover:bg-[#006E6F]/10 rounded-lg"
-                          >
+                            className="p-2 text-[#006E6F] hover:bg-[#006E6F]/10 rounded-lg">
                             <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
