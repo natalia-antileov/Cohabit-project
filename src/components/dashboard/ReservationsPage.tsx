@@ -410,7 +410,7 @@ export const ReservationsPage: React.FC = () => {
                           <div
                             key={reservation.id}
                             // Estilo de card replicado (fondo blanco, borde)
-                            className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col transition-all duration-200 hover:shadow-md"
+                            className="bg-white border border-[#BDBE7D] rounded-lg p-4 flex flex-col transition-all duration-200 hover:shadow-md"
                           >
                             
                             {/* Primera fila: Icono, Nombre, Acciones (alineadas arriba a la derecha) */}
@@ -492,7 +492,7 @@ export const ReservationsPage: React.FC = () => {
                           <div
                             key={reservation.id}
                             // Estilo de card replicado (fondo blanco, borde sutil gris)
-                            className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col transition-all duration-200 hover:shadow-md opacity-70"
+                            className="bg-white border border-[#BDBE7D] rounded-lg p-4 flex flex-col transition-all duration-200 hover:shadow-md opacity-70"
                           >
                             
                             {/* Primera fila: Icono, Nombre */}
@@ -555,7 +555,7 @@ export const ReservationsPage: React.FC = () => {
                           <div
                             key={reservation.id}
                             // Estilo de card replicado (fondo blanco, borde sutil gris)
-                            className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col transition-all duration-200 opacity-50" // Opacidad más baja para destacar el estado 'cancelada'
+                            className="bg-white border border-[#BDBE7D] rounded-lg p-4 flex flex-col transition-all duration-200 opacity-50" // Opacidad más baja para destacar el estado 'cancelada'
                           >
                             
                             {/* Primera fila: Icono, Nombre */}
