@@ -416,7 +416,7 @@ export const VisitsPage: React.FC = () => {
               {/* Otras fechas - agrupadas */}
               {Object.entries(groupedVisits).map(([date, visits]) => (
                 <div key={date}>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">
+                  <h3 className="text-xs font-bold uppercase tracking-wide text-gray-500 mb-3 pl-1 mt-4">
                     {format(new Date(date), "EEEE, d 'de' MMMM", { locale: es })}
                   </h3>
                   <div className="space-y-3">
