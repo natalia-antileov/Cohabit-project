@@ -471,11 +471,6 @@ export const ReservationsPage: React.FC = () => {
                                   {reservation.time} hrs
                                 </span>
                               </div>
-
-                              {/* Badge de estado (lo dejamos aquí para completar la info visualmente, aunque no es del diseño de Visitas) */}
-                              <div className="mt-2 pt-1">
-                                {getStatusBadge(reservation.status, reservation.confirmed)}
-                              </div>
                             </div>
                           </div>
                         ))}
