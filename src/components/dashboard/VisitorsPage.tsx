@@ -93,9 +93,9 @@ export const VisitsPage: React.FC = () => {
 
   const getArrivalTypeIcon = (type: string) => {
     if (type === "vehiculo") {
-      return <Car className="w-5 h-5 text-[#79792B]" />;
+      return <Car className="w-5 h-5 text-black" />;
     }
-    return <Footprints className="w-5 h-5 text-[#79792B]" />;
+    return <Footprints className="w-5 h-5 text-black" />;
   };
 
   const handleDeleteClick = (id: string) => {
@@ -459,7 +459,7 @@ export const VisitsPage: React.FC = () => {
                       <div 
                         key={visit.id} 
                         // Estilo de card replicado (fondo blanco, borde)
-                        className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col transition-all duration-200 hover:shadow-md"
+                        className="bg-white border border-[#BDBE7D] rounded-lg p-4 flex flex-col transition-all duration-200 hover:shadow-md"
                       >
                         
                         {/* Primera fila: Icono, Nombre, Acciones (alineadas arriba a la derecha) */}
