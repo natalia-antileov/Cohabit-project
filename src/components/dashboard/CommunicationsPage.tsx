@@ -226,8 +226,7 @@ export const CommunicationsPage: React.FC = () => {
         </div>
 
         {/* Communications Sections */}
-        <div className="space-y-6">
-          <CommunicationSection title="Fijados" communications={pinnedComms} />
+        <div className="text-xs font-bold uppercase tracking-wide text-gray-500 mb-3 pl-1 mt-4">
           <CommunicationSection title="Hoy" communications={todayComms} />
           <CommunicationSection title="Ayer" communications={yesterdayComms} />
           
