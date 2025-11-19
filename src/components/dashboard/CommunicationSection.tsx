@@ -14,11 +14,11 @@ interface CommunicationSectionProps {
   onViewAll: () => void;
 }
 
-// 1. HELPER: Mapea la prioridad/categoría a color de fondo y borde (replicando CommunicationsPage.tsx)
+// 1. HELPER: Mapea la prioridad/categoría a color de fondo (replicando CommunicationsPage.tsx)
 const getBgColor = (priority: 'normal' | 'urgent', category: string) => {
   if (priority === 'urgent') return 'bg-red-100';
-  // En CommunicationsPage, 'general' es blue-100. Usamos blue-100 para 'normal'
   if (category === 'Mantención') return 'bg-yellow-100';
+  // Valor por defecto para 'general' o 'normal'
   return 'bg-blue-100'; 
 };
 
@@ -35,15 +35,11 @@ export const CommunicationSection: React.FC<CommunicationSectionProps> = ({
   onViewAll 
 }) => {
   
-  // Clase de fondo basada en la prioridad/categoría
   const bgColor = getBgColor(communication.priority, communication.category);
-  // Clase de texto para el tipo de comunicado
   const typeColor = getTypeColor(communication.priority, communication.category);
   
-  // El borde es siempre gris-200 (excepto para urgente)
-  const containerClasses = communication.priority === 'urgent' 
-    ? "border-2 border-red-300" // Borde más fuerte para urgente
-    : "border border-gray-200"; // Borde sutil como en CommunicationsPage.tsx
+  // CORRECCIÓN CLAVE: El borde es SIEMPRE gris-200, independientemente de la prioridad.
+  const containerClasses = "border border-gray-200"; 
   
   const titleColor = "text-gray-900";
   const contentColor = "text-gray-600";
@@ -54,9 +50,9 @@ export const CommunicationSection: React.FC<CommunicationSectionProps> = ({
         Comunicados
       </h2>
       
-      {/* CARD CONTAINER: Incluye la clase de fondo y el borde gris-200 */}
+      {/* CARD CONTAINER: Borde gris-200 y fondo dinámico */}
       <div 
-        className={`${containerClasses} ${bgColor} w-full overflow-hidden rounded-lg border-solid bg-white px-4 py-5`}
+        className={`${containerClasses} ${bgColor} w-full overflow-hidden rounded-lg border-solid px-4 py-5`}
       >
         
         {/* FILA SUPERIOR: Título, Fecha Relativa y Tipo/Categoría */}
@@ -73,7 +69,6 @@ export const CommunicationSection: React.FC<CommunicationSectionProps> = ({
             
             {/* Tipo/Categoría (e.g., Urgente o Mantención) */}
             <div className={`text-xs font-medium ${typeColor}`}>
-              {/* Aquí se muestra la categoría. Se usa Urgente o la categoría proporcionada. */}
               {communication.priority === 'urgent' ? 'Urgente' : communication.category} 
             </div>
           </div>
