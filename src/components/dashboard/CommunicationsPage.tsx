@@ -199,7 +199,7 @@ export const CommunicationsPage: React.FC = () => {
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Comunicados</h1>
+          <h1 className="text-xl font-bold">Comunicados</h1>
           
           {/* Filters */}
           <div className="mb-6">
