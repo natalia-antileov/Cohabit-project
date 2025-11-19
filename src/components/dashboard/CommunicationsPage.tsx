@@ -136,20 +136,20 @@ export const CommunicationsPage: React.FC = () => {
   const yesterdayComms = filteredComms.filter(comm => comm.date === 'Ayer' && !comm.pinned);
   const olderComms = filteredComms.filter(comm => !['Hoy', 'Ayer'].includes(comm.date) && !comm.pinned);
 
-const DetailItem = ({ label, type, icon }: { 
-  label: string; 
-  type: 'actionable' | 'detail';
-  icon: 'clock' | 'calendar';
-}) => (
-  <div className="inline-flex items-center space-x-2">
-    {icon === 'clock' ? (
-      <Clock className="w-4 h-4" style={{ color: '#79792B' }} />
-    ) : (
-      <Calendar className="w-4 h-4" style={{ color: '#79792B' }} />
-    )}
-    <span className="text-sm text-gray-600">{label}</span>
-  </div>
-);
+  const DetailItem = ({ label, type, icon }: { 
+    label: string; 
+    type: 'actionable' | 'detail';
+    icon: 'clock' | 'calendar';
+  }) => (
+    <div className="inline-flex items-center space-x-2">
+      {icon === 'clock' ? (
+        <Clock className="w-4 h-4" style={{ color: '#79792B' }} />
+      ) : (
+        <Calendar className="w-4 h-4" style={{ color: '#79792B' }} />
+      )}
+      <span className="text-sm text-gray-600">{label}</span>
+    </div>
+  );
 
   const CommunicationSection = ({ title, communications }: { title: string; communications: any[] }) => {
     if (communications.length === 0) return null;
