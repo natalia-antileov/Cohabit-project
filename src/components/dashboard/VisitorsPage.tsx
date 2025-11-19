@@ -437,7 +437,7 @@ export const VisitsPage: React.FC = () => {
                           {/* Patente (si aplica) */}
                           {visit.type === "vehiculo" && (
                             <div className="text-sm text-gray-500 pl-5">
-                              Patente: **{visit.plate}**
+                              Patente: {visit.plate}
                             </div>
                           )}
                         </div>
