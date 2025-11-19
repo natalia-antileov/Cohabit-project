@@ -48,7 +48,7 @@ export const ReservationsPage: React.FC = () => {
       spaceName: "Piscina",
       spaceIcon: "/piscina-icon.png",
       // Dejamos la fecha como string para el manejo de datos de back-end
-      date: "2025-11-19",
+      date: "2025-11-22",
       time: "15:00 - 17:00",
       status: "upcoming",
       confirmed: true,
@@ -57,7 +57,7 @@ export const ReservationsPage: React.FC = () => {
       id: "2",
       spaceName: "Quincho",
       spaceIcon: "/quincho-icon.png",
-      date: "2025-11-22",
+      date: "2025-11-24",
       time: "12:00 - 15:00",
       status: "upcoming",
       confirmed: true,
