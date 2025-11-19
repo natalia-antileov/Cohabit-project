@@ -419,7 +419,7 @@ export const VisitsPage: React.FC = () => {
                         <div className="space-y-1 ml-13"> {/* Margen para alinear con el texto del nombre/chip */}
                           
                           {/* Fecha */}
-                          <div className="flex items-center gap-1 text-sm text-gray-500">
+                          <div className="flex items-center gap-1 text-sm text-gray-600">
                             <Calendar className="w-4 h-4 text-gray-600" />
                             <span>
                               {format(new Date(visit.date), "EEEE, d 'de' MMMM", { locale: es })}
@@ -502,7 +502,7 @@ export const VisitsPage: React.FC = () => {
                         <div className="space-y-1 ml-13"> {/* Margen para alinear con el texto del nombre/chip */}
                           
                           {/* Fecha */}
-                          <div className="flex items-center gap-1 text-sm text-gray-500">
+                          <div className="flex items-center gap-1 text-sm text-gray-600">
                             <Calendar className="w-4 h-4 text-gray-600" />
                             <span>
                               {format(new Date(visit.date), "EEEE, d 'de' MMMM", { locale: es })}
@@ -519,7 +519,7 @@ export const VisitsPage: React.FC = () => {
                           
                           {/* Patente (si aplica) */}
                           {visit.type === "vehiculo" && (
-                            <div className="text-sm text-gray-500 pl-5">
+                            <div className="text-sm text-gray-600 pl-5">
                               Patente: {visit.plate}
                             </div>
                           )}
