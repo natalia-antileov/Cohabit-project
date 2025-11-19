@@ -519,6 +519,7 @@ export const ReservationsPage: React.FC = () => {
                                   </span>
                                 </div>
                               </div>
+                            </div>
 
                             {/* Segunda fila: Información de Fecha y Hora */}
                             <div className="space-y-1 ml-13"> 
