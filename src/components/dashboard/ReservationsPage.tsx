@@ -408,62 +408,72 @@ export const ReservationsPage: React.FC = () => {
                         {upcoming.map((reservation) => (
                           <div
                             key={reservation.id}
-                            className="rounded-lg p-5 transition-all duration-200 border-2 bg-blue-50 hover:shadow-md"
-                            style={{ borderColor: '#93C5E8' }}
+                            // Estilo de card replicado (fondo blanco, borde)
+                            className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col transition-all duration-200 hover:shadow-md"
                           >
-
+                            
+                            {/* Primera fila: Icono, Nombre, Acciones (alineadas arriba a la derecha) */}
                             <div className="flex items-start justify-between mb-3">
                               <div className="flex items-center gap-3">
-                                <div className="relative">
-                                  <img
-                                    src={reservation.spaceIcon}
-                                    alt={reservation.spaceName}
-                                    className="w-12 h-12 rounded-lg object-cover"
-                                  />
-                                </div>
+                                {/* Icono del espacio */}
+                                <img
+                                  src={reservation.spaceIcon}
+                                  alt={reservation.spaceName}
+                                  className="w-10 h-10 rounded object-cover" // Reducido ligeramente para coincidir con el diseño de la visita
+                                />
                                 <div className="flex-1">
-                                  <h3 className="font-bold text-gray-800 text-base leading-tight">
+                                  <h3 className="text-base font-medium text-gray-800 leading-tight">
                                     {reservation.spaceName}
                                   </h3>
-                                  {getStatusBadge(reservation.status, reservation.confirmed)}
+                                  {/* Replicando el estilo de chip de visitante para el Relative Time */}
+                                  <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full mt-1 inline-block">
+                                    {getRelativeTime(reservation.date, reservation.status)}
+                                  </span>
                                 </div>
                               </div>
-
-                              <div className="flex gap-2">
+                              
+                              {/* Iconos de acción: Edit y Trash (alineados arriba a la derecha) */}
+                              <div className="flex gap-1 ml-auto pt-1">
                                 <button
                                   onClick={() => handleEdit(reservation)}
-                                  className="p-2 hover:opacity-70 rounded-lg transition-opacity duration-150"
+                                  className="p-1.5 text-[#006E6F] hover:bg-[#006E6F]/10 rounded-lg transition-colors"
                                   title="Editar reserva"
                                 >
-                                  <Edit2 className="w-5 h-5" style={{ color: '#006E6F' }} />
+                                  <Edit2 className="w-4 h-4" /> {/* Icono de 4x4 */}
                                 </button>
+                                {/* El icono de eliminar debe ser verde petróleo (coherente con el resto de la app, excepto el AlertDialog) */}
                                 <button
                                   onClick={() => setReservationToDelete(reservation.id)}
-                                  className="p-2 hover:opacity-70 rounded-lg transition-opacity duration-150"
+                                  className="p-1.5 text-[#006E6F] hover:bg-[#006E6F]/10 rounded-lg transition-colors"
                                   title="Eliminar reserva"
                                 >
-                                  <Trash2 className="w-5 h-5" style={{ color: '#006E6F' }} />
+                                  <Trash2 className="w-4 h-4" /> {/* Icono de 4x4 */}
                                 </button>
                               </div>
                             </div>
 
-                            <div className="space-y-2 ml-16">
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                  <Calendar className="w-4 h-4" style={{ color: '#79792B' }} />
-                                  <span className="text-sm text-gray-700 font-medium">
-                                    {formatDate(reservation.date)}
-                                  </span>
-                                </div>
-                                <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
-                                  {getRelativeTime(reservation.date, reservation.status)}
+                            {/* Segunda fila: Información de Fecha y Hora (alineadas con el diseño de Visitas) */}
+                            <div className="space-y-1 ml-13"> {/* Ajuste de margen para alineación */}
+                              
+                              {/* Fecha */}
+                              <div className="flex items-center gap-1 text-sm text-gray-500">
+                                <Calendar className="w-4 h-4" />
+                                <span>
+                                  {formatDate(reservation.date)}
                                 </span>
                               </div>
-                              <div className="flex items-center gap-2">
-                                <Clock className="w-4 h-4" style={{ color: '#79792B' }} />
-                                <span className="text-sm text-gray-600">
-                                  {reservation.time}
+                              
+                              {/* Horario */}
+                              <div className="flex items-center gap-1 text-sm text-gray-600">
+                                <Clock className="w-4 h-4" />
+                                <span>
+                                  {reservation.time} hrs
                                 </span>
+                              </div>
+
+                              {/* Badge de estado (lo dejamos aquí para completar la info visualmente, aunque no es del diseño de Visitas) */}
+                              <div className="mt-2 pt-1">
+                                {getStatusBadge(reservation.status, reservation.confirmed)}
                               </div>
                             </div>
                           </div>
@@ -485,44 +495,52 @@ export const ReservationsPage: React.FC = () => {
                         {completed.map((reservation) => (
                           <div
                             key={reservation.id}
-                            className="rounded-lg p-5 transition-all duration-200 border-2 bg-white hover:shadow-md"
-                            style={{ borderColor: '#FCD34D' }}
+                            // Estilo de card replicado (fondo blanco, borde sutil gris)
+                            className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col transition-all duration-200 hover:shadow-md opacity-70"
                           >
+                            
+                            {/* Primera fila: Icono, Nombre */}
                             <div className="flex items-start justify-between mb-3">
                               <div className="flex items-center gap-3">
-                                <div className="relative">
-                                  <img
-                                    src={reservation.spaceIcon}
-                                    alt={reservation.spaceName}
-                                    className="w-12 h-12 rounded-lg object-cover"
-                                  />
-                                </div>
+                                {/* Icono del espacio */}
+                                <img
+                                  src={reservation.spaceIcon}
+                                  alt={reservation.spaceName}
+                                  className="w-10 h-10 rounded object-cover" 
+                                />
                                 <div className="flex-1">
-                                  <h3 className="font-bold text-gray-700 text-base leading-tight">
+                                  <h3 className="text-base font-medium text-gray-700 leading-tight">
                                     {reservation.spaceName}
                                   </h3>
-                                  {getStatusBadge(reservation.status, reservation.confirmed)}
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="space-y-2 ml-16">
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                  <Calendar className="w-4 h-4 text-gray-400" />
-                                  <span className="text-sm text-gray-600">
-                                    {formatDate(reservation.date)}
+                                  {/* Chip de tiempo relativo (estilo gris para completadas) */}
+                                  <span className="text-xs font-semibold text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full mt-1 inline-block">
+                                    {getRelativeTime(reservation.date, reservation.status)}
                                   </span>
                                 </div>
-                                <span className="text-xs font-semibold text-gray-500 bg-gray-200 px-2.5 py-1 rounded-full">
-                                  {getRelativeTime(reservation.date, reservation.status)}
+                              </div>
+
+                            {/* Segunda fila: Información de Fecha y Hora */}
+                            <div className="space-y-1 ml-13"> 
+                              
+                              {/* Fecha */}
+                              <div className="flex items-center gap-1 text-sm text-gray-500">
+                                <Calendar className="w-4 h-4 text-gray-400" />
+                                <span>
+                                  {formatDate(reservation.date)}
                                 </span>
                               </div>
-                              <div className="flex items-center gap-2">
+                              
+                              {/* Horario */}
+                              <div className="flex items-center gap-1 text-sm text-gray-500">
                                 <Clock className="w-4 h-4 text-gray-400" />
-                                <span className="text-sm text-gray-500">
-                                  {reservation.time}
+                                <span>
+                                  {reservation.time} hrs
                                 </span>
+                              </div>
+
+                              {/* Badge de estado */}
+                              <div className="mt-2 pt-1">
+                                {getStatusBadge(reservation.status, reservation.confirmed)}
                               </div>
                             </div>
                           </div>
@@ -544,44 +562,53 @@ export const ReservationsPage: React.FC = () => {
                         {cancelled.map((reservation) => (
                           <div
                             key={reservation.id}
-                            className="rounded-lg p-5 transition-all duration-200 border-2 bg-white hover:shadow-md"
-                            style={{ borderColor: '#E0E0CC' }}
+                            // Estilo de card replicado (fondo blanco, borde sutil gris)
+                            className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col transition-all duration-200 opacity-50" // Opacidad más baja para destacar el estado 'cancelada'
                           >
+                            
+                            {/* Primera fila: Icono, Nombre */}
                             <div className="flex items-start justify-between mb-3">
                               <div className="flex items-center gap-3">
-                                <div className="relative">
-                                  <img
-                                    src={reservation.spaceIcon}
-                                    alt={reservation.spaceName}
-                                    className="w-12 h-12 rounded-lg object-cover"
-                                  />
-                                </div>
+                                {/* Icono del espacio (tono gris) */}
+                                <img
+                                  src={reservation.spaceIcon}
+                                  alt={reservation.spaceName}
+                                  className="w-10 h-10 rounded object-cover filter grayscale" 
+                                />
                                 <div className="flex-1">
-                                  <h3 className="font-bold text-gray-800 text-base leading-tight">
+                                  <h3 className="text-base font-medium text-gray-700 leading-tight">
                                     {reservation.spaceName}
                                   </h3>
-                                  {getStatusBadge(reservation.status, reservation.confirmed)}
+                                  {/* Chip de estado (estilo gris para canceladas) */}
+                                  <span className="text-xs font-semibold text-red-600 bg-red-50 px-2.5 py-1 rounded-full mt-1 inline-block">
+                                    {getRelativeTime(reservation.date, reservation.status)}
+                                  </span>
                                 </div>
                               </div>
                             </div>
-
-                            <div className="space-y-2 ml-16">
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                  <Calendar className="w-4 h-4" style={{ color: '#79792B' }} />
-                                  <span className="text-sm text-gray-700">
-                                    {formatDate(reservation.date)}
-                                  </span>
-                                </div>
-                                <span className="text-xs font-semibold text-red-600 bg-red-100 px-2.5 py-1 rounded-full">
-                                  {getRelativeTime(reservation.date, reservation.status)}
+                            
+                            {/* Segunda fila: Información de Fecha y Hora */}
+                            <div className="space-y-1 ml-13"> 
+                              
+                              {/* Fecha */}
+                              <div className="flex items-center gap-1 text-sm text-gray-500">
+                                <Calendar className="w-4 h-4 text-gray-400" />
+                                <span>
+                                  {formatDate(reservation.date)}
                                 </span>
                               </div>
-                              <div className="flex items-center gap-2">
-                                <Clock className="w-4 h-4" style={{ color: '#79792B' }} />
-                                <span className="text-sm text-gray-600">
-                                  {reservation.time}
+                              
+                              {/* Horario */}
+                              <div className="flex items-center gap-1 text-sm text-gray-500">
+                                <Clock className="w-4 h-4 text-gray-400" />
+                                <span>
+                                  {reservation.time} hrs
                                 </span>
+                              </div>
+
+                              {/* Badge de estado */}
+                              <div className="mt-2 pt-1">
+                                {getStatusBadge(reservation.status, reservation.confirmed)}
                               </div>
                             </div>
                           </div>
