@@ -93,9 +93,9 @@ export const VisitsPage: React.FC = () => {
 
   const getArrivalTypeIcon = (type: string) => {
     if (type === "vehiculo") {
-      return <Car className="w-5 h-5 text-black" />;
+      return <Car className="w-6 h-6 text-gray-800" />;
     }
-    return <Footprints className="w-5 h-5 text-black" />;
+    return <Footprints className="w-6 h-6 text-gray-800" />;
   };
 
   const handleDeleteClick = (id: string) => {
