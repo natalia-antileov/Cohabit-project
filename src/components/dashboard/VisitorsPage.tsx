@@ -367,7 +367,7 @@ export const VisitsPage: React.FC = () => {
 
           {/* Tab: Próximas visitas */}
           <TabsContent value="proximas" className="mt-0">
-            <div className="space-y-6">
+            <div className="space-y-6 pb-20">
               
               {/* Sección Mañana */}
               {tomorrowVisits.length > 0 && (
