@@ -143,9 +143,9 @@ export const CommunicationsPage: React.FC = () => {
   }) => (
     <div className="inline-flex items-center space-x-2">
       {icon === 'clock' ? (
-        <Clock className="w-4 h-4" style={{ color: '#79792B' }} />
+        <Clock className="w-4 h-4 text-gray-700" /> // Cambiado a text-gray-700
       ) : (
-        <Calendar className="w-4 h-4" style={{ color: '#79792B' }} />
+        <Calendar className="w-4 h-4 text-gray-700" /> // Cambiado a text-gray-700
       )}
       <span className="text-sm text-gray-700">{label}</span>
     </div>
