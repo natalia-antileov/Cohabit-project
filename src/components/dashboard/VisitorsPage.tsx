@@ -368,44 +368,69 @@ export const VisitsPage: React.FC = () => {
           {/* Tab: Próximas visitas */}
           <TabsContent value="proximas" className="mt-0">
             <div className="space-y-6">
+              
               {/* Sección Mañana */}
               {tomorrowVisits.length > 0 && (
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-3">Mañana</h3>
                   <div className="space-y-3">
                     {tomorrowVisits.map((visit) => (
-                      <div key={visit.id} className="bg-white border border-gray-200 rounded-lg p-4 flex justify-between items-center">
-                        <div className="flex items-start gap-3 w-full">
-                          <div className="mt-0.5">
-                            {getArrivalTypeIcon(visit.type)}
+                      <div 
+                        key={visit.id} 
+                        // Estilo de card replicado (fondo blanco, borde)
+                        className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col transition-all duration-200 hover:shadow-md"
+                      >
+                        
+                        {/* Primera fila: Icono, Nombre, Acciones (alineadas arriba a la derecha) */}
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex items-center gap-3">
+                            <div className="pt-0.5">
+                              {getArrivalTypeIcon(visit.type)}
+                            </div>
+                            <div className="flex-1">
+                              <h3 className="text-base font-medium text-gray-800 leading-tight">
+                                {visit.name}
+                              </h3>
+                              {/* Chip de "Mañana" - Replicando el estilo de Reservation Page */}
+                              <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full mt-1 inline-block">
+                                Mañana
+                              </span>
+                            </div>
                           </div>
-                          <div className="flex-1">
-                            <h3 className="text-base font-medium text-gray-800">{visit.name}</h3>
-                            <div className="flex items-center gap-1 text-sm text-gray-600 mt-1">
-                              <Clock className="w-4 h-4" />
-                              <span>{visit.arrivalTime} - {visit.departureTime} hrs</span>
-                            </div>
-                            <div className="flex items-center gap-1 text-sm text-gray-500 mt-1">
-                              <Calendar className="w-4 h-4" />
-                              <span>{format(new Date(visit.date), "EEE, d 'de' MMMM", { locale: es })}</span>
-                            </div>
-                            {visit.type === "vehiculo" && (
-                              <div className="text-sm text-gray-500 mt-1">
-                                {visit.plate}
-                              </div>
-                            )}
+                          
+                          {/* Iconos de acción: Edit y Trash (alineados arriba a la derecha) */}
+                          <div className="flex gap-1 ml-auto pt-1">
+                            <button className="p-1.5 text-[#006E6F] hover:bg-[#006E6F]/10 rounded-lg transition-colors" title="Editar visita">
+                              <Edit2 className="w-4 h-4" /> 
+                            </button>
+                            {/* Icono de eliminar en verde petróleo (#006E6F) - CORREGIDO */}
+                            <button 
+                              onClick={() => handleDeleteClick(visit.id)} 
+                              className="p-1.5 text-[#006E6F] hover:bg-[#006E6F]/10 rounded-lg transition-colors"
+                              title="Eliminar visita"
+                            >
+                              <Trash2 className="w-4 h-4" /> 
+                            </button>
                           </div>
                         </div>
-                        <div className="flex gap-2 ml-2">
-                          <button className="p-2 text-[#006E6F] hover:bg-[#006E6F]/10 rounded-lg">
-                            <Edit2 className="w-4 h-4" />
-                          </button>
-                          <button 
-                            onClick={() => handleDeleteClick(visit.id)} 
-                            className="p-2 text-[#006E6F] hover:bg-[#006E6F]/10 rounded-lg"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+
+                        {/* Segunda fila: Información de Fecha, Hora y Patente (alineadas con el diseño) */}
+                        <div className="space-y-1 ml-13"> {/* ml-13 para alinear con el texto del nombre */}
+                          
+                          {/* Horario */}
+                          <div className="flex items-center gap-1 text-sm text-gray-600">
+                            <Clock className="w-4 h-4" />
+                            <span>
+                              {visit.arrivalTime} - {visit.departureTime} hrs
+                            </span>
+                          </div>
+
+                          {/* Patente (si aplica) */}
+                          {visit.type === "vehiculo" && (
+                            <div className="text-sm text-gray-500">
+                              Patente: **{visit.plate}**
+                            </div>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -416,43 +441,71 @@ export const VisitsPage: React.FC = () => {
               {/* Otras fechas - agrupadas */}
               {Object.entries(groupedVisits).map(([date, visits]) => (
                 <div key={date}>
+                  {/* Título de la fecha - sin cambios */}
                   <h3 className="text-xs font-bold uppercase tracking-wide text-gray-500 mb-3 pl-1 mt-4">
                     {format(new Date(date), "EEEE, d 'de' MMMM", { locale: es })}
                   </h3>
                   <div className="space-y-3">
                     {visits.map((visit) => (
-                      <div key={visit.id} className="bg-white border border-gray-200 rounded-lg p-4 flex justify-between items-center">
-                        <div className="flex items-start gap-3 w-full">
-                          <div className="mt-0.5">
-                            {getArrivalTypeIcon(visit.type)}
+                      <div 
+                        key={visit.id} 
+                        // Estilo de card replicado (fondo blanco, borde)
+                        className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col transition-all duration-200 hover:shadow-md"
+                      >
+                        
+                        {/* Primera fila: Icono, Nombre, Acciones (alineadas arriba a la derecha) */}
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex items-center gap-3">
+                            <div className="pt-0.5">
+                              {getArrivalTypeIcon(visit.type)}
+                            </div>
+                            <div className="flex-1">
+                              <h3 className="text-base font-medium text-gray-800 leading-tight">
+                                {visit.name}
+                              </h3>
+                              {/* Chip de fecha (Ej: "En 2 días") - Replicando el estilo de Reservation Page */}
+                              <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full mt-1 inline-block">
+                                {/* Esta lógica no estaba en VisitorsPage, la creamos simple. Si es hoy, dice Hoy, si no, el formato de fecha */}
+                                {new Date(visit.date).toDateString() === new Date().toDateString() 
+                                  ? "Hoy" 
+                                  : format(new Date(visit.date), "dd/MM", { locale: es })}
+                              </span>
+                            </div>
                           </div>
-                          <div className="flex-1">
-                            <h3 className="text-base font-medium text-gray-800">{visit.name}</h3>
-                            <div className="flex items-center gap-1 text-sm text-gray-600 mt-1">
-                              <Clock className="w-4 h-4" />
-                              <span>{visit.arrivalTime} - {visit.departureTime} hrs</span>
-                            </div>
-                            <div className="flex items-center gap-1 text-sm text-gray-500 mt-1">
-                              <Calendar className="w-4 h-4" />
-                              <span>{format(new Date(visit.date), "EEE, d 'de' MMMM", { locale: es })}</span>
-                            </div>
-                            {visit.type === "vehiculo" && (
-                              <div className="text-sm text-gray-500 mt-1">
-                                {visit.plate}
-                              </div>
-                            )}
+
+                          {/* Iconos de acción: Edit y Trash (alineados arriba a la derecha) */}
+                          <div className="flex gap-1 ml-auto pt-1">
+                            <button className="p-1.5 text-[#006E6F] hover:bg-[#006E6F]/10 rounded-lg transition-colors" title="Editar visita">
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                            {/* Icono de eliminar en verde petróleo (#006E6F) - CORREGIDO */}
+                            <button 
+                              onClick={() => handleDeleteClick(visit.id)} 
+                              className="p-1.5 text-[#006E6F] hover:bg-[#006E6F]/10 rounded-lg transition-colors"
+                              title="Eliminar visita"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
                           </div>
                         </div>
-                        <div className="flex gap-2 ml-2">
-                          <button className="p-2 text-[#006E6F] hover:bg-[#006E6F]/10 rounded-lg">
-                            <Edit2 className="w-4 h-4" />
-                          </button>
-                          <button 
-                            onClick={() => handleDeleteClick(visit.id)} 
-                            className="p-2 text-red-500 hover:bg-red-50 rounded-lg"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+
+                        {/* Segunda fila: Información de Fecha, Hora y Patente (alineadas con el diseño) */}
+                        <div className="space-y-1 ml-13"> {/* ml-13 para alinear con el texto del nombre */}
+                          
+                          {/* Horario */}
+                          <div className="flex items-center gap-1 text-sm text-gray-600">
+                            <Clock className="w-4 h-4" />
+                            <span>
+                              {visit.arrivalTime} - {visit.departureTime} hrs
+                            </span>
+                          </div>
+                          
+                          {/* Patente (si aplica) */}
+                          {visit.type === "vehiculo" && (
+                            <div className="text-sm text-gray-500">
+                              Patente: **{visit.plate}**
+                            </div>
+                          )}
                         </div>
                       </div>
                     ))}
