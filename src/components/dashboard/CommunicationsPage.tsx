@@ -8,76 +8,70 @@ export const CommunicationsPage: React.FC = () => {
 
   // Datos estructurados según la imagen
   const communicationsData = [
-    { 
-      id: 1, 
-      title: 'Arriendo de departamento', 
+    {
+      id: 1,
+      title: 'Arriendo de departamento',
       date: 'Ayer',
       time: 'Oferta',
-      type: 'general' as const, 
-      pinned: true,
+      type: 'general' as const,
       content: 'Se arrienda departamento 5B Torre Norte. Interesados contactar a Maribel Olivares +56912345678',
       details: [
         { label: 'Disponible desde: 4 Nov', icon: 'calendar' as const, type: 'detail' as const }
       ]
     },
-    { 
-      id: 2, 
-      title: 'Ascensor Torre Norte fuera de servicio', 
+    {
+      id: 2,
+      title: 'Ascensor Torre Norte fuera de servicio',
       date: 'Hoy',
       time: 'Urgente',
-      type: 'urgent' as const, 
-      pinned: false,
+      type: 'urgent' as const,
       content: 'Estimados residentes, Les informamos que debido a fallos técnico del ascensor, este se encontrará fuera de servicio hasta mañana.',
       details: [
         { label: 'Mar, 4 - Mie, 5 Nov', icon: 'calendar' as const, type: 'detail' as const }
       ]
     },
-    { 
-      id: 3, 
-      title: 'Mantención programada de piscina', 
+    {
+      id: 3,
+      title: 'Mantención programada de piscina',
       date: 'Hoy',
       time: 'Mantención',
-      type: 'maintenance' as const, 
-      pinned: false,
+      type: 'maintenance' as const,
       content: 'Estimados residentes, Les informamos que como cada semana, la piscina estará cerrada el día de hoy entre 07:00 y las 09:00 hrs',
       details: [
         { label: '07:00 - 09:00 hrs', icon: 'clock' as const, type: 'actionable' as const },
         { label: 'Mar, 4 Nov', icon: 'calendar' as const, type: 'detail' as const }
       ]
     },
-    { 
-      id: 4, 
-      title: 'Completada en Quincho', 
+    {
+      id: 4,
+      title: 'Completada en Quincho',
       date: 'Lun, 3 Nov',
       time: 'Oferta',
-      type: 'general' as const, 
-      pinned: false,
+      type: 'general' as const,
       content: 'Se realizará completada el viernes en el quincho del Jardín Central. A $2500 los completos.',
       details: [
         { label: 'Vie, 7 Nov', icon: 'calendar' as const, type: 'detail' as const },
         { label: '12:00 - 18:00 hrs', icon: 'clock' as const, type: 'actionable' as const }
       ]
     },
-    { 
-      id: 5, 
-      title: 'Evento de Recaudación', 
+    {
+      id: 5,
+      title: 'Evento de Recaudación',
       date: 'Dom, 2 Nov',
       time: 'Evento',
-      type: 'general' as const, 
-      pinned: false,
+      type: 'general' as const,
       content: 'Estimados residentes, Les informamos que el Lunes 17 de noviembre se realizará el evento de recaudación anual. Quedan todos cordialmente invitados',
       details: [
         { label: 'Lun, 17 Nov', icon: 'calendar' as const, type: 'detail' as const },
         { label: '16:00 - 20:00 hrs', icon: 'clock' as const, type: 'actionable' as const }
       ]
     },
-    { 
-      id: 6, 
-      title: 'Ascensor Torre Sur fuera de servicio', 
+    {
+      id: 6,
+      title: 'Ascensor Torre Sur fuera de servicio',
       date: 'Dom, 2 Nov',
       time: 'Urgente',
-      type: 'urgent' as const, 
-      pinned: false,
+      type: 'urgent' as const,
       content: 'Estimados residentes, Les informamos que debido a fallos técnico del ascensor, este se encontrará fuera de servicio hasta mañana.',
       details: [
         { label: 'Dom, 2 - Lun, 3 Nov', icon: 'calendar' as const, type: 'detail' as const }
@@ -131,10 +125,9 @@ export const CommunicationsPage: React.FC = () => {
   };
 
   const filteredComms = getFilteredCommunications();
-  const pinnedComms = filteredComms.filter(comm => comm.pinned);
-  const todayComms = filteredComms.filter(comm => comm.date === 'Hoy' && !comm.pinned);
-  const yesterdayComms = filteredComms.filter(comm => comm.date === 'Ayer' && !comm.pinned);
-  const olderComms = filteredComms.filter(comm => !['Hoy', 'Ayer'].includes(comm.date) && !comm.pinned);
+  const todayComms = filteredComms.filter(comm => comm.date === 'Hoy');
+  const yesterdayComms = filteredComms.filter(comm => comm.date === 'Ayer');
+  const olderComms = filteredComms.filter(comm => !['Hoy', 'Ayer'].includes(comm.date));
 
   const DetailItem = ({ label, type, icon }: { 
     label: string; 
@@ -227,7 +220,6 @@ export const CommunicationsPage: React.FC = () => {
 
         {/* Communications Sections */}
         <div className="space-y-6">
-          <CommunicationSection title="Fijados" communications={pinnedComms} />
           <CommunicationSection title="Hoy" communications={todayComms} />
           <CommunicationSection title="Ayer" communications={yesterdayComms} />
           
