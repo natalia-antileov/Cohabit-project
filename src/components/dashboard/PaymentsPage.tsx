@@ -448,9 +448,9 @@ export const PaymentsPage: React.FC = () => {
               <div className="space-y-4 pb-20">
                 {/* Resumen estadístico - Compacto */}
                 <div className="flex gap-3">
-                  <div className="flex-1 bg-emerald-50 rounded-lg p-3 border border-emerald-200">
+                  <div className="flex-1 bg-emerald-50 rounded-lg p-3 border border-amber-200">
                     <p className="text-xs text-emerald-700 font-semibold mb-1">Promedio de pago mensual</p>
-                    <p className="text-base font-bold text-emerald-800">
+                    <p className="text-base font-bold text-amber-800">
                       {formatCurrency(getPaymentStats().averageAmount)}
                     </p>
                   </div>
