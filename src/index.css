@@ -99,7 +99,23 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    padding: 0;
+    margin: 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
   body {
     @apply bg-background text-foreground;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Safe area support for mobile */
+  @supports (padding: max(0px)) {
+    body {
+      padding-left: max(0px, env(safe-area-inset-left));
+      padding-right: max(0px, env(safe-area-inset-right));
+    }
   }
 }
