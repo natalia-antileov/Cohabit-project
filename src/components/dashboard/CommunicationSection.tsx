@@ -94,7 +94,7 @@ export const CommunicationSection: React.FC<CommunicationSectionProps> = ({
         )}
         
         {/* BOTÓN "Ver todos" */}
-        <div className="flex justify-end pt-3"> 
+        <div className="flex justify-end pt-1"> 
           <button 
             onClick={onViewAll}
             className="text-[#006E6F] text-sm font-normal hover:underline transition-all"
