@@ -415,12 +415,12 @@ export const VisitsPage: React.FC = () => {
                           </div>
                         </div>
 
-                        {/* Segunda fila: Información de Fecha y Hora (CORREGIDO: Incluye Calendar) */}
+                        {/* Segunda fila: Información de Fecha y Hora*/}
                         <div className="space-y-1 ml-13"> {/* Margen para alinear con el texto del nombre/chip */}
                           
                           {/* Fecha */}
                           <div className="flex items-center gap-1 text-sm text-gray-500">
-                            <Calendar className="w-4 h-4 text-gray-400" />
+                            <Calendar className="w-4 h-4 text-gray-600" />
                             <span>
                               {format(new Date(visit.date), "EEEE, d 'de' MMMM", { locale: es })}
                             </span>
@@ -428,7 +428,7 @@ export const VisitsPage: React.FC = () => {
 
                           {/* Horario */}
                           <div className="flex items-center gap-1 text-sm text-gray-600">
-                            <Clock className="w-4 h-4 text-gray-400" />
+                            <Clock className="w-4 h-4 text-gray-600" />
                             <span>
                               {visit.arrivalTime} - {visit.departureTime} hrs
                             </span>
@@ -498,12 +498,12 @@ export const VisitsPage: React.FC = () => {
                           </div>
                         </div>
 
-                        {/* Segunda fila: Información de Fecha y Hora (CORREGIDO: Incluye Calendar) */}
+                        {/* Segunda fila: Información de Fecha y Hora */}
                         <div className="space-y-1 ml-13"> {/* Margen para alinear con el texto del nombre/chip */}
                           
                           {/* Fecha */}
                           <div className="flex items-center gap-1 text-sm text-gray-500">
-                            <Calendar className="w-4 h-4 text-gray-400" />
+                            <Calendar className="w-4 h-4 text-gray-600" />
                             <span>
                               {format(new Date(visit.date), "EEEE, d 'de' MMMM", { locale: es })}
                             </span>
@@ -511,7 +511,7 @@ export const VisitsPage: React.FC = () => {
                           
                           {/* Horario */}
                           <div className="flex items-center gap-1 text-sm text-gray-600">
-                            <Clock className="w-4 h-4 text-gray-400" />
+                            <Clock className="w-4 h-4 text-gray-600" />
                             <span>
                               {visit.arrivalTime} - {visit.departureTime} hrs
                             </span>
