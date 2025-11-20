@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir \"C:\\Users\\matia\\OneDrive\\Documentos\\GitHub\\Cohabit-project\\public\" /s)",
+      "Bash(dir \"C:\\Users\\matia\\OneDrive\\Documentos\\GitHub\\Cohabit-project\\public\")",
+      "Bash(java -version:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

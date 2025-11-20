@@ -619,10 +619,12 @@ export const ReservationsPage: React.FC = () => {
       <BottomDrawer isOpen={isDrawerOpen} onClose={handleCloseDrawer}>
         {selected && (
           <div className="w-full">
-            <div className="relative mb-3 w-full h-36 sm:h-40 rounded-xl bg-gradient-to-br flex items-center justify-center" style={{
-              backgroundImage: 'linear-gradient(135deg, #006E6F 0%, #005a5b 100%)'
-            }}>
-              <span className="text-white text-4xl">{selected.name === 'Piscina' ? '🏊' : selected.name === 'Quincho' ? '🔥' : selected.name === 'Salón de reuniones' ? '📊' : selected.name === 'Salón de eventos' ? '🎉' : selected.name === 'Gimnasio' ? '💪' : '🎮'}</span>
+            <div className="relative mb-3 w-full h-36 sm:h-40 rounded-xl overflow-hidden">
+              <img
+                src={selected.image}
+                alt={selected.name}
+                className="w-full h-full object-cover"
+              />
             </div>
 
             <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">

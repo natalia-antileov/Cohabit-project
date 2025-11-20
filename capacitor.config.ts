@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.cohabit.app',
-  appName: 'Cohabit',
+  appName: 'CohabitApp',
   webDir: 'dist',
   plugins: {
     StatusBar: {
